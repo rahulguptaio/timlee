@@ -1,0 +1,103 @@
+timlee-avatar {
+  --avatar-size: var(--ts-space-10);
+  --avatar-bg: var(--ts-primary-soft);
+  --avatar-fg: var(--ts-primary-soft-foreground);
+  --avatar-radius: var(--ts-radius-full);
+  --avatar-ring: var(--ts-surface-raised);
+  --avatar-status-bg: var(--ts-idle);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex: none;
+  inline-size: var(--avatar-size);
+  block-size: var(--avatar-size);
+  border-radius: var(--avatar-radius);
+  background: var(--avatar-bg);
+  color: var(--avatar-fg);
+  font-family: var(--mc-font-sans);
+  font-size: calc(var(--avatar-size) * 0.4);
+  font-weight: 650;
+  line-height: var(--mc-leading-none);
+  letter-spacing: var(--mc-tracking-normal);
+  overflow: hidden;
+  user-select: none;
+  vertical-align: middle;
+}
+
+timlee-avatar[size="xs"] {
+  --avatar-size: var(--ts-space-6);
+}
+timlee-avatar[size="sm"] {
+  --avatar-size: var(--ts-space-8);
+}
+timlee-avatar[size="lg"] {
+  --avatar-size: var(--ts-space-12);
+}
+timlee-avatar[size="xl"] {
+  --avatar-size: var(--ts-space-16);
+}
+
+timlee-avatar[shape="square"] {
+  --avatar-radius: var(--ts-radius-md);
+}
+
+timlee-avatar[tone="byoc"] {
+  --avatar-bg: var(--ts-byoc-soft);
+  --avatar-fg: var(--ts-byoc-soft-foreground);
+}
+timlee-avatar[tone="neutral"] {
+  --avatar-bg: var(--ts-surface-3);
+  --avatar-fg: var(--ts-text-2);
+}
+
+timlee-avatar > img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+timlee-avatar > img[hidden] {
+  display: none;
+}
+
+/* A status dot has to be more than a colour, so it also carries a text
+   label in the host's aria-label. */
+timlee-avatar[status]::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  inline-size: calc(var(--avatar-size) * 0.28);
+  block-size: calc(var(--avatar-size) * 0.28);
+  border: var(--mc-focus-width) solid var(--avatar-ring);
+  border-radius: var(--mc-radius-full);
+  background: var(--avatar-status-bg);
+}
+
+timlee-avatar[status="online"] {
+  --avatar-status-bg: var(--ts-success);
+}
+timlee-avatar[status="busy"] {
+  --avatar-status-bg: var(--ts-danger);
+}
+timlee-avatar[status="away"] {
+  --avatar-status-bg: var(--ts-warning);
+}
+
+timlee-avatar-group {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+timlee-avatar-group > timlee-avatar {
+  --avatar-ring: var(--ts-background);
+  box-shadow: 0 0 0 var(--mc-focus-width) var(--avatar-ring);
+}
+
+timlee-avatar-group > timlee-avatar + timlee-avatar {
+  margin-inline-start: calc(var(--avatar-size) * -0.3);
+}

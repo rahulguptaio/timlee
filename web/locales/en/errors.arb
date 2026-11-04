@@ -1,0 +1,47 @@
+{
+  "@@locale": "en",
+  "@@context": "Control-plane error codes and form errors.",
+  "errors.page.title": "Error: {title}",
+  "@errors.page.title": {
+    "description": "Document title prefix when a rendered page contains an error.",
+    "placeholders": { "title": { "type": "text" } }
+  },
+  "errors.action.retry": "Try again",
+  "@errors.action.retry": { "description": "Link that retries a failed request." },
+  "errors.action.reload": "Reload the page",
+  "@errors.action.reload": { "description": "Link that reloads after an invalid form." },
+  "errors.settings.unavailableTitle": "Settings are unavailable right now",
+  "@errors.settings.unavailableTitle": { "description": "Title when the settings control plane is unavailable." },
+  "errors.settings.unavailableBody": "Timlee’s control plane is not answering, so your account cannot be shown or changed. Nothing has been lost — try again in a moment.",
+  "@errors.settings.unavailableBody": { "description": "Body when the settings control plane is unavailable." },
+  "errors.settings.busyBody": "Timlee is receiving more requests than it can answer just now, so your account cannot be shown. Nothing has been lost — try again in a minute.",
+  "@errors.settings.busyBody": { "description": "Body when settings is rate limited." },
+  "errors.settings.formUnverifiedTitle": "That form could not be verified",
+  "@errors.settings.formUnverifiedTitle": { "description": "Title when a settings form fails origin or CSRF verification." },
+  "errors.settings.formUnverifiedBody": "Timlee only accepts changes from a page it showed you in this session, and this one could not be matched — the page may be out of date, or you signed in again since it loaded. Nothing was changed.",
+  "@errors.settings.formUnverifiedBody": { "description": "Body when a settings form fails origin or CSRF verification." },
+  "errors.settings.actionUnreachable": "Timlee could not reach its control plane, so nothing was changed. Try again in a moment.",
+  "@errors.settings.actionUnreachable": { "description": "Flash when a settings action cannot reach the control plane." },
+  "errors.settings.network": "Timlee could not be reached, so nothing was changed. Check your connection and try again.",
+  "@errors.settings.network": { "description": "Toast when an enhanced settings form cannot reach Timlee." },
+  "errors.settings.roleChanged": "Your role in this organisation no longer allows that. The page now shows what you can do.",
+  "@errors.settings.roleChanged": { "description": "Flash when the reader's role changed before an action." },
+  "errors.settings.forbiddenOrigin": "Timlee refused that change because it did not come from this site. Reload the page and try again.",
+  "@errors.settings.forbiddenOrigin": { "description": "Flash when a control-plane origin check rejects an action." },
+  "errors.settings.rateLimited": "That was a lot of changes in a short time. Wait a minute, then try again.",
+  "@errors.settings.rateLimited": { "description": "Flash when settings actions are rate limited." },
+  "errors.settings.server": "Timlee could not complete that change. Reload the page to check whether it took effect, then try again.",
+  "@errors.settings.server": { "description": "Flash when the control plane fails a settings action." },
+  "errors.settings.generic": "That did not work. Reload the page and try again.",
+  "@errors.settings.generic": { "description": "Generic settings action failure." },
+  "errors.settings.loadUnreachable": "Timlee could not load {what} because the control plane is not answering. Reload the page to try again.",
+  "@errors.settings.loadUnreachable": {
+    "description": "Read failure when the control plane is unavailable.",
+    "placeholders": { "what": { "type": "text" } }
+  },
+  "errors.settings.loadFailed": "Timlee could not load {what} just now. Reload the page to try again.",
+  "@errors.settings.loadFailed": {
+    "description": "Generic settings read failure.",
+    "placeholders": { "what": { "type": "text" } }
+  }
+}

@@ -1,0 +1,1222 @@
+{
+  "@@locale": "en",
+  "@@context": "Settings and admin pages and their flash messages.",
+  "settings.keys.expiresLegend": "Expires",
+  "@settings.keys.expiresLegend": {
+    "description": "Legend of the group of choices for when a new API key stops working."
+  },
+  "settings.keys.expiresHint": "After it expires, requests that use the key fail. You can rotate it to a new key before then.",
+  "@settings.keys.expiresHint": {
+    "description": "Hint under the Expires legend when creating an API key."
+  },
+  "settings.keys.lifetime.week": "7 days",
+  "@settings.keys.lifetime.week": {
+    "description": "Choice: the new API key expires 7 days from now."
+  },
+  "settings.keys.lifetime.month": "30 days",
+  "@settings.keys.lifetime.month": {
+    "description": "Choice: the new API key expires 30 days from now. The default."
+  },
+  "settings.keys.lifetime.quarter": "90 days",
+  "@settings.keys.lifetime.quarter": {
+    "description": "Choice: the new API key expires 90 days from now."
+  },
+  "settings.keys.lifetime.year": "1 year",
+  "@settings.keys.lifetime.year": {
+    "description": "Choice: the new API key expires 365 days from now."
+  },
+  "settings.keys.lifetime.never": "Never",
+  "@settings.keys.lifetime.never": {
+    "description": "Choice: the new API key does not expire."
+  },
+  "settings.keys.lifetimeNeverHint": "Until revoked",
+  "@settings.keys.lifetimeNeverHint": {
+    "description": "Under the Never expiry choice, where the other choices show the date the key would stop working."
+  },
+  "settings.keys.expiresError": "Choose when the key expires.",
+  "@settings.keys.expiresError": {
+    "description": "Error when the create-key form arrives without an expiry choice."
+  },
+  "settings.keys.stopNote": "A revoked or expired key stops working within 30 seconds: each server keeps a key it has checked for up to 30 seconds.",
+  "@settings.keys.stopNote": {
+    "description": "Note above the API keys table. The 30 seconds is how long services may cache a key check."
+  },
+  "settings.keys.filterLabel": "Filter keys by status",
+  "@settings.keys.filterLabel": {
+    "description": "Accessible name of the row of links that filter the API keys table."
+  },
+  "settings.keys.filter.all": "All",
+  "@settings.keys.filter.all": {
+    "description": "Filter link: every API key."
+  },
+  "settings.keys.filter.active": "Active",
+  "@settings.keys.filter.active": {
+    "description": "Filter link: API keys that still work."
+  },
+  "settings.keys.filter.expiring": "Expiring soon",
+  "@settings.keys.filter.expiring": {
+    "description": "Filter link: API keys that expire within 7 days."
+  },
+  "settings.keys.filter.expired": "Expired",
+  "@settings.keys.filter.expired": {
+    "description": "Filter link: API keys past their expiry."
+  },
+  "settings.keys.filter.revoked": "Revoked",
+  "@settings.keys.filter.revoked": {
+    "description": "Filter link: revoked API keys."
+  },
+  "settings.keys.creatorFilter": "Showing keys created by <b>{name}</b>.",
+  "@settings.keys.creatorFilter": {
+    "description": "Above the API keys table when it shows one member's keys. name is the member's display name.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.keys.showEvery": "Show every key",
+  "@settings.keys.showEvery": {
+    "description": "Link that removes the API keys table's filters."
+  },
+  "settings.keys.caption": "{live, plural, one {# active} other {# active}}{expired, plural, =0 {} one {, # expired} other {, # expired}}{revoked, plural, =0 {} one {, # revoked} other {, # revoked}}",
+  "@settings.keys.caption": {
+    "description": "Caption of the API keys table: how many keys still work, then how many expired and how many were revoked, each part only when there are some.",
+    "placeholders": { "live": { "type": "int" }, "expired": { "type": "int" }, "revoked": { "type": "int" } }
+  },
+  "settings.keys.captionFiltered": "{shown} of {total, plural, one {# key} other {# keys}}",
+  "@settings.keys.captionFiltered": {
+    "description": "Caption of the API keys table while a filter is on: how many it shows of how many there are.",
+    "placeholders": { "shown": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "settings.keys.columnExpires": "Expires",
+  "@settings.keys.columnExpires": {
+    "description": "Column heading in the API keys table: when each key stops working."
+  },
+  "settings.keys.replaces": "Replaces <code>{prefix}…</code>",
+  "@settings.keys.replaces": {
+    "description": "Under a key's label: the key it was rotated from. prefix is the start of that key, like mk_live_ab12.",
+    "placeholders": { "prefix": { "type": "text" } }
+  },
+  "settings.keys.worksUntil": "Works until {date}",
+  "@settings.keys.worksUntil": {
+    "description": "Expiry of a key that was rotated: it keeps working until this moment. date is already formatted, like 31 Oct 2026, 14:05 UTC.",
+    "placeholders": { "date": { "type": "text" } }
+  },
+  "settings.keys.expiresIn": "Expires {when}",
+  "@settings.keys.expiresIn": {
+    "description": "Warning badge on a key that expires within 7 days. when is already worded, like in 3 days.",
+    "placeholders": { "when": { "type": "text" } }
+  },
+  "settings.keys.never": "Never",
+  "@settings.keys.never": {
+    "description": "Expiry of a key that does not expire."
+  },
+  "settings.keys.stateExpired": "Expired",
+  "@settings.keys.stateExpired": {
+    "description": "Badge on a key past its expiry."
+  },
+  "settings.keys.stateReplaced": "Replaced",
+  "@settings.keys.stateReplaced": {
+    "description": "Badge on a key that was rotated and still works until its overlap ends."
+  },
+  "settings.keys.rotateAction": "Rotate",
+  "@settings.keys.rotateAction": {
+    "description": "Row action that opens the confirmation for replacing a key with a new one. The key's label follows for screen readers."
+  },
+  "settings.keys.rotateQuestion": "<b>Rotate {label}?</b> Timlee creates a new key with the same name and lifetime. The old key keeps working for the time you choose, so you can deploy the new one first.",
+  "@settings.keys.rotateQuestion": {
+    "description": "Inline confirmation before rotating a key. label is the key's name, as typed.",
+    "placeholders": { "label": { "type": "text" } }
+  },
+  "settings.keys.overlapLegend": "Keep the old key working for",
+  "@settings.keys.overlapLegend": {
+    "description": "Legend of the choices for how long a rotated key keeps working beside its replacement."
+  },
+  "settings.keys.overlap.hour": "1 hour",
+  "@settings.keys.overlap.hour": {
+    "description": "Choice: the old key keeps working for 1 hour after rotation."
+  },
+  "settings.keys.overlap.day": "24 hours",
+  "@settings.keys.overlap.day": {
+    "description": "Choice: the old key keeps working for 24 hours after rotation. The default."
+  },
+  "settings.keys.overlap.week": "7 days",
+  "@settings.keys.overlap.week": {
+    "description": "Choice: the old key keeps working for 7 days after rotation."
+  },
+  "settings.keys.overlap.none": "Stop it now",
+  "@settings.keys.overlap.none": {
+    "description": "Choice: the old key is revoked when its replacement is created."
+  },
+  "settings.keys.rotateSubmit": "Create replacement key",
+  "@settings.keys.rotateSubmit": {
+    "description": "Button that rotates a key."
+  },
+  "settings.keys.rotateCancel": "Cancel",
+  "@settings.keys.rotateCancel": {
+    "description": "Link that closes the rotation confirmation without rotating."
+  },
+  "settings.keys.filteredEmpty": "No keys match this filter",
+  "@settings.keys.filteredEmpty": {
+    "description": "Heading when a filter leaves the API keys table empty."
+  },
+  "settings.keys.filteredEmptyBody": "Every key the organisation has is still listed under All.",
+  "@settings.keys.filteredEmptyBody": {
+    "description": "Under the empty filtered keys heading. All is the filter link that shows every key."
+  },
+  "settings.keys.firstKey": "Create your first key",
+  "@settings.keys.firstKey": {
+    "description": "Link from the empty keys list to the create-key form."
+  },
+  "settings.keys.formerMember": "A former member",
+  "@settings.keys.formerMember": {
+    "description": "Who created a key, when that person has left the organisation."
+  },
+  "settings.keys.created": "Created “{label}”. It expires on {date}. Copy it now — it is shown only once.",
+  "@settings.keys.created": {
+    "description": "Flash after creating an API key that expires. label is the key's name as typed; date is already formatted, like 29 Nov 2026, 14:05 UTC.",
+    "placeholders": { "label": { "type": "text" }, "date": { "type": "text" } }
+  },
+  "settings.keys.createdNoExpiry": "Created “{label}”. It does not expire. Copy it now — it is shown only once.",
+  "@settings.keys.createdNoExpiry": {
+    "description": "Flash after creating an API key that does not expire. label is the key's name as typed.",
+    "placeholders": { "label": { "type": "text" } }
+  },
+  "settings.keys.rotated": "Created a replacement for “{label}”. The old key keeps working until {date}. Copy the new key now — it is shown only once.",
+  "@settings.keys.rotated": {
+    "description": "Flash after rotating a key with an overlap. date is when the old key stops, already formatted, like 31 Oct 2026, 14:05 UTC.",
+    "placeholders": { "label": { "type": "text" }, "date": { "type": "text" } }
+  },
+  "settings.keys.rotatedRevoked": "Created a replacement for “{label}”. Requests that use the old key fail within 30 seconds. Copy the new key now — it is shown only once.",
+  "@settings.keys.rotatedRevoked": {
+    "description": "Flash after rotating a key with no overlap, which revokes the old key. The 30 seconds is how long services may cache a key check.",
+    "placeholders": { "label": { "type": "text" } }
+  },
+  "settings.keys.rotateUnshown": "Timlee created a replacement for “{label}” but could not show it to you, so the replacement was revoked straight away. Create a new key to replace it.",
+  "@settings.keys.rotateUnshown": {
+    "description": "Flash when a rotation's new key could not be shown once, and was therefore revoked.",
+    "placeholders": { "label": { "type": "text" } }
+  },
+  "settings.keys.rotateGone": "“{label}” no longer exists, so it was not rotated.",
+  "@settings.keys.rotateGone": {
+    "description": "Flash when the key to rotate was not found.",
+    "placeholders": { "label": { "type": "text" } }
+  },
+  "settings.keys.rotateForbidden": "Only owners and admins can rotate API keys, and your role no longer allows it.",
+  "@settings.keys.rotateForbidden": {
+    "description": "Flash when the reader's role changed and no longer allows rotating keys."
+  },
+  "settings.keys.overlapMissing": "Choose how long the old key keeps working, then rotate “{label}” again.",
+  "@settings.keys.overlapMissing": {
+    "description": "Flash when the rotation form arrived without a choice of overlap.",
+    "placeholders": { "label": { "type": "text" } }
+  },
+  "settings.members.removeImpact": "{keys, plural, =0 {{name} loses access to {org} within 30 seconds. To bring them back, invite them again.} one {{name} loses access to {org}, and the API key they created is revoked. Both take effect within 30 seconds. To bring them back, invite them again.} other {{name} loses access to {org}, and the # API keys they created are revoked. Both take effect within 30 seconds. To bring them back, invite them again.}}",
+  "@settings.members.removeImpact": {
+    "description": "Body of the confirmation before removing a member. name is the member's display name; org the organisation's name; keys how many of their API keys still work. The 30 seconds is how long services may cache a key check.",
+    "placeholders": { "name": { "type": "text" }, "org": { "type": "text" }, "keys": { "type": "int" } }
+  },
+  "settings.members.keyUsed": "<b>{label}</b> <code>{prefix}…</code>, last used {when}",
+  "@settings.members.keyUsed": {
+    "description": "One of a member's API keys in the removal confirmation. label is the key's name; prefix its start; when is already worded, like 2 hours ago.",
+    "placeholders": { "label": { "type": "text" }, "prefix": { "type": "text" }, "when": { "type": "text" } }
+  },
+  "settings.members.keyUnused": "<b>{label}</b> <code>{prefix}…</code>, never used",
+  "@settings.members.keyUnused": {
+    "description": "One of a member's API keys in the removal confirmation, when it has never been used.",
+    "placeholders": { "label": { "type": "text" }, "prefix": { "type": "text" } }
+  },
+  "settings.members.keysRecentlyUsed": "{count, plural, one {# of these keys was used in the last 24 hours.} other {# of these keys were used in the last 24 hours.}}",
+  "@settings.members.keysRecentlyUsed": {
+    "description": "Warning in the removal confirmation: how many of the member's keys are in recent use.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.members.rotateFirst": "Rotate these keys first",
+  "@settings.members.rotateFirst": {
+    "description": "Link from the removal confirmation to the member's keys, to hand them over before they are revoked."
+  },
+  "settings.members.removeAndRevoke": "{keys, plural, one {Remove {name} and revoke # key} other {Remove {name} and revoke # keys}}",
+  "@settings.members.removeAndRevoke": {
+    "description": "Button that removes a member whose API keys are revoked with them. name is the member's display name.",
+    "placeholders": { "name": { "type": "text" }, "keys": { "type": "int" } }
+  },
+  "settings.overview.keysExpiring": "{count, plural, one {# key expires in the next 7 days} other {# keys expire in the next 7 days}}",
+  "@settings.overview.keysExpiring": {
+    "description": "Link on the settings overview to the API keys that expire soon.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.problems.title": "There is a problem",
+  "@settings.problems.title": {
+    "description": "Heading of the error summary at the top of a settings form that was submitted with mistakes. Each mistake is listed below it as a link to its field."
+  },
+  "settings.problems.prefix": "Error:",
+  "@settings.problems.prefix": {
+    "description": "Hidden from sight and read by screen readers before a field's error message, so the message is recognised as an error out of context."
+  },
+  "settings.flash.title": "Outcome",
+  "@settings.flash.title": {
+    "description": "Hidden heading that names the message saying what the last settings form did, so it can be reached as a landmark."
+  },
+  "settings.keys.revealEnv": "Set it as an environment variable, for example <code>{name}</code>, and never commit it to source control.",
+  "@settings.keys.revealEnv": {
+    "description": "Advice under a newly created API key's secret. name is an environment variable name and is not translated.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.members.resendNote": "Sending an invitation again emails a new link, and the earlier link stops working.",
+  "@settings.members.resendNote": {
+    "description": "Note above the table of pending invitations."
+  },
+  "settings.members.resend": "Send again",
+  "@settings.members.resend": {
+    "description": "Button on a pending invitation that emails a new link."
+  },
+  "settings.members.resendExpired": "Send a new invitation",
+  "@settings.members.resendExpired": {
+    "description": "Button on an expired invitation that emails a new link."
+  },
+  "settings.members.resendHidden": "(a new link to {email})",
+  "@settings.members.resendHidden": {
+    "description": "Hidden from sight, read by screen readers after the Send again button's visible label. email is the invited address.",
+    "placeholders": { "email": { "type": "text" } }
+  },
+  "settings.members.expiredOn": "Expired on {date}",
+  "@settings.members.expiredOn": {
+    "description": "Badge on an invitation whose link has expired. date is already formatted, like 3 May 2026.",
+    "placeholders": { "date": { "type": "text" } }
+  },
+  "settings.members.noInvitations": "No invitations are waiting. Anyone you invite appears here until they accept.",
+  "@settings.members.noInvitations": {
+    "description": "Shown when an organisation has no pending invitations."
+  },
+  "settings.members.inviteSomeone": "Invite someone",
+  "@settings.members.inviteSomeone": {
+    "description": "Link from the empty list of invitations to the invitation form."
+  },
+  "settings.audit.period.day": "Last 24 hours",
+  "@settings.audit.period.day": {
+    "description": "Audit log period filter: events from the last 24 hours."
+  },
+  "settings.audit.period.week": "Last 7 days",
+  "@settings.audit.period.week": {
+    "description": "Audit log period filter: events from the last 7 days."
+  },
+  "settings.audit.period.month": "Last 30 days",
+  "@settings.audit.period.month": {
+    "description": "Audit log period filter: events from the last 30 days."
+  },
+  "settings.audit.period.all": "All kept",
+  "@settings.audit.period.all": {
+    "description": "Audit log period filter: every event Timlee still keeps."
+  },
+  "settings.audit.periodLabel": "Period",
+  "@settings.audit.periodLabel": {
+    "description": "Accessible name of the row of audit log period links."
+  },
+  "settings.audit.targetLabel": "Target",
+  "@settings.audit.targetLabel": {
+    "description": "Label of the audit log filter that matches what an action was done to."
+  },
+  "settings.audit.targetHint": "Part of a key's label, an email address or a person's name.",
+  "@settings.audit.targetHint": {
+    "description": "Hint under the audit log's Target filter."
+  },
+  "settings.audit.rangeLegend": "Custom range",
+  "@settings.audit.rangeLegend": {
+    "description": "Legend of the audit log's pair of date fields, which replace the period links."
+  },
+  "settings.audit.rangeHint": "Dates are in UTC and include the whole day. Leave either empty for no limit.",
+  "@settings.audit.rangeHint": {
+    "description": "Hint under the audit log's Custom range legend."
+  },
+  "settings.audit.from": "From",
+  "@settings.audit.from": {
+    "description": "Label of the audit log's start date field."
+  },
+  "settings.audit.to": "To",
+  "@settings.audit.to": {
+    "description": "Label of the audit log's end date field."
+  },
+  "settings.audit.fromInvalid": "The start date must be a real date, like 2026-10-01",
+  "@settings.audit.fromInvalid": {
+    "description": "Error when the audit log's start date cannot be read."
+  },
+  "settings.audit.toInvalid": "The end date must be a real date, like 2026-10-31",
+  "@settings.audit.toInvalid": {
+    "description": "Error when the audit log's end date cannot be read."
+  },
+  "settings.audit.rangeBackwards": "The start date must be on or before the end date",
+  "@settings.audit.rangeBackwards": {
+    "description": "Error when the audit log's start date is after its end date."
+  },
+  "settings.audit.retention": "Timlee keeps this organisation’s audit events for as long as it exists. This page and its exports cover {start} to now.",
+  "@settings.audit.retention": {
+    "description": "Retention statement above the audit log. start is the date of the oldest kept event, already formatted.",
+    "placeholders": { "start": { "type": "text" } }
+  },
+  "settings.audit.exportLead": "{count, plural, one {Export the # matching event:} other {Export all # matching events, from every page:}}",
+  "@settings.audit.exportLead": {
+    "description": "Lead-in to the audit log's download buttons.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.audit.exportCsv": "Download CSV",
+  "@settings.audit.exportCsv": {
+    "description": "Link that downloads the filtered audit log as a CSV file."
+  },
+  "settings.audit.exportJson": "Download JSON",
+  "@settings.audit.exportJson": {
+    "description": "Link that downloads the filtered audit log as a JSON file."
+  },
+  "settings.audit.exportCapped": "{cap, plural, one {An export holds the newest event. Choose a shorter period to export older ones.} other {An export holds the newest # events. Choose a shorter period to export older ones.}}",
+  "@settings.audit.exportCapped": {
+    "description": "Shown when the filters match more events than one export holds.",
+    "placeholders": { "cap": { "type": "int" } }
+  },
+  "settings.audit.exportFailed": "The audit log could not be read just now, so nothing was exported. Try again in a moment.",
+  "@settings.audit.exportFailed": {
+    "description": "Error after an audit log export failed."
+  },
+  "settings.audit.caption": "{total, plural, one {Showing {from}–{to} of # event} other {Showing {from}–{to} of # events}}",
+  "@settings.audit.caption": {
+    "description": "Caption of the audit log table. from and to number the rows on this page.",
+    "placeholders": { "total": { "type": "int" }, "from": { "type": "int" }, "to": { "type": "int" } }
+  },
+  "settings.audit.captionFiltered": "{total, plural, one {Showing {from}–{to} of # event matching the filters} other {Showing {from}–{to} of # events matching the filters}}",
+  "@settings.audit.captionFiltered": {
+    "description": "Caption of the audit log table when filters apply. from and to number the rows on this page.",
+    "placeholders": { "total": { "type": "int" }, "from": { "type": "int" }, "to": { "type": "int" } }
+  },
+  "settings.audit.emptyInvite": "Invite someone",
+  "@settings.audit.emptyInvite": {
+    "description": "Link from the empty audit log to the invitation form."
+  },
+  "settings.audit.emptyKey": "Create an API key",
+  "@settings.audit.emptyKey": {
+    "description": "Link from the empty audit log to the form that creates an API key."
+  },
+  "settings.audit.rotated": "Rotated an API key",
+  "@settings.audit.rotated": {
+    "description": "Audit log action: someone replaced an API key with a new one."
+  },
+  "settings.audit.rotatedUntil": "Overlap ends {when}",
+  "@settings.audit.rotatedUntil": {
+    "description": "Detail of a key rotation in the audit log: when the old key stops working. when is a full date and time, already formatted.",
+    "placeholders": { "when": { "type": "text" } }
+  },
+  "settings.nav.overview": "Overview",
+  "@settings.nav.overview": {
+    "description": "Settings navigation: the summary page."
+  },
+  "settings.nav.profile": "Profile",
+  "@settings.nav.profile": {
+    "description": "Settings navigation: your name."
+  },
+  "settings.nav.security": "Security",
+  "@settings.nav.security": {
+    "description": "Settings navigation: sign-in methods and sessions."
+  },
+  "settings.nav.organisation": "Organisation",
+  "@settings.nav.organisation": {
+    "description": "Settings navigation: the organisation's name, leaving and deleting it."
+  },
+  "settings.nav.members": "Members",
+  "@settings.nav.members": {
+    "description": "Settings navigation: people in the organisation and invitations."
+  },
+  "settings.nav.keys": "API keys",
+  "@settings.nav.keys": {
+    "description": "Settings navigation: the organisation's API keys."
+  },
+  "settings.nav.audit": "Audit log",
+  "@settings.nav.audit": {
+    "description": "Settings navigation: the organisation's audit log."
+  },
+  "settings.profile.lede": "How you appear to your organisation. The ways you sign in, and where you are signed in, are under <link>Security</link>.",
+  "@settings.profile.lede": {
+    "description": "Introduction on the Profile page. The link goes to the Security page.",
+    "placeholders": { "link": { "type": "text" } }
+  },
+  "settings.overview.security": "Sign-in and sessions",
+  "@settings.overview.security": {
+    "description": "Button on the settings overview that opens the Security page."
+  },
+  "settings.overview.orgOwner": "Its name, leaving it, and deleting it",
+  "@settings.overview.orgOwner": {
+    "description": "What the Organisation page holds, for an owner."
+  },
+  "settings.overview.orgAdmin": "Its name, and leaving it",
+  "@settings.overview.orgAdmin": {
+    "description": "What the Organisation page holds, for an admin."
+  },
+  "settings.overview.orgMember": "Leaving it",
+  "@settings.overview.orgMember": {
+    "description": "What the Organisation page holds, for a member or viewer."
+  },
+  "settings.security.title": "Security",
+  "@settings.security.title": {
+    "description": "Title of the Security settings page."
+  },
+  "settings.security.lede": "The ways you sign in to this account, and where it is signed in.",
+  "@settings.security.lede": {
+    "description": "Introduction on the Security settings page."
+  },
+  "settings.security.methods": "Sign-in methods",
+  "@settings.security.methods": {
+    "description": "Heading and table name for the ways an account signs in."
+  },
+  "settings.security.methodsLede": "Any of these can sign in to this account. Unlinking one stops it working straight away.",
+  "@settings.security.methodsLede": {
+    "description": "Explanation above the table of sign-in methods."
+  },
+  "settings.security.methodsCaption": "{count, plural, one {# linked sign-in method} other {# linked sign-in methods}}",
+  "@settings.security.methodsCaption": {
+    "description": "Caption of the table of sign-in methods.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.security.colMethod": "Method",
+  "@settings.security.colMethod": {
+    "description": "Column of the sign-in methods table: the provider, like GitHub."
+  },
+  "settings.security.colEmail": "Email",
+  "@settings.security.colEmail": {
+    "description": "Column of the sign-in methods table: the address the provider reported."
+  },
+  "settings.security.colLinked": "Linked",
+  "@settings.security.colLinked": {
+    "description": "Column of the sign-in methods table: when the method was linked."
+  },
+  "settings.security.colLastUsed": "Last used",
+  "@settings.security.colLastUsed": {
+    "description": "Column of the sign-in methods table: when the method last signed in."
+  },
+  "settings.security.colActions": "Actions",
+  "@settings.security.colActions": {
+    "description": "Hidden heading of the sign-in methods table's column of buttons."
+  },
+  "settings.security.never": "Never",
+  "@settings.security.never": {
+    "description": "A sign-in method that has never been used."
+  },
+  "settings.security.onlyMethod": "Your only sign-in method, so it cannot be unlinked",
+  "@settings.security.onlyMethod": {
+    "description": "Shown instead of an Unlink button when the account has one sign-in method."
+  },
+  "settings.security.unlink": "Unlink",
+  "@settings.security.unlink": {
+    "description": "Button that opens the confirmation to unlink a sign-in method; the provider's name follows it, hidden."
+  },
+  "settings.security.unlinkTitle": "Unlink {provider}?",
+  "@settings.security.unlinkTitle": {
+    "description": "Title of the confirmation to unlink a sign-in method. provider is like GitHub.",
+    "placeholders": { "provider": { "type": "text" } }
+  },
+  "settings.security.unlinkBody": "Signing in with {provider} will stop opening this account. Your other sign-in methods keep working.",
+  "@settings.security.unlinkBody": {
+    "description": "Body of the confirmation to unlink a sign-in method.",
+    "placeholders": { "provider": { "type": "text" } }
+  },
+  "settings.security.unlinkBodyEmail": "Signing in with {provider} as {email} will stop opening this account. Your other sign-in methods keep working.",
+  "@settings.security.unlinkBodyEmail": {
+    "description": "Body of the confirmation to unlink a sign-in method that reported an address.",
+    "placeholders": { "provider": { "type": "text" }, "email": { "type": "text" } }
+  },
+  "settings.security.unlinkButton": "Unlink {provider}",
+  "@settings.security.unlinkButton": {
+    "description": "Button that unlinks a sign-in method.",
+    "placeholders": { "provider": { "type": "text" } }
+  },
+  "settings.security.cancel": "Cancel",
+  "@settings.security.cancel": {
+    "description": "Button that closes a settings confirmation without doing anything."
+  },
+  "settings.security.sessions": "Where you are signed in",
+  "@settings.security.sessions": {
+    "description": "Heading of the sessions section on the Security page."
+  },
+  "settings.security.others": "{count, plural, one {You are signed in here and in # other browser, device or desktop app.} other {You are signed in here and in # other browsers, devices or desktop apps.}}",
+  "@settings.security.others": {
+    "description": "How many other sessions the account has.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.security.noOthers": "You are signed in here and nowhere else.",
+  "@settings.security.noOthers": {
+    "description": "Shown when the account has no other sessions."
+  },
+  "settings.security.endOthers": "Sign out of other sessions",
+  "@settings.security.endOthers": {
+    "description": "Button that ends every session of the account except this one."
+  },
+  "settings.security.endOthersNote": "This browser stays signed in. The others are signed out at once, though a service that caches session checks may accept one of them for up to 30 seconds more.",
+  "@settings.security.endOthersNote": {
+    "description": "Note under the button that ends the account's other sessions."
+  },
+  "settings.security.sessionsUnknown": "Your other sessions could not be counted just now. Reload the page to try again.",
+  "@settings.security.sessionsUnknown": {
+    "description": "Shown when the control plane could not count the account's sessions."
+  },
+  "settings.security.ended": "{count, plural, =0 {There were no other sessions to sign out of.} one {Signed out of # other session.} other {Signed out of # other sessions.}}",
+  "@settings.security.ended": {
+    "description": "Message after ending the account's other sessions.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.organisation.title": "Organisation",
+  "@settings.organisation.title": {
+    "description": "Title of the Organisation settings page."
+  },
+  "settings.organisation.lede": "{name}’s name, and leaving or deleting it.",
+  "@settings.organisation.lede": {
+    "description": "Introduction on the Organisation page. name is the organisation's name.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.ledeNone": "The organisation you act in.",
+  "@settings.organisation.ledeNone": {
+    "description": "Introduction on the Organisation page for an account in no organisation."
+  },
+  "settings.organisation.none": "You are not in an organisation. When someone invites you, the link in their email brings you back here.",
+  "@settings.organisation.none": {
+    "description": "Organisation page for an account in no organisation."
+  },
+  "settings.organisation.nameTitle": "Name",
+  "@settings.organisation.nameTitle": {
+    "description": "Heading of the organisation's name section."
+  },
+  "settings.organisation.nameLabel": "Organisation name",
+  "@settings.organisation.nameLabel": {
+    "description": "Label of the field that renames the organisation."
+  },
+  "settings.organisation.nameHint": "Everyone in the organisation sees this name, and so do people you invite.",
+  "@settings.organisation.nameHint": {
+    "description": "Hint under the organisation name field."
+  },
+  "settings.organisation.save": "Save name",
+  "@settings.organisation.save": {
+    "description": "Button that saves the organisation's new name."
+  },
+  "settings.organisation.renameAsk": "Only owners and admins can rename the organisation.",
+  "@settings.organisation.renameAsk": {
+    "description": "Shown to members and viewers instead of the rename form."
+  },
+  "settings.organisation.nameMissing": "Give the organisation a name.",
+  "@settings.organisation.nameMissing": {
+    "description": "Error when the organisation name is empty."
+  },
+  "settings.organisation.nameLong": "{max, plural, one {Use at most # character.} other {Use at most # characters.}}",
+  "@settings.organisation.nameLong": {
+    "description": "Error when the organisation name is too long.",
+    "placeholders": { "max": { "type": "int" } }
+  },
+  "settings.organisation.nameControl": "Use letters, numbers, spaces and punctuation only.",
+  "@settings.organisation.nameControl": {
+    "description": "Error when the organisation name contains control characters."
+  },
+  "settings.organisation.renamed": "Renamed the organisation to {name}.",
+  "@settings.organisation.renamed": {
+    "description": "Message after renaming the organisation.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.leaveTitle": "Leave {name}",
+  "@settings.organisation.leaveTitle": {
+    "description": "Heading of the section for leaving the organisation.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.leaveLede": "You lose access to its members, API keys and audit log at once. To come back, someone has to invite you again.",
+  "@settings.organisation.leaveLede": {
+    "description": "What leaving the organisation means."
+  },
+  "settings.organisation.leaveButton": "Leave {name}",
+  "@settings.organisation.leaveButton": {
+    "description": "Button that opens the confirmation to leave the organisation.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.leaveConfirmTitle": "Leave {name}?",
+  "@settings.organisation.leaveConfirmTitle": {
+    "description": "Title of the confirmation to leave the organisation.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.leaveImpact": "{keys, plural, =0 {You lose access to {name} at once. None of the API keys you created still work, so none are revoked.} one {You lose access to {name} at once, and the # API key you created for it is revoked. It stops working within 30 seconds.} other {You lose access to {name} at once, and the # API keys you created for it are revoked. They stop working within 30 seconds.}}",
+  "@settings.organisation.leaveImpact": {
+    "description": "Body of the confirmation to leave the organisation, with the number of the reader's working API keys.",
+    "placeholders": { "keys": { "type": "int" }, "name": { "type": "text" } }
+  },
+  "settings.organisation.leaveImpactUnknown": "You lose access to {name} at once, and any API keys you created for it are revoked. They stop working within 30 seconds.",
+  "@settings.organisation.leaveImpactUnknown": {
+    "description": "Body of the confirmation to leave when the reader's keys could not be listed.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.leaveConfirm": "Leave {name}",
+  "@settings.organisation.leaveConfirm": {
+    "description": "Button that leaves the organisation.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.soleOwner": "You are this organisation’s only owner, so you cannot leave it. Make someone else an owner first, or delete the organisation.",
+  "@settings.organisation.soleOwner": {
+    "description": "Shown instead of the Leave button to the only owner, and when leaving was refused for that reason."
+  },
+  "settings.organisation.left": "{keys, plural, =0 {You left {name}.} one {You left {name}. The # API key you created for it was revoked.} other {You left {name}. The # API keys you created for it were revoked.}}",
+  "@settings.organisation.left": {
+    "description": "Message after leaving an organisation.",
+    "placeholders": { "keys": { "type": "int" }, "name": { "type": "text" } }
+  },
+  "settings.organisation.dangerTitle": "Danger zone",
+  "@settings.organisation.dangerTitle": {
+    "description": "Heading of the section with the action that deletes the organisation."
+  },
+  "settings.organisation.deleteTitle": "Delete {name}",
+  "@settings.organisation.deleteTitle": {
+    "description": "Heading of the delete organisation action.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.deleteLede": "Deleting the organisation cannot be undone. It takes away:",
+  "@settings.organisation.deleteLede": {
+    "description": "Lead-in to the list of what deleting the organisation removes."
+  },
+  "settings.organisation.deleteMembers": "{count, plural, one {its # member’s access, yours included} other {all # members’ access, yours included}}",
+  "@settings.organisation.deleteMembers": {
+    "description": "One item of what deleting the organisation removes.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.organisation.deleteKeys": "{count, plural, =0 {its API keys, none of which still work} one {its # working API key, which stops working within 30 seconds} other {its # working API keys, which stop working within 30 seconds}}",
+  "@settings.organisation.deleteKeys": {
+    "description": "One item of what deleting the organisation removes.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "settings.organisation.deleteKeysUnknown": "its API keys, which stop working within 30 seconds",
+  "@settings.organisation.deleteKeysUnknown": {
+    "description": "One item of what deleting the organisation removes, when the keys could not be counted."
+  },
+  "settings.organisation.deleteRest": "its pending invitations and its audit log",
+  "@settings.organisation.deleteRest": {
+    "description": "One item of what deleting the organisation removes."
+  },
+  "settings.organisation.confirmLabel": "Type <b>{name}</b> to confirm",
+  "@settings.organisation.confirmLabel": {
+    "description": "Label of the field where an owner types the organisation's name to delete it.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.confirmHint": "Type the name exactly as it is shown, including capitals.",
+  "@settings.organisation.confirmHint": {
+    "description": "Hint under the field that confirms deleting the organisation."
+  },
+  "settings.organisation.deleteButton": "Delete {name}",
+  "@settings.organisation.deleteButton": {
+    "description": "Button that deletes the organisation.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.confirmMismatch": "Type the organisation’s name exactly as shown: {name}",
+  "@settings.organisation.confirmMismatch": {
+    "description": "Error when the typed name does not match the organisation's.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.organisation.confirmStale": "The organisation’s name changed after this page was loaded. Type its current name to delete it.",
+  "@settings.organisation.confirmStale": {
+    "description": "Error when the organisation was renamed while the delete form was open."
+  },
+  "settings.organisation.deleted": "{keys, plural, =0 {Deleted {name}.} one {Deleted {name}. Its # working API key stops working within 30 seconds.} other {Deleted {name}. Its # working API keys stop working within 30 seconds.}}",
+  "@settings.organisation.deleted": {
+    "description": "Message after deleting an organisation.",
+    "placeholders": { "keys": { "type": "int" }, "name": { "type": "text" } }
+  },
+  "settings.organisation.loadFailed": "Timlee could not load your organisation just now. Reload the page to try again.",
+  "@settings.organisation.loadFailed": {
+    "description": "Shown on the Organisation page when the organisation could not be read."
+  },
+  "settings.organisation.loadUnreachable": "Timlee could not load your organisation because the control plane is not answering. Reload the page to try again.",
+  "@settings.organisation.loadUnreachable": {
+    "description": "Shown on the Organisation page when the control plane did not answer."
+  },
+  "settings.table.sortAscending": "(sort ascending)",
+  "@settings.table.sortAscending": {
+    "description": "Hidden from sight, read after a sortable column's name: what following its link does."
+  },
+  "settings.table.sortDescending": "(sort descending)",
+  "@settings.table.sortDescending": {
+    "description": "Hidden from sight, read after a sortable column's name: what following its link does."
+  },
+  "settings.table.previous": "Previous",
+  "@settings.table.previous": {
+    "description": "Link to the previous page of a settings table."
+  },
+  "settings.table.next": "Next",
+  "@settings.table.next": {
+    "description": "Link to the next page of a settings table."
+  },
+  "settings.table.page": "Page",
+  "@settings.table.page": {
+    "description": "Hidden from sight, read before a page number in a settings table's page links."
+  },
+  "settings.table.showing": " · showing {from}–{to}",
+  "@settings.table.showing": {
+    "description": "Added to a settings table's caption when it has more than one page. from and to number the rows on this page.",
+    "placeholders": { "from": { "type": "int" }, "to": { "type": "int" } }
+  },
+  "settings.keys.col.label": "Label",
+  "@settings.keys.col.label": {
+    "description": "Column of the API keys table: the key's name."
+  },
+  "settings.keys.col.created": "Created",
+  "@settings.keys.col.created": {
+    "description": "Column of the API keys table: who created the key and when."
+  },
+  "settings.keys.col.used": "Last used",
+  "@settings.keys.col.used": {
+    "description": "Column of the API keys table: when the key was last used."
+  },
+  "settings.keys.col.expires": "Expires",
+  "@settings.keys.col.expires": {
+    "description": "Column of the API keys table: when the key stops working."
+  },
+  "settings.keys.pagesLabel": "API key pages",
+  "@settings.keys.pagesLabel": {
+    "description": "Name of the navigation between pages of the API keys table."
+  },
+  "settings.members.col.name": "Member",
+  "@settings.members.col.name": {
+    "description": "Column of the members table: the person."
+  },
+  "settings.members.col.role": "Role",
+  "@settings.members.col.role": {
+    "description": "Column of the members table: their role."
+  },
+  "settings.members.col.joined": "Joined",
+  "@settings.members.col.joined": {
+    "description": "Column of the members table: when they joined."
+  },
+  "settings.members.pagesLabel": "Member pages",
+  "@settings.members.pagesLabel": {
+    "description": "Name of the navigation between pages of the members table."
+  },
+  "settings.members.caption": "{count, plural, one {# member} other {# members}}, {owners, plural, one {# owner} other {# owners}}",
+  "@settings.members.caption": {
+    "description": "Caption of the members table.",
+    "placeholders": { "count": { "type": "int" }, "owners": { "type": "int" } }
+  },
+  "settings.members.confirmSelfTitle": "Change your own role to {role}?",
+  "@settings.members.confirmSelfTitle": {
+    "description": "Title of the confirmation before a reader changes their own role in a way only someone else can undo. role is like Member.",
+    "placeholders": { "role": { "type": "text" } }
+  },
+  "settings.members.confirmSelfBody": "You will no longer be able to manage members, invitations, API keys or the audit log in {org}. Only an owner or admin can change this back.",
+  "@settings.members.confirmSelfBody": {
+    "description": "Body of the confirmation before a reader gives up their own management access. org is the organisation's name.",
+    "placeholders": { "org": { "type": "text" } }
+  },
+  "settings.members.confirmSelfOwnerBody": "You will no longer be able to change owners in {org}. Only an owner can make you one again.",
+  "@settings.members.confirmSelfOwnerBody": {
+    "description": "Body of the confirmation before an owner demotes themselves to admin.",
+    "placeholders": { "org": { "type": "text" } }
+  },
+  "settings.members.confirmSelfButton": "Change my role to {role}",
+  "@settings.members.confirmSelfButton": {
+    "description": "Button that confirms changing your own role.",
+    "placeholders": { "role": { "type": "text" } }
+  },
+  "settings.members.keepRole": "Keep my role",
+  "@settings.members.keepRole": {
+    "description": "Link that leaves your own role as it is."
+  },
+  "settings.members.confirmOwnerTitle": "Make {name} an owner?",
+  "@settings.members.confirmOwnerTitle": {
+    "description": "Title of the confirmation before making someone an owner.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.members.confirmOwnerBody": "Owners have full control of {org}, including over other owners. {name} will be able to change your role or remove you.",
+  "@settings.members.confirmOwnerBody": {
+    "description": "Body of the confirmation before making someone an owner.",
+    "placeholders": { "name": { "type": "text" }, "org": { "type": "text" } }
+  },
+  "settings.members.confirmOwnerButton": "Make {name} an owner",
+  "@settings.members.confirmOwnerButton": {
+    "description": "Button that makes someone an owner.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.members.confirmDemoteTitle": "Change {name}’s role to {role}?",
+  "@settings.members.confirmDemoteTitle": {
+    "description": "Title of the confirmation before demoting an owner.",
+    "placeholders": { "name": { "type": "text" }, "role": { "type": "text" } }
+  },
+  "settings.members.confirmDemoteBody": "{name} will no longer be able to change owners.",
+  "@settings.members.confirmDemoteBody": {
+    "description": "Body of the confirmation before demoting an owner.",
+    "placeholders": { "name": { "type": "text" } }
+  },
+  "settings.members.confirmDemoteButton": "Change role to {role}",
+  "@settings.members.confirmDemoteButton": {
+    "description": "Button that demotes an owner.",
+    "placeholders": { "role": { "type": "text" } }
+  },
+  "settings.meta.title": "{page} — Settings — Timlee",
+  "@settings.meta.title": { "description": "Document title for a settings page.", "placeholders": { "page": { "type": "text" } } },
+  "settings.meta.description": "Manage your Timlee profile, organisation members, API keys and audit log.",
+  "@settings.meta.description": { "description": "Meta description shared by settings pages." },
+  "settings.shell.skip": "Skip to content",
+  "@settings.shell.skip": { "description": "Skip link in the settings shell." },
+  "settings.shell.title": "Settings",
+  "@settings.shell.title": { "description": "Settings section name and navigation label." },
+  "settings.shell.apps": "Apps",
+  "@settings.shell.apps": { "description": "Link from settings to the reader's apps." },
+  "settings.shell.signOut": "Sign out",
+  "@settings.shell.signOut": { "description": "Button that signs the reader out." },
+  "settings.shell.organisation": "Organisation",
+  "@settings.shell.organisation": { "description": "Organisation picker label." },
+  "settings.shell.switch": "Switch",
+  "@settings.shell.switch": { "description": "Button that switches the active organisation." },
+  "settings.shell.noOrganisation": "No organisation",
+  "@settings.shell.noOrganisation": { "description": "Shown when the account belongs to no organisation." },
+  "settings.shell.yourRole": "Your role",
+  "@settings.shell.yourRole": { "description": "Label before the reader's role." },
+  "settings.ask.heading": "Ask an owner or admin:",
+  "@settings.ask.heading": { "description": "Heading before contacts who can manage the organisation." },
+  "settings.roles.owner": "Owner",
+  "@settings.roles.owner": { "description": "Owner role label." },
+  "settings.roles.admin": "Admin",
+  "@settings.roles.admin": { "description": "Admin role label." },
+  "settings.roles.member": "Member",
+  "@settings.roles.member": { "description": "Member role label." },
+  "settings.roles.viewer": "Viewer",
+  "@settings.roles.viewer": { "description": "Viewer role label." },
+  "settings.roles.none": "No access",
+  "@settings.roles.none": { "description": "Fallback label for an unknown role." },
+  "settings.roles.ownerBlurb": "Full control, including other owners. Every organisation keeps at least one.",
+  "@settings.roles.ownerBlurb": { "description": "Explanation of the owner role." },
+  "settings.roles.adminBlurb": "Manages members, invitations, API keys and the audit log. Cannot change owners.",
+  "@settings.roles.adminBlurb": { "description": "Explanation of the admin role." },
+  "settings.roles.memberBlurb": "Uses the console and the API, and can see who belongs to the organisation.",
+  "@settings.roles.memberBlurb": { "description": "Explanation of the member role." },
+  "settings.roles.viewerBlurb": "Read-only: can see the organisation and its members, and change nothing.",
+  "@settings.roles.viewerBlurb": { "description": "Explanation of the viewer role." },
+  "settings.overview.title": "Overview",
+  "@settings.overview.title": { "description": "Settings overview page title." },
+  "settings.overview.lede": "Your account, and where to change it.",
+  "@settings.overview.lede": { "description": "Overview introduction without an organisation." },
+  "settings.overview.ledeOrg": "Your account and {org}, and where to change them.",
+  "@settings.overview.ledeOrg": { "description": "Overview introduction with an organisation.", "placeholders": { "org": { "type": "text" } } },
+  "settings.overview.account": "Your account",
+  "@settings.overview.account": { "description": "Accessible heading for the account summary." },
+  "settings.overview.editProfile": "Edit profile",
+  "@settings.overview.editProfile": { "description": "Link to edit the profile." },
+  "settings.overview.access": "Your access to {org}",
+  "@settings.overview.access": { "description": "Heading for the reader's organisation access.", "placeholders": { "org": { "type": "text" } } },
+  "settings.overview.managedByAdmins": "Members, invitations, API keys and the audit log are managed by owners and admins.",
+  "@settings.overview.managedByAdmins": { "description": "Explanation shown to a member without management access." },
+  "settings.overview.membersSummary": "{members, plural, one {# person} other {# people}}{pending, plural, =0 {} one {, # invitation waiting to be accepted} other {, # invitations waiting to be accepted}}",
+  "@settings.overview.membersSummary": { "description": "Organisation member and pending invitation counts.", "placeholders": { "members": { "type": "integer" }, "pending": { "type": "integer" } } },
+  "settings.overview.keysManaged": "Created and revoked by owners and admins",
+  "@settings.overview.keysManaged": { "description": "API-key summary for a reader without management access." },
+  "settings.overview.activeKeys": "{count, plural, one {# active key} other {# active keys}}",
+  "@settings.overview.activeKeys": { "description": "Count of active API keys.", "placeholders": { "count": { "type": "integer" } } },
+  "settings.overview.keysUnknown": "Could not be counted just now",
+  "@settings.overview.keysUnknown": { "description": "Shown when active keys could not be counted." },
+  "settings.overview.auditManaged": "Every change to members, invitations and API keys",
+  "@settings.overview.auditManaged": { "description": "Audit-log overview for managers." },
+  "settings.overview.auditRestricted": "Visible to owners and admins",
+  "@settings.overview.auditRestricted": { "description": "Audit-log overview for non-managers." },
+  "settings.overview.noOrgTitle": "You are not in an organisation",
+  "@settings.overview.noOrgTitle": { "description": "Heading when the account belongs to no organisation." },
+  "settings.overview.noOrgBody": "Timlee keys, members and the audit log all belong to an organisation. Ask someone in yours to send you an invitation; the link in that email brings you back here.",
+  "@settings.overview.noOrgBody": { "description": "Explanation when the account belongs to no organisation." },
+  "settings.profile.title": "Profile",
+  "@settings.profile.title": { "description": "Profile settings page title." },
+  "settings.profile.nameTitle": "Name",
+  "@settings.profile.nameTitle": { "description": "Heading for display-name settings." },
+  "settings.profile.nameLabel": "Display name",
+  "@settings.profile.nameLabel": { "description": "Display-name input label." },
+  "settings.profile.nameHint": "Shown to your organisation and in the audit log. Leave it empty to show your email address instead.",
+  "@settings.profile.nameHint": { "description": "Display-name input hint." },
+  "settings.profile.save": "Save name",
+  "@settings.profile.save": { "description": "Button that saves the display name." },
+  "settings.profile.signedInAs": "Signed in as <b>{email}</b>. Your email address comes from the way you sign in, so it is changed there rather than here.",
+  "@settings.profile.signedInAs": { "description": "Explanation of the account email address.", "placeholders": { "email": { "type": "text" } } },
+  "settings.profile.nameControl": "Use letters, spaces and punctuation only.",
+  "@settings.profile.nameControl": { "description": "Validation error for control characters in a display name." },
+  "settings.profile.nameLong": "Use at most {max, plural, one {# character} other {# characters}} (fewer if your name uses accented or non-Latin letters).",
+  "@settings.profile.nameLong": { "description": "Validation error for a display name that is too long.", "placeholders": { "max": { "type": "integer" } } },
+  "settings.profile.saved": "Saved your name.",
+  "@settings.profile.saved": { "description": "Flash after saving a display name." },
+  "settings.profile.removed": "Removed your name. Timlee will show your email address instead.",
+  "@settings.profile.removed": { "description": "Flash after clearing a display name." },
+  "settings.security.providerEmail": "Email",
+  "@settings.security.providerEmail": { "description": "Label for email sign-in." },
+  "settings.security.providerUnknown": "Unknown",
+  "@settings.security.providerUnknown": { "description": "Fallback sign-in provider label." },
+  "settings.security.thatMethod": "that sign-in method",
+  "@settings.security.thatMethod": { "description": "Fallback reference to a sign-in method." },
+  "settings.security.onlyMethodError": "That is your only way to sign in, so it cannot be unlinked. Link another sign-in method first.",
+  "@settings.security.onlyMethodError": { "description": "Error when unlinking the only sign-in method." },
+  "settings.security.alreadyUnlinked": "{provider} was already unlinked from your account.",
+  "@settings.security.alreadyUnlinked": { "description": "Flash when a sign-in method is already unlinked.", "placeholders": { "provider": { "type": "text" } } },
+  "settings.security.unlinked": "Unlinked {provider}. It can no longer be used to sign in to this account.",
+  "@settings.security.unlinked": { "description": "Flash after unlinking a sign-in method.", "placeholders": { "provider": { "type": "text" } } },
+  "settings.keys.title": "API keys",
+  "@settings.keys.title": { "description": "API keys page title." },
+  "settings.keys.lede": "Keys identify your scripts to Timlee services, which verify each key with the control plane.",
+  "@settings.keys.lede": { "description": "API keys page introduction without an organisation." },
+  "settings.keys.ledeOrg": "Keys identify your scripts to Timlee services on behalf of {org}; each key is verified with the control plane.",
+  "@settings.keys.ledeOrg": { "description": "API keys page introduction with an organisation.", "placeholders": { "org": { "type": "text" } } },
+  "settings.keys.noOrg": "API keys belong to an organisation, and you are not in one yet. Ask someone in yours to invite you.",
+  "@settings.keys.noOrg": { "description": "Explanation when API keys have no organisation." },
+  "settings.keys.restricted": "Only owners and admins can see, create and revoke this organisation’s API keys.",
+  "@settings.keys.restricted": { "description": "Explanation for a reader without API-key access." },
+  "settings.keys.revealTitle": "Copy your new key now",
+  "@settings.keys.revealTitle": { "description": "Heading above a newly revealed API key." },
+  "settings.keys.revealBody": "This is the only time Timlee shows <b>{label}</b>. Timlee stores only a hash of it, so if it is lost the fix is a new key. Reloading or leaving this page hides it for good.",
+  "@settings.keys.revealBody": { "description": "Warning around a newly revealed API key.", "placeholders": { "label": { "type": "text" } } },
+  "settings.keys.revealLabel": "New API key",
+  "@settings.keys.revealLabel": { "description": "Accessible label for the new API-key secret." },
+  "settings.keys.revealUse": "Send it as <code>Authorization: Bearer</code> followed by the key.",
+  "@settings.keys.revealUse": { "description": "Instruction for using a new API key." },
+  "settings.keys.revealDone": "I've stored it",
+  "@settings.keys.revealDone": { "description": "Button that dismisses a revealed API key." },
+  "settings.keys.createTitle": "Create a key",
+  "@settings.keys.createTitle": { "description": "Heading for API-key creation." },
+  "settings.keys.label": "Label",
+  "@settings.keys.label": { "description": "API-key label field." },
+  "settings.keys.labelHint": "Name it after the app or environment that will use it, like “billing worker, production”.",
+  "@settings.keys.labelHint": { "description": "Hint for an API-key label." },
+  "settings.keys.create": "Create key",
+  "@settings.keys.create": { "description": "Button that creates an API key." },
+  "settings.keys.listTitle": "Keys",
+  "@settings.keys.listTitle": { "description": "Heading above the API-key list." },
+  "settings.keys.columnPrefix": "Prefix",
+  "@settings.keys.columnPrefix": { "description": "API-key prefix column label." },
+  "settings.keys.columnStatusActions": "Status and actions",
+  "@settings.keys.columnStatusActions": { "description": "Accessible label for the API-key status and actions column." },
+  "settings.keys.stateRevoked": "Revoked",
+  "@settings.keys.stateRevoked": { "description": "Revoked API-key state." },
+  "settings.keys.revokeAction": "Revoke",
+  "@settings.keys.revokeAction": { "description": "Action that starts API-key revocation." },
+  "settings.keys.revokeQuestion": "<b>Revoke {label}?</b> Requests that use it start failing within 30 seconds, and it cannot be turned back on.",
+  "@settings.keys.revokeQuestion": { "description": "API-key revocation confirmation.", "placeholders": { "label": { "type": "text" } } },
+  "settings.keys.revokeSubmit": "Revoke key",
+  "@settings.keys.revokeSubmit": { "description": "Button that revokes an API key." },
+  "settings.keys.revokeCancel": "Keep key",
+  "@settings.keys.revokeCancel": { "description": "Link that cancels API-key revocation." },
+  "settings.keys.emptyTitle": "No API keys yet",
+  "@settings.keys.emptyTitle": { "description": "Empty API-key list heading." },
+  "settings.keys.emptyBody": "Create a key above, then send it with each request.",
+  "@settings.keys.emptyBody": { "description": "Empty API-key list explanation." },
+  "settings.keys.loadSubject": "your API keys",
+  "@settings.keys.loadSubject": { "description": "Object named in an API-key load error." },
+  "settings.keys.labelMissing": "Give the key a label so you can recognise it later.",
+  "@settings.keys.labelMissing": { "description": "Validation error for a missing API-key label." },
+  "settings.keys.labelControl": "Use letters, numbers, spaces and punctuation only.",
+  "@settings.keys.labelControl": { "description": "Validation error for control characters in an API-key label." },
+  "settings.keys.labelLong": "Keep the label to {max, plural, one {# character} other {# characters}} or fewer.",
+  "@settings.keys.labelLong": { "description": "Validation error for an API-key label that is too long.", "placeholders": { "max": { "type": "integer" } } },
+  "settings.keys.createForbidden": "Only owners and admins can create API keys, and your role no longer allows it.",
+  "@settings.keys.createForbidden": { "description": "Error when the reader can no longer create API keys." },
+  "settings.keys.createUnshown": "Timlee created the key but could not show it to you, so it was revoked straight away. Try again.",
+  "@settings.keys.createUnshown": { "description": "Error when a new key secret could not be shown." },
+  "settings.keys.rotateRetired": "This key is revoked or expired, so it cannot be rotated. Create a new key instead.",
+  "@settings.keys.rotateRetired": { "description": "Error when a retired API key cannot be rotated." },
+  "settings.keys.alreadyRevoked": "{label, select, other {“{label}” was already revoked.}}",
+  "@settings.keys.alreadyRevoked": { "description": "Flash when an API key is already revoked.", "placeholders": { "label": { "type": "text" } } },
+  "settings.keys.revokeForbidden": "Only owners and admins can revoke API keys, and your role no longer allows it.",
+  "@settings.keys.revokeForbidden": { "description": "Error when the reader can no longer revoke API keys." },
+  "settings.keys.revoked": "Revoked “{label}”. Requests that use it fail within 30 seconds.",
+  "@settings.keys.revoked": { "description": "Flash after revoking an API key.", "placeholders": { "label": { "type": "text" } } },
+  "settings.members.title": "Members",
+  "@settings.members.title": { "description": "Members settings page title." },
+  "settings.members.lede": "People in your organisation, and what each of them can do.",
+  "@settings.members.lede": { "description": "Members page introduction without an organisation." },
+  "settings.members.ledeOrg": "People in {org}, and what each of them can do.",
+  "@settings.members.ledeOrg": { "description": "Members page introduction with an organisation.", "placeholders": { "org": { "type": "text" } } },
+  "settings.members.noOrg": "You are not in an organisation yet. When someone invites you, the link in their email brings you back here.",
+  "@settings.members.noOrg": { "description": "Explanation when the account belongs to no organisation." },
+  "settings.members.inviteTitle": "Invite someone",
+  "@settings.members.inviteTitle": { "description": "Heading for the invitation form." },
+  "settings.members.mailOffTitle": "Invitations cannot be sent from this server.",
+  "@settings.members.mailOffTitle": { "description": "Warning heading when mail is unavailable." },
+  "settings.members.mailOffBody": "Timlee delivers each invitation link by email, and no mail transport is configured. Ask whoever runs Timlee to set one up; until then nobody can be invited.",
+  "@settings.members.mailOffBody": { "description": "Warning body when mail is unavailable." },
+  "settings.members.invitationLegend": "Invitation",
+  "@settings.members.invitationLegend": { "description": "Accessible legend for the invitation form." },
+  "settings.members.emailLabel": "Email address",
+  "@settings.members.emailLabel": { "description": "Invitation email field label." },
+  "settings.members.emailHint": "They join by signing in with this exact address. The link works for 7 days.",
+  "@settings.members.emailHint": { "description": "Invitation email field hint." },
+  "settings.members.roleLabel": "Role",
+  "@settings.members.roleLabel": { "description": "Role field and column label." },
+  "settings.members.sendInvitation": "Send invitation",
+  "@settings.members.sendInvitation": { "description": "Button that sends an invitation." },
+  "settings.members.peopleTitle": "People",
+  "@settings.members.peopleTitle": { "description": "Heading above organisation members." },
+  "settings.members.restricted": "Only owners and admins can invite people, change roles or remove members.",
+  "@settings.members.restricted": { "description": "Explanation for a reader without member-management access." },
+  "settings.members.actions": "Actions",
+  "@settings.members.actions": { "description": "Accessible actions column label." },
+  "settings.members.you": "You",
+  "@settings.members.you": { "description": "Badge on the signed-in member." },
+  "settings.members.roleFor": "Role for {name}",
+  "@settings.members.roleFor": { "description": "Accessible role picker label.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.changeRole": "Change role",
+  "@settings.members.changeRole": { "description": "Button that changes a member's role." },
+  "settings.members.forName": "for {name}",
+  "@settings.members.forName": { "description": "Hidden person suffix on an action.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.soleOwnerSelf": "You are the only owner. Make someone else an owner before changing this.",
+  "@settings.members.soleOwnerSelf": { "description": "Explanation when the reader is the sole owner." },
+  "settings.members.soleOwnerOther": "{name} is the only owner. Make someone else an owner before changing this.",
+  "@settings.members.soleOwnerOther": { "description": "Explanation when another member is the sole owner.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.ownerOnly": "Only an owner can change an owner.",
+  "@settings.members.ownerOnly": { "description": "Explanation of who may change an owner's role." },
+  "settings.members.removeAction": "Remove",
+  "@settings.members.removeAction": { "description": "Action that opens member removal." },
+  "settings.members.removeTitle": "Remove {name}?",
+  "@settings.members.removeTitle": { "description": "Member-removal confirmation title.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.removeImpactUnknown": "They lose access to {org}, and every API key they created is revoked. Both take effect within 30 seconds. To bring them back, invite them again.",
+  "@settings.members.removeImpactUnknown": { "description": "Member-removal impact when keys could not be listed.", "placeholders": { "org": { "type": "text" } } },
+  "settings.members.removeMember": "Remove member",
+  "@settings.members.removeMember": { "description": "Button that removes a member without keys." },
+  "settings.members.pendingTitle": "Pending invitations",
+  "@settings.members.pendingTitle": { "description": "Heading above pending invitations." },
+  "settings.members.pendingCaption": "{count, plural, one {# invitation waiting to be accepted} other {# invitations waiting to be accepted}}",
+  "@settings.members.pendingCaption": { "description": "Count of pending invitations.", "placeholders": { "count": { "type": "integer" } } },
+  "settings.members.emailColumn": "Email",
+  "@settings.members.emailColumn": { "description": "Invitation email column label." },
+  "settings.members.invitedBy": "Invited by",
+  "@settings.members.invitedBy": { "description": "Invitation sender column label." },
+  "settings.members.expires": "Expires",
+  "@settings.members.expires": { "description": "Invitation expiry column label." },
+  "settings.members.revokeInvitationAction": "Revoke",
+  "@settings.members.revokeInvitationAction": { "description": "Action that opens invitation revocation." },
+  "settings.members.invitationFor": "invitation for {email}",
+  "@settings.members.invitationFor": { "description": "Hidden invitation recipient suffix.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.revokeInvitationTitle": "Revoke the invitation for {email}?",
+  "@settings.members.revokeInvitationTitle": { "description": "Invitation-revocation confirmation title.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.revokeInvitationBody": "The link in their email stops working. You can invite them again at any time.",
+  "@settings.members.revokeInvitationBody": { "description": "Invitation-revocation confirmation body." },
+  "settings.members.revokeInvitation": "Revoke invitation",
+  "@settings.members.revokeInvitation": { "description": "Button that revokes an invitation." },
+  "settings.members.loadSubject": "the member list",
+  "@settings.members.loadSubject": { "description": "Object named in a member-list load error." },
+  "settings.members.invitesLoadSubject": "pending invitations",
+  "@settings.members.invitesLoadSubject": { "description": "Object named in an invitation-list load error." },
+  "settings.members.formerMember": "A former member",
+  "@settings.members.formerMember": { "description": "Fallback name for someone who left the organisation." },
+  "settings.members.emailMissing": "Enter the email address to send the invitation to.",
+  "@settings.members.emailMissing": { "description": "Validation error for a missing invitation email." },
+  "settings.members.emailInvalid": "Enter an email address like name@company.com.",
+  "@settings.members.emailInvalid": { "description": "Validation error for an invalid invitation email." },
+  "settings.members.roleMissing": "Choose the role they will join with.",
+  "@settings.members.roleMissing": { "description": "Validation error for a missing invitation role." },
+  "settings.members.invited": "Invitation sent to {email}. The link works for 7 days.",
+  "@settings.members.invited": { "description": "Flash after sending an invitation.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.resent": "Sent {email} a new invitation link. The previous link no longer works.",
+  "@settings.members.resent": { "description": "Flash after resending an invitation.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.mailUnavailable": "Invitations are sent by email, and this server has no mail configured, so {email} was not invited. Ask whoever runs Timlee to set up mail, then try again.",
+  "@settings.members.mailUnavailable": { "description": "Error when invitation mail is not configured.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.mailFailed": "The invitation email to {email} could not be sent, so nothing changed. Try again in a moment.",
+  "@settings.members.mailFailed": { "description": "Error when one invitation email failed.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.thatAddress": "that address",
+  "@settings.members.thatAddress": { "description": "Fallback reference to an invitation address." },
+  "settings.members.invitationGone": "The invitation for {email} had already been accepted, revoked or replaced.",
+  "@settings.members.invitationGone": { "description": "Flash when an invitation no longer exists.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.invitationRevoked": "Revoked the invitation for {email}. Its link no longer works.",
+  "@settings.members.invitationRevoked": { "description": "Flash after revoking an invitation.", "placeholders": { "email": { "type": "text" } } },
+  "settings.members.thatMember": "That member",
+  "@settings.members.thatMember": { "description": "Fallback reference to a member." },
+  "settings.members.roleForInvalid": "Choose one of the listed roles for {name}.",
+  "@settings.members.roleForInvalid": { "description": "Error when a role choice is invalid.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.lastOwner": "An organisation needs at least one owner — promote someone else first.",
+  "@settings.members.lastOwner": { "description": "Error when an action would remove the final owner." },
+  "settings.members.noLongerMember": "{name} is no longer a member of this organisation.",
+  "@settings.members.noLongerMember": { "description": "Flash when a member no longer exists.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.changeHigherRole": "Could not change {name}’s role. You cannot change a member who holds a higher role than your own.",
+  "@settings.members.changeHigherRole": { "description": "Error when changing a stronger member's role.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.roleChangedSelf": "Changed your role to {role}.",
+  "@settings.members.roleChangedSelf": { "description": "Flash after changing the reader's role.", "placeholders": { "role": { "type": "text" } } },
+  "settings.members.roleChangedOther": "Changed {name}’s role to {role}.",
+  "@settings.members.roleChangedOther": { "description": "Flash after changing another member's role.", "placeholders": { "name": { "type": "text" }, "role": { "type": "text" } } },
+  "settings.members.removeHigherRole": "Could not remove {name}. You cannot change a member who holds a higher role than your own.",
+  "@settings.members.removeHigherRole": { "description": "Error when removing a stronger member.", "placeholders": { "name": { "type": "text" } } },
+  "settings.members.removed": "{keys, plural, =0 {Removed {name} from the organisation.} one {Removed {name} from the organisation. The # API key they created was revoked and stops working within 30 seconds.} other {Removed {name} from the organisation. The # API keys they created were revoked and stop working within 30 seconds.}}",
+  "@settings.members.removed": { "description": "Flash after removing a member.", "placeholders": { "name": { "type": "text" }, "keys": { "type": "integer" } } },
+  "settings.organisation.switchForbidden": "You are no longer a member of that organisation, so it could not be opened.",
+  "@settings.organisation.switchForbidden": { "description": "Error when switching to an organisation is forbidden." },
+  "settings.organisation.switched": "Switched organisation.",
+  "@settings.organisation.switched": { "description": "Flash after switching organisation when its name is unavailable." },
+  "settings.organisation.switchedTo": "Switched to {name}.",
+  "@settings.organisation.switchedTo": { "description": "Flash after switching organisation.", "placeholders": { "name": { "type": "text" } } },
+  "settings.audit.title": "Audit log",
+  "@settings.audit.title": { "description": "Audit-log page title." },
+  "settings.audit.lede": "Changes to your organisation’s members, invitations and API keys, newest first.",
+  "@settings.audit.lede": { "description": "Audit-log introduction without an organisation." },
+  "settings.audit.ledeOrg": "Changes to {org}’s members, invitations and API keys, newest first.",
+  "@settings.audit.ledeOrg": { "description": "Audit-log introduction with an organisation.", "placeholders": { "org": { "type": "text" } } },
+  "settings.audit.noOrg": "The audit log belongs to an organisation, and you are not in one yet.",
+  "@settings.audit.noOrg": { "description": "Explanation when the audit log has no organisation." },
+  "settings.audit.restricted": "Only owners and admins can read this organisation’s audit log.",
+  "@settings.audit.restricted": { "description": "Explanation for a reader without audit-log access." },
+  "settings.audit.events": "Events",
+  "@settings.audit.events": { "description": "Accessible heading above audit events." },
+  "settings.audit.filterLabel": "Filter the audit log",
+  "@settings.audit.filterLabel": { "description": "Accessible label for audit-log filters." },
+  "settings.audit.activity": "Activity",
+  "@settings.audit.activity": { "description": "Audit category filter label." },
+  "settings.audit.doneBy": "Done by",
+  "@settings.audit.doneBy": { "description": "Audit actor filter label." },
+  "settings.audit.applyFilters": "Apply filters",
+  "@settings.audit.applyFilters": { "description": "Button that applies audit filters." },
+  "settings.audit.clearFilters": "Clear filters",
+  "@settings.audit.clearFilters": { "description": "Link that clears audit filters." },
+  "settings.audit.when": "When",
+  "@settings.audit.when": { "description": "Audit time column label." },
+  "settings.audit.actor": "Actor",
+  "@settings.audit.actor": { "description": "Audit actor column label." },
+  "settings.audit.action": "Action",
+  "@settings.audit.action": { "description": "Audit action column label." },
+  "settings.audit.target": "Target",
+  "@settings.audit.target": { "description": "Audit target column label." },
+  "settings.audit.pagesLabel": "Audit log pages",
+  "@settings.audit.pagesLabel": { "description": "Accessible label for audit pagination." },
+  "settings.audit.filteredEmptyTitle": "No events match these filters",
+  "@settings.audit.filteredEmptyTitle": { "description": "Heading when no audit events match." },
+  "settings.audit.filteredEmptyBody": "Try another activity or person, or clear the filters to see everything.",
+  "@settings.audit.filteredEmptyBody": { "description": "Explanation when no audit events match." },
+  "settings.audit.emptyTitle": "Nothing has been recorded yet",
+  "@settings.audit.emptyTitle": { "description": "Heading when the audit log is empty." },
+  "settings.audit.emptyBody": "Inviting someone, changing a role or creating an API key adds the first entry here.",
+  "@settings.audit.emptyBody": { "description": "Explanation when the audit log is empty." },
+  "settings.audit.category.all": "All activity",
+  "@settings.audit.category.all": { "description": "Audit category for all activity." },
+  "settings.audit.category.keys": "API keys",
+  "@settings.audit.category.keys": { "description": "Audit category for API keys." },
+  "settings.audit.category.members": "Members and roles",
+  "@settings.audit.category.members": { "description": "Audit category for members and roles." },
+  "settings.audit.category.invitations": "Invitations",
+  "@settings.audit.category.invitations": { "description": "Audit category for invitations." },
+  "settings.audit.category.organisation": "Organisation",
+  "@settings.audit.category.organisation": { "description": "Audit category for organisation changes." },
+  "settings.audit.loadSubject": "the audit log",
+  "@settings.audit.loadSubject": { "description": "Object named in an audit-log load error." },
+  "settings.audit.anyone": "Anyone",
+  "@settings.audit.anyone": { "description": "Audit actor filter for anyone." },
+  "settings.audit.system": "System",
+  "@settings.audit.system": { "description": "Actor name for a system event." },
+  "settings.audit.earlierInvitation": "An earlier invitation",
+  "@settings.audit.earlierInvitation": { "description": "Fallback target for an older invitation event." },
+  "settings.audit.action.keyCreated": "Created an API key",
+  "@settings.audit.action.keyCreated": { "description": "Description of an API-key creation event." },
+  "settings.audit.action.keyRevoked": "Revoked an API key",
+  "@settings.audit.action.keyRevoked": { "description": "Description of an API-key revocation event." },
+  "settings.audit.action.memberInvited": "Invited a member",
+  "@settings.audit.action.memberInvited": { "description": "Description of a member invitation event." },
+  "settings.audit.action.invitationRevoked": "Revoked an invitation",
+  "@settings.audit.action.invitationRevoked": { "description": "Description of an invitation revocation event." },
+  "settings.audit.action.invitationAccepted": "Accepted an invitation",
+  "@settings.audit.action.invitationAccepted": { "description": "Description of an invitation acceptance event." },
+  "settings.audit.action.roleChanged": "Changed a role",
+  "@settings.audit.action.roleChanged": { "description": "Description of a role-change event." },
+  "settings.audit.action.memberRemoved": "Removed a member",
+  "@settings.audit.action.memberRemoved": { "description": "Description of a member-removal event." },
+  "settings.audit.action.orgCreated": "Created the organisation",
+  "@settings.audit.action.orgCreated": { "description": "Description of an organisation creation event." },
+  "settings.audit.detail.asRole": "As {role}",
+  "@settings.audit.detail.asRole": { "description": "Role detail on an invitation event.", "placeholders": { "role": { "type": "text" } } },
+  "settings.audit.detail.joinedAs": "Joined as {role}",
+  "@settings.audit.detail.joinedAs": { "description": "Role detail on an accepted invitation.", "placeholders": { "role": { "type": "text" } } },
+  "settings.audit.detail.roleChanged": "{from} → {to}",
+  "@settings.audit.detail.roleChanged": { "description": "Old and new roles on a role-change event.", "placeholders": { "from": { "type": "text" }, "to": { "type": "text" } } },
+  "settings.audit.detail.wasRole": "Was {role}",
+  "@settings.audit.detail.wasRole": { "description": "Former role on a member-removal event.", "placeholders": { "role": { "type": "text" } } },
+  "settings.audit.detail.keysRevoked": "{count, plural, one {# API key revoked} other {# API keys revoked}}",
+  "@settings.audit.detail.keysRevoked": { "description": "Keys revoked by a member-removal event.", "placeholders": { "count": { "type": "integer" } } },
+  "settings.audit.detail.separator": " · ",
+  "@settings.audit.detail.separator": { "description": "Separator between audit-event details." },
+  "settings.audit.unknownTarget": "—",
+  "@settings.audit.unknownTarget": { "description": "Placeholder when an audit target is unknown." }
+}

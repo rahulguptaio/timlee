@@ -1,0 +1,131 @@
+timlee-tabs {
+  --tabs-border: var(--ts-border);
+  --tab-fg: var(--ts-text-2);
+  --tab-fg-selected: var(--ts-text-heading);
+  --tab-indicator: var(--ts-primary);
+  --tab-padding-inline: var(--ts-space-3);
+  --tab-gap: var(--ts-space-1);
+
+  display: block;
+}
+
+timlee-tabs [data-tablist] {
+  display: flex;
+  gap: var(--tab-gap);
+  border-block-end: var(--mc-border-width) solid var(--tabs-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+timlee-tabs [data-tablist]::-webkit-scrollbar {
+  display: none;
+}
+
+timlee-tabs [data-tablist] > :where(a, button) {
+  --tab-item-fg: var(--tab-fg);
+  --tab-item-border: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mc-space-2);
+  /* 2.5rem keeps the target well past SC 2.5.8's 24px floor. */
+  min-block-size: var(--mc-space-10);
+  padding-inline: var(--tab-padding-inline);
+  border: 0;
+  border-block-end: var(--mc-focus-width) solid var(--tab-item-border);
+  /* Overlaps the tablist's own rule, so the selected marker sits on it. */
+  margin-block-end: calc(var(--mc-border-width) * -1);
+  background: none;
+  color: var(--tab-item-fg);
+  font-family: var(--mc-font-sans);
+  font-size: var(--mc-text-base);
+  font-weight: 600;
+  line-height: var(--mc-leading-tight);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--mc-duration-fast) var(--mc-ease),
+    border-color var(--mc-duration-fast) var(--mc-ease);
+}
+
+timlee-tabs [data-tablist] > :where(a, button):hover {
+  --tab-item-fg: var(--tab-fg-selected);
+}
+
+timlee-tabs [data-tablist] > :where(a, button):focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: calc(var(--mc-focus-offset) * -1);
+  border-radius: var(--mc-radius-sm);
+}
+
+/* "aria-selected" is the single source of truth, so the visual state can
+   never disagree with what assistive technology is told. */
+timlee-tabs [data-tablist] > [aria-selected="true"],
+timlee-tabs [data-tablist] > [aria-current="page"] {
+  --tab-item-fg: var(--tab-fg-selected);
+  --tab-item-border: var(--tab-indicator);
+}
+
+timlee-tabs [data-tablist] > [aria-disabled="true"],
+timlee-tabs [data-tablist] > :disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+timlee-tabs [data-tabpanel] {
+  padding-block-start: var(--mc-space-4);
+}
+
+timlee-tabs [data-tabpanel]:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+/* --- Vertical ----------------------------------------------------------- */
+
+timlee-tabs[orientation="vertical"] {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) 1fr;
+  gap: var(--mc-space-5);
+}
+
+timlee-tabs[orientation="vertical"] [data-tablist] {
+  flex-direction: column;
+  border-block-end: 0;
+  border-inline-end: var(--mc-border-width) solid var(--tabs-border);
+  overflow-x: visible;
+}
+
+timlee-tabs[orientation="vertical"] [data-tablist] > :where(a, button) {
+  justify-content: flex-start;
+  border-block-end: 0;
+  border-inline-end: var(--mc-focus-width) solid var(--tab-item-border);
+  margin-block-end: 0;
+  margin-inline-end: calc(var(--mc-border-width) * -1);
+  padding-block: var(--mc-space-2);
+}
+
+timlee-tabs[orientation="vertical"] [data-tabpanel] {
+  padding-block-start: 0;
+}
+
+/* Forced colours give every border one system colour, so an unselected tab's
+   transparent indicator would look exactly like the selected tab's. Only the
+   indicator side has a width, so setting all four colours is safe. */
+@media (forced-colors: active) {
+  timlee-tabs [data-tablist] > :where(a, button),
+  timlee-tabs[orientation="vertical"] [data-tablist] > :where(a, button) {
+    border-color: Canvas;
+    /* A colour mid-transition is not a system colour, so it would be forced
+       to CanvasText and flash both indicators on every change. */
+    transition: none;
+  }
+
+  timlee-tabs [data-tablist] > :is([aria-selected="true"], [aria-current="page"]),
+  timlee-tabs[orientation="vertical"]
+    [data-tablist]
+    > :is([aria-selected="true"], [aria-current="page"]) {
+    border-color: Highlight;
+  }
+}

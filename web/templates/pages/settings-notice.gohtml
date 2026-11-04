@@ -1,0 +1,12 @@
+{{- /*
+  A standalone message: the control plane is not answering, or a form could
+  not be verified. Says what happened and offers the one way forward.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+<section class="st-card">
+  <h1 id="notice-title">{{ $d.Title }}</h1>
+  <p>{{ $d.Body }}</p>
+  <timlee-button variant="primary"><a href="{{ $d.Href }}">{{ $d.Label }}</a></timlee-button>
+</section>
+{{ end }}

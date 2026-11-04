@@ -1,0 +1,35 @@
+{{- /*
+  auth — the sign-in shell. No marketing nav, no indexing, and a layout that
+  stays usable when the identity providers are the only thing on the page.
+*/ -}}
+{{ define "auth" -}}
+<!doctype html>
+<html lang="{{ .L.Locale.Lang }}" dir="{{ .L.Locale.Dir }}"{{ with .Theme }} data-theme="{{ . }}"{{ end }}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {{- template "head-links" . }}
+    {{- template "theme-meta" . }}
+    {{ with .Canonical }}<link rel="canonical" href="{{ . }}" />{{ end }}
+    {{ with .Robots }}<meta name="robots" content="{{ . }}" />{{ end }}
+    <title>{{ .Title }}</title>
+    <meta name="description" content="{{ .Description }}" />
+    {{ template "styles" . }}
+    {{- template "speculation-rules" . }}
+  </head>
+
+  <body{{ with .BodyClass }} class="{{ . }}"{{ end }}>
+    <a class="skip-link" href="#main">{{ t .L "common.skip.content" }}</a>
+
+    <header class="auth-top">
+      {{ template "logo" (dict "Href" (href .L "/") "Class" "logo" "L" .L) }}
+      {{ template "theme-toggle" (dict "Page" . "Class" "auth-theme") }}
+    </header>
+
+    <main class="auth-main" id="main">
+      {{ template "content" . }}
+    </main>
+    {{ template "scripts" . }}
+  </body>
+</html>
+{{ end }}

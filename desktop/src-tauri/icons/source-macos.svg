@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- The brand mark (source.svg) on Apple's macOS icon grid: an 824 pt body
+       centred on the 1024 pt canvas, so the Dock shows it at the same size as
+       every other app. Windows and Linux icons use source.svg full bleed. -->
+  <g transform="translate(100 100) scale(25.75)">
+    <rect width="32" height="32" rx="7" fill="#E8461E"/>
+    <path d="M8 9h16v3h-6.5v11h-3V12H8z" fill="#FFFFFF"/>
+  </g>
+</svg>

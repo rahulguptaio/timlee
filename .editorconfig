@@ -1,0 +1,32 @@
+# Read by editors, Biome and shfmt. Sections encode the conventions already in
+# the tree.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+# shfmt-only (other tools ignore it); here so extensionless scripts get it too.
+switch_case_indent = true
+
+[*.{yml,yaml,json,jsonc,md,ts,js,mjs,cjs,css,html,sql,toml}]
+indent_style = space
+indent_size = 2
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[{*.go,go.mod,go.work}]
+indent_style = tab
+
+# Two trailing spaces are a Markdown hard line break.
+[*.md]
+trim_trailing_whitespace = false
+
+# Shell, read by shfmt: two spaces. Extensionless scripts get shfmt's
+# default, tabs.
+[*.sh]
+indent_style = space
+indent_size = 2

@@ -1,0 +1,145 @@
+timlee-breadcrumb {
+  --crumb-fg: var(--ts-text-3);
+  --crumb-fg-current: var(--ts-text-1);
+  --crumb-separator: var(--ts-border);
+
+  display: block;
+  font-size: var(--mc-text-sm);
+}
+
+timlee-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mc-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+timlee-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mc-space-1);
+}
+
+/* Decorative, and therefore not in the accessibility tree. */
+timlee-breadcrumb li + li::before {
+  content: "/";
+  color: var(--crumb-separator);
+  user-select: none;
+}
+
+timlee-breadcrumb a {
+  --crumb-link-fg: var(--crumb-fg);
+
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--mc-space-7);
+  padding-inline: var(--mc-space-1);
+  border-radius: var(--mc-radius-sm);
+  color: var(--crumb-link-fg);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+timlee-breadcrumb a:hover {
+  --crumb-link-fg: var(--crumb-fg-current);
+  text-decoration: underline;
+  text-underline-offset: var(--mc-focus-offset);
+}
+
+timlee-breadcrumb a:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+timlee-breadcrumb [aria-current="page"] {
+  color: var(--crumb-fg-current);
+  font-weight: 600;
+}
+
+/* --- Pagination --------------------------------------------------------- */
+
+timlee-pagination {
+  --page-fg: var(--ts-text-2);
+  --page-bg: transparent;
+  --page-border: transparent;
+  --page-size: calc(var(--ts-space-8) + var(--ts-space-1));
+
+  display: block;
+}
+
+timlee-pagination nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mc-space-1);
+}
+
+timlee-pagination :where(a, button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Square and at least 36px, well past SC 2.5.8's 24px floor. */
+  min-inline-size: var(--page-size);
+  min-block-size: var(--page-size);
+  padding-inline: var(--mc-space-2);
+  border: var(--mc-border-width) solid var(--page-border);
+  border-radius: var(--mc-radius-md);
+  background: var(--page-bg);
+  color: var(--page-fg);
+  font-family: var(--mc-font-sans);
+  font-size: var(--mc-text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--mc-duration-fast) var(--mc-ease),
+    color var(--mc-duration-fast) var(--mc-ease);
+}
+
+timlee-pagination :where(a, button):hover {
+  --page-bg: var(--ts-surface-hover);
+  --page-fg: var(--ts-text-1);
+}
+
+timlee-pagination :where(a, button):focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+timlee-pagination [aria-current="page"] {
+  --page-bg: var(--ts-primary);
+  --page-fg: var(--ts-primary-foreground);
+  --page-border: var(--ts-primary);
+}
+
+timlee-pagination [aria-disabled="true"],
+timlee-pagination :disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+timlee-pagination [data-ellipsis] {
+  padding-inline: var(--mc-space-1);
+  color: var(--mc-text-3);
+  user-select: none;
+}
+
+/* Forced colours paint the current page's fill Canvas and every border one
+   colour, which leaves it looking like any other page: mark it the way the
+   system marks a selection. Without forced-color-adjust the text would sit on
+   a Canvas backplate, invisible in HighlightText, so every colour here is a
+   system colour set by hand, the focus ring included. */
+@media (forced-colors: active) {
+  timlee-pagination [aria-current="page"] {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+    outline-color: CanvasText;
+    transition: none;
+  }
+}

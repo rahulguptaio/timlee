@@ -1,0 +1,18 @@
+{
+  "@@locale": "en",
+  "@@context": "Landing page and its metadata.",
+
+  "marketing.meta.title": "Timlee — describe an app, get a working Svelte app",
+  "@marketing.meta.title": {"description": "Document and social title of the landing page."},
+  "marketing.meta.description": "Timlee turns a written prompt into a Svelte app built on a shared design system that you can preview, edit and theme.",
+  "@marketing.meta.description": {"description": "Search and social description of the landing page."},
+
+  "marketing.hero.title": "Describe an app. Timlee builds it.",
+  "@marketing.hero.title": {"description": "Main heading of the landing page."},
+  "marketing.hero.lede": "Write what you want in plain language. Timlee turns each prompt into a Svelte app built on a shared design system, so every app you make starts consistent and accessible. Preview it as it is built, keep editing it with follow-up prompts, and change its theme without rewriting it.",
+  "@marketing.hero.lede": {"description": "Paragraph under the landing page heading explaining what Timlee does."},
+  "marketing.action.openApps": "Open your apps",
+  "@marketing.action.openApps": {"description": "Primary landing-page action for a signed-in reader."},
+  "marketing.action.signIn": "Sign in to start building",
+  "@marketing.action.signIn": {"description": "Primary landing-page action for a signed-out reader."}
+}

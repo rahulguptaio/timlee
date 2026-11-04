@@ -1,0 +1,45 @@
+/* =============================================================================
+   locale.css — the suggestion banner (partials/locale-banner.gohtml).
+
+   The language switcher is one more footer group and needs nothing of its
+   own. The banner opens main: a sentence, then its two buttons beside it while
+   they fit and under it when they do not.
+   ========================================================================== */
+
+.locale-banner {
+  padding-block: var(--ts-space-4);
+}
+
+/* In the docs shell it lines up with the page under it (docs.css). */
+.docs-main > .locale-banner {
+  padding-inline: var(--ts-space-4);
+}
+
+@media (min-width: 48rem) {
+  .docs-main > .locale-banner {
+    padding-inline: var(--ts-space-8);
+  }
+}
+
+@media (min-width: 80rem) {
+  .docs-main > .locale-banner {
+    padding-inline: var(--ts-space-12);
+  }
+}
+
+.locale-banner form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-2) var(--ts-space-4);
+}
+
+.locale-banner p {
+  flex: 1 1 16rem;
+}
+
+.locale-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-2);
+}

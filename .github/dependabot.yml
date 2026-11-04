@@ -1,0 +1,75 @@
+# Weekly, grouped version updates.
+# Security updates are not grouped and skip the cooldown, so fixes still arrive
+# as soon as an advisory is published. The 7-day cooldown keeps a hijacked
+# release out of the tree long enough for the ecosystem to catch it.
+version: 2
+updates:
+  # The Go module behind the shipped binaries.
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      go-modules:
+        update-types: [minor, patch]
+        patterns: ["*"]
+
+  # Pinned developer tools (tools/<area>/go.mod): scanners and linters only
+  # improve with updates, and one PR a week is easy to review.
+  - package-ecosystem: gomod
+    directories: ["/tools/*"]
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      go-tools:
+        patterns: ["*"]
+
+  # pnpm-lock.yaml: frontend build and test tooling, all devDependencies.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # Released in lockstep: mixed versions break, majors included.
+      vitest-and-playwright:
+        patterns: ["vitest", "@vitest/*", "playwright", "@playwright/test"]
+      dev-tooling:
+        update-types: [minor, patch]
+        patterns: ["*"]
+
+  # Workflows.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      github-actions:
+        patterns: ["*"]

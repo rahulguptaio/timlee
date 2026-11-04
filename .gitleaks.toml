@@ -1,0 +1,51 @@
+# Secret scanning for Timlee: gitleaks dir --config .gitleaks.toml .
+#
+# Every default rule stays on and scans every path. Two rules are added for
+# credentials only this project mints or names.
+#
+# Allowlists match exact secret VALUES that are public by design, never paths:
+# a path entry would also hide every real secret later pasted into that file.
+# The check script ignores inline `gitleaks:allow` comments, so exceptions are
+# reviewed here. A real secret is never allowlisted: rotate it, then record the
+# finding's fingerprint in .gitleaksignore (docs/checks/security.md).
+
+title = "Timlee"
+
+[extend]
+useDefault = true
+
+# NewAPIKey (internal/store/ids.go) mints "mk_live_" + base64url(24 bytes).
+# No default rule knows the prefix, so a pasted key outside an Authorization
+# header or a key=value pair would otherwise go unnoticed.
+[[rules]]
+id = "timlee-api-key"
+description = "Timlee data-plane API key"
+regex = '''mk_live_[A-Za-z0-9_-]{24,}'''
+entropy = 3.5
+keywords = ["mk_live_"]
+
+# A literal assigned to one of the shared secrets in a config, deployment or
+# documentation file. The generic rule needs entropy >= 3.5, so a hand-typed
+# value such as "staging-token-2026" passes it. Scoped by `path` to the files
+# where such a line configures a real deployment; source and test files are
+# still covered by every default rule.
+[[rules]]
+id = "timlee-env-secret"
+description = "Literal value for a Timlee shared secret in a config or doc file"
+path = '''(?i)(?:^|/)(?:\.env[^/]*|[^/]*\.(?:env|ya?ml|toml|ini|conf|cfg|properties|json|sh|bash|zsh|ps1|bicep|bicepparam|tf|tfvars|hcl|service|md|txt)|(?:Docker|Container)file[^/]*)$'''
+regex = '''\b[A-Z0-9_]*(?:INTERNAL_TOKEN|UPSTREAM_TOKEN|SESSION_SECRET|CSRF_SECRET|CLIENT_SECRET)["']?[ \t]*[=:][ \t]*["'`]?([A-Za-z0-9][A-Za-z0-9_~+/=-]{7,})(?:["'`\s,;)}]|$)'''
+secretGroup = 1
+entropy = 3.0
+keywords = ["internal_token", "upstream_token", "session_secret", "csrf_secret", "client_secret"]
+
+# The development defaults in internal/config/config.go. They are published in
+# the repository and production refuses to start while either is configured.
+[[allowlists]]
+description = "Documented development defaults"
+regexes = ['''^dev-internal-token$''', '''^dev-session-secret-change-me$''']
+
+# Test vectors, e.g. "session-secret-for-tests-0123456789abcdef" in
+# cmd/timlee-auth/main_test.go. The sequential-hex suffix is the marker.
+[[allowlists]]
+description = "Test vectors ending in -for-tests-0123456789abcdef"
+regexes = ['''^[a-z]+(?:-[a-z]+)*-for-tests-0123456789abcdef$''']

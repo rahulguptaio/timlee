@@ -1,0 +1,40 @@
+# Timlee
+
+> Website where signed-in, allowlisted users describe an app and the GitHub
+> Copilot CLI builds it as a Svelte app in a shared design system. Go
+> server-rendered site, separate auth service, Tauri desktop shell.
+
+## Start here
+
+- [Repository README](README.md)
+- [Agent guide](AGENTS.md)
+- [Documentation index](docs/README.md)
+- [Status](docs/STATUS.md)
+
+## Architecture
+
+- `cmd/timlee-web`: website (landing, sign-in, settings, apps workspace, preview server); `server.go` routes, `apps.go`, `preview.go`
+- `cmd/timlee-auth` + `internal/authsvc` + `internal/store`: sessions, OAuth, orgs, API keys, prompt allowlist, SQLite
+- `cmd/timlee-dev` + `internal/devstack`: local orchestrator
+- `cmd/timlee-build` + `internal/assets`: asset pipeline and manifest
+- `internal/render`, `web/templates`: server rendering
+- `web/components`: light-DOM Web Components; `web/assets`: CSS/TS entry points
+- `web/locales`, `internal/i18n`: ARB catalogs and locale routing
+- `internal/appfactory`: creates apps, runs the Copilot CLI per prompt, enforces the app boundary, builds with Bazel, publishes previews, commits to the workspace repo
+- `desktop`: Tauri 2 shell
+- `workspace`: Bazel monorepo of generated apps (its own git repo; `workspace/AGENTS.md` are the rules Copilot follows)
+
+## Development
+
+```sh
+go run ./cmd/timlee-dev        # web :5173, auth :8788, both on 127.0.0.1
+go build ./... && go vet ./... && go test ./...
+corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test
+```
+
+## Constraints
+
+- Prompts only from accounts on `TIMLEE_ALLOWED_EMAILS` (empty = nobody).
+- Pages must work without JavaScript; components stay in light DOM.
+- English only; pseudo-locales are test-only.
+- No repository-wide license has been declared.

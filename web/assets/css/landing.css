@@ -1,0 +1,465 @@
+/* =============================================================================
+   landing.css: the public site's chrome (header, menus, footer) and the
+   landing and error pages.
+
+   Semantic --ts-* tokens only. Hairlines use the `thin` keyword because the
+   token set has no border-width step yet. A rule that moves something states
+   its reduced-motion form beside it, as base.css asks.
+   ========================================================================== */
+
+/* --- Night ----------------------------------------------------------------
+   The header, the hero and the sign-in band stay night in both
+   themes. The flipping roles cannot be used there, so these local roles are
+   derived from the permanently dark tokens once and read everywhere a
+   surface is night. */
+
+.nav,
+.hero,
+.auth-top {
+  --night: var(--ts-brand-night);
+  --night-ink: var(--ts-on-dark-text);
+  --night-ink-2: color-mix(in oklab, var(--ts-on-dark-text) 74%, var(--ts-brand-night));
+  --night-line: var(--ts-on-dark-border);
+  --night-line-strong: var(--ts-on-dark-border-hover);
+  --night-wash: var(--ts-on-dark-wash);
+  --night-teal: color-mix(in oklab, var(--ts-primary) 45%, var(--ts-on-dark-text));
+}
+
+:is(.nav, .hero, .auth-top) :focus-visible {
+  outline-color: var(--night-ink);
+}
+
+:is(.nav, .hero, .auth-top) :is(timlee-button, timlee-icon-button) {
+  --button-ring: var(--night-ink);
+}
+
+:is(.nav, .hero, .auth-top) timlee-button[variant="ghost"],
+:is(.nav, .hero, .auth-top) timlee-icon-button {
+  --button-fg: var(--night-ink-2);
+}
+
+:is(.nav, .hero, .auth-top) timlee-button[variant="secondary"] {
+  --button-bg: transparent;
+  --button-fg: var(--night-ink);
+  --button-border: var(--night-line-strong);
+  --button-shadow: none;
+}
+
+:is(.nav, .hero, .auth-top)
+  :is(
+    timlee-button[variant="ghost"],
+    timlee-button[variant="secondary"],
+    timlee-icon-button
+  ):hover {
+  --button-bg: var(--night-wash);
+  --button-fg: var(--night-ink);
+}
+
+/* --- Header ---------------------------------------------------------------- */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--ts-z-sticky);
+  background: var(--night);
+  color: var(--night-ink);
+  border-block-end: thin solid var(--night-line);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--ts-space-8);
+  min-block-size: var(--ts-space-16);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ts-space-2-5);
+  min-block-size: var(--ts-space-10);
+  color: inherit;
+  font-size: var(--ts-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--ts-tracking-tight);
+}
+
+.logo svg {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  flex: none;
+}
+
+.logo rect {
+  fill: var(--ts-primary);
+}
+
+.logo path {
+  fill: var(--ts-primary-foreground);
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--ts-space-1);
+}
+
+.nav-links a {
+  padding: var(--ts-space-2) var(--ts-space-2-5);
+  border-radius: var(--ts-radius);
+  color: var(--night-ink-2);
+  font-size: var(--ts-text-md);
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: underline transparent;
+  text-decoration-thickness: 0.125em;
+  text-underline-offset: 0.5em;
+  transition:
+    color var(--ts-duration-fast) var(--ts-ease-standard),
+    text-decoration-color var(--ts-duration-fast) var(--ts-ease-standard);
+}
+
+.nav-links a:hover {
+  color: var(--night-ink);
+}
+
+/* The page being read, marked by the server. */
+.nav-links a[aria-current] {
+  color: var(--night-ink);
+  text-decoration-color: var(--ts-primary);
+}
+
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--ts-space-2);
+  margin-inline-start: auto;
+}
+
+.nav-burger {
+  display: none;
+}
+
+.nav-burger .i-close,
+.nav:has(.nav-menu:popover-open) .nav-burger .i-open {
+  display: none;
+}
+
+.nav:has(.nav-menu:popover-open) .nav-burger .i-close {
+  display: block;
+}
+
+/* --- Menus: popovers, so they open, close and restore focus without script. */
+
+.nav-menu,
+.account-panel {
+  margin: 0;
+  padding: var(--ts-space-2);
+  border: thin solid var(--night-line);
+  background: var(--night);
+  color: var(--night-ink);
+  box-shadow: var(--ts-elevation-4);
+}
+
+.nav-menu:popover-open {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Phones: a sheet under the header. */
+.nav-menu {
+  inset: var(--ts-space-16) 0 auto;
+  inline-size: auto;
+  max-block-size: calc(100dvh - var(--ts-space-16));
+  padding-inline: var(--ts-space-6);
+  padding-block-end: var(--ts-space-6);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-inline: 0;
+  border-block-start: 0;
+}
+
+.nav-menu > a {
+  padding-block: var(--ts-space-3-5);
+  border-block-end: thin solid var(--night-line);
+  color: var(--night-ink);
+  font-size: var(--ts-text-lg);
+  font-weight: 500;
+}
+
+.nav-menu > a[aria-current] {
+  text-decoration: underline var(--ts-primary);
+  text-decoration-thickness: 0.125em;
+  text-underline-offset: 0.5em;
+}
+
+.nav-menu-cta {
+  display: grid;
+  gap: var(--ts-space-2);
+  margin-block-start: var(--ts-space-5);
+}
+
+.account-trigger {
+  --button-padding: var(--ts-space-1-5);
+  anchor-name: --account;
+}
+
+/* timlee-button wraps a control's content in a label span when it upgrades;
+   the avatar is a block, so the span has to stay a row or the name would
+   drop under it, and move the header, the moment script runs. */
+.account-trigger :is(button, .timlee-button__label) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ts-space-2);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  flex: none;
+  border-radius: var(--ts-radius-full);
+  background: var(--ts-primary);
+  color: var(--ts-primary-foreground);
+  font-size: var(--ts-text-xs);
+  font-weight: 700;
+}
+
+.account-name {
+  max-inline-size: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-panel {
+  inset-block: var(--ts-space-16) auto;
+  inset-inline: auto var(--ts-space-6);
+  inline-size: 17rem;
+  margin-block-start: var(--ts-space-2);
+  border-radius: var(--ts-radius-lg);
+}
+
+/* Anchored to its trigger where the browser can; the fixed corner above is
+   the fallback. */
+@supports (position-area: block-end) {
+  .account-panel {
+    position-anchor: --account;
+    position-area: block-end span-inline-start;
+    inset: auto;
+  }
+}
+
+.account-panel:popover-open {
+  display: grid;
+  gap: var(--ts-space-0-5);
+}
+
+.account-id {
+  display: grid;
+  gap: var(--ts-space-0-5);
+  padding: var(--ts-space-2) var(--ts-space-3) var(--ts-space-3);
+  margin-block-end: var(--ts-space-1);
+  border-block-end: thin solid var(--night-line);
+  color: var(--night-ink-2);
+  font-size: var(--ts-text-sm);
+  overflow-wrap: anywhere;
+}
+
+.account-id b {
+  color: var(--night-ink);
+}
+
+.account-panel > a {
+  padding: var(--ts-space-2-5) var(--ts-space-3);
+  border-radius: var(--ts-radius);
+  color: var(--night-ink);
+}
+
+.account-panel > a:hover {
+  background: var(--night-wash);
+}
+
+.account-signout button {
+  justify-content: flex-start;
+}
+
+@media (width <= 64rem) {
+  .nav-links,
+  .nav-wide {
+    display: none;
+  }
+
+  .nav-burger {
+    display: inline-flex;
+  }
+}
+
+/* Tablets: a card hanging under the menu button rather than a stretched sheet. */
+@media (40rem <= width <= 64rem) {
+  .nav-menu {
+    inset-block: var(--ts-space-16) auto;
+    inset-inline: auto var(--ts-space-6);
+    inline-size: 21rem;
+    max-block-size: calc(100dvh - var(--ts-space-20));
+    margin-block-start: var(--ts-space-2);
+    padding-inline: var(--ts-space-5);
+    border: thin solid var(--night-line);
+    border-radius: var(--ts-radius-xl);
+  }
+}
+
+@media (width > 64rem) {
+  .nav-menu:popover-open {
+    display: none;
+  }
+}
+
+/* --- Footer ---------------------------------------------------------------- */
+
+.footer {
+  padding-block: var(--ts-space-16) var(--ts-space-8);
+  border-block-start: thin solid var(--ts-border);
+  color: var(--ts-text-2);
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--ts-space-12);
+}
+
+.footer-brand .logo {
+  color: var(--ts-text-heading);
+}
+
+.footer-brand p {
+  max-inline-size: 30ch;
+  margin-block-start: var(--ts-space-3);
+  font-size: var(--ts-text-sm);
+}
+
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ts-space-6);
+}
+
+.footer-group h2 {
+  margin-block-end: var(--ts-space-2);
+  font-size: var(--ts-text-sm);
+  letter-spacing: var(--ts-tracking-normal);
+}
+
+.footer-group ul {
+  list-style: none;
+}
+
+.footer-group a {
+  display: inline-block;
+  padding-block: var(--ts-space-1);
+  font-size: var(--ts-text-sm);
+}
+
+.footer-group a:hover {
+  color: var(--ts-text-1);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.footer-legal {
+  margin-block-start: var(--ts-space-12);
+  padding-block-start: var(--ts-space-6);
+  border-block-start: thin solid var(--ts-border-subtle);
+  color: var(--ts-text-3);
+  font-size: var(--ts-text-xs);
+}
+
+@media (width <= 48rem) {
+  .footer-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footer-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- Shared page type -------------------------------------------------------- */
+
+.error-page h1 {
+  font-size: var(--ts-text-4xl);
+  letter-spacing: var(--ts-tracking-tight);
+}
+
+.lede {
+  max-inline-size: 40rem;
+  margin-block-start: var(--ts-space-4);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-xl);
+  line-height: var(--ts-leading-normal);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-3);
+}
+
+/* --- Hero ----------------------------------------------------------------- */
+
+.hero {
+  padding-block: var(--ts-space-24);
+  background: var(--night);
+  color: var(--night-ink);
+}
+
+.hero-title {
+  max-inline-size: 40rem;
+  color: var(--night-ink);
+  font-size: var(--ts-text-5xl);
+  font-weight: 700;
+  line-height: var(--ts-leading-display);
+  letter-spacing: var(--ts-tracking-display);
+  text-wrap: balance;
+}
+
+.hero-lede {
+  max-inline-size: 38rem;
+  margin-block-start: var(--ts-space-6);
+  color: var(--night-ink-2);
+  font-size: var(--ts-text-xl);
+  line-height: var(--ts-leading-normal);
+}
+
+.hero .actions {
+  margin-block-start: var(--ts-space-8);
+}
+
+@media (width < 45rem) {
+  .hero {
+    padding-block: var(--ts-space-12);
+  }
+
+  .hero .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* --- Error page ------------------------------------------------------------- */
+
+.error-code {
+  color: var(--ts-text-3);
+  font-size: var(--ts-text-6xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ts-leading-display);
+}
+
+.error-page h1 {
+  margin-block-start: var(--ts-space-4);
+}
+
+.error-page .actions {
+  margin-block-start: var(--ts-space-8);
+}

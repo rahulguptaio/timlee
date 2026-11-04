@@ -1,0 +1,183 @@
+timlee-toaster {
+  --toaster-gap: var(--ts-space-2);
+  --toaster-inset: var(--ts-space-4);
+  --toaster-width: 22rem;
+
+  position: fixed;
+  z-index: var(--mc-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--toaster-gap);
+  inline-size: min(var(--toaster-width), 100vw - var(--mc-space-8));
+  /* While it holds toasts the toaster is a popover (toast.ts); these undo
+     the box the UA gives one, which is centred, bordered and scrolls. */
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  overflow: visible;
+  /* The region itself must not eat clicks on the page behind it. */
+  pointer-events: none;
+  inset-block: auto var(--toaster-inset);
+  inset-inline: auto var(--toaster-inset);
+}
+
+/* "display: flex" above would otherwise show a closed popover. */
+timlee-toaster[popover]:not(:popover-open) {
+  display: none;
+}
+
+timlee-toaster[inline] {
+  position: static;
+}
+
+timlee-toaster[position="top-end"] {
+  inset-block: var(--toaster-inset) auto;
+  inset-inline: auto var(--toaster-inset);
+}
+timlee-toaster[position="top-start"] {
+  inset-block: var(--toaster-inset) auto;
+  inset-inline: var(--toaster-inset) auto;
+}
+timlee-toaster[position="bottom-start"] {
+  inset-block: auto var(--toaster-inset);
+  inset-inline: var(--toaster-inset) auto;
+}
+timlee-toaster[position="top-center"] {
+  inset-block: var(--toaster-inset) auto;
+  inset-inline: auto;
+  /* direction: physical — centred: inset-inline-start: 50% is right: 50% in
+     right-to-left, while translate still moves left. */
+  left: 50%;
+  translate: -50% 0; /* direction: physical — centres the box, with left: 50% */
+}
+
+timlee-toaster:empty {
+  display: none;
+}
+
+timlee-toast {
+  --toast-bg: var(--ts-surface-raised);
+  --toast-fg: var(--ts-text-1);
+  --toast-border: var(--ts-border);
+  --toast-accent: var(--ts-idle);
+  --toast-shadow: var(--ts-elevation-2);
+  --toast-glyph: var(--ts-space-2);
+  --toast-padding-end: var(--ts-space-8);
+
+  pointer-events: auto;
+  /* Block flow rather than grid or flex: the message is whatever the Go
+     template wrote — bare text, a <strong>, a link, or all three — and in a
+     grid each of those would become its own track. The dot and the dismiss
+     button are positioned instead, so any markup lays out correctly before
+     the element upgrades. */
+  display: block;
+  position: relative;
+  padding-block: var(--mc-space-3);
+  padding-inline: var(--mc-space-6) var(--toast-padding-end);
+  border: var(--mc-border-width) solid var(--toast-border);
+  border-radius: var(--mc-radius-lg);
+  background: var(--toast-bg);
+  color: var(--toast-fg);
+  box-shadow: var(--toast-shadow);
+  font-size: var(--mc-text-base);
+  line-height: var(--mc-leading-snug);
+}
+
+timlee-toast[no-dismiss] {
+  --toast-padding-end: var(--ts-space-4);
+}
+
+timlee-toast::before {
+  content: "";
+  position: absolute;
+  /* Centred on the first line, whatever its height. */
+  inset-block-start: calc(
+    var(--mc-space-3) +
+    (var(--mc-text-base) * var(--mc-leading-snug) - var(--toast-glyph)) /
+    2
+  );
+  inset-inline-start: var(--mc-space-3);
+  inline-size: var(--toast-glyph);
+  block-size: var(--toast-glyph);
+  border-radius: var(--mc-radius-full);
+  background: var(--toast-accent);
+}
+
+timlee-toast[tone="success"] {
+  --toast-accent: var(--ts-success);
+  --toast-border: var(--ts-success);
+}
+timlee-toast[tone="warning"] {
+  --toast-accent: var(--ts-warning);
+  --toast-border: var(--ts-warning);
+}
+timlee-toast[tone="danger"] {
+  --toast-accent: var(--ts-danger);
+  --toast-border: var(--ts-danger);
+}
+timlee-toast[tone="info"] {
+  --toast-accent: var(--ts-info);
+  --toast-border: var(--ts-info);
+}
+
+timlee-toast a {
+  color: var(--mc-primary);
+  text-decoration: underline;
+  text-underline-offset: var(--mc-focus-offset);
+}
+
+.timlee-toast__dismiss {
+  --toast-dismiss-bg: transparent;
+  --toast-dismiss-fg: var(--ts-text-3);
+
+  position: absolute;
+  inset-block-start: var(--mc-space-2);
+  inset-inline-end: var(--mc-space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--mc-space-6);
+  block-size: var(--mc-space-6);
+  padding: 0;
+  border: 0;
+  border-radius: var(--mc-radius-sm);
+  background: var(--toast-dismiss-bg);
+  color: var(--toast-dismiss-fg);
+  font-size: var(--mc-text-lg);
+  line-height: var(--mc-leading-none);
+  cursor: pointer;
+}
+
+/* Extends the hit area to 24px without changing the visual box, which is
+   the SC 2.5.8 minimum. */
+.timlee-toast__dismiss::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--mc-space-1) * -1);
+}
+
+.timlee-toast__dismiss:hover {
+  --toast-dismiss-bg: var(--ts-surface-hover);
+  --toast-dismiss-fg: var(--ts-text-1);
+}
+
+.timlee-toast__dismiss:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-border-width);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  timlee-toast {
+    animation: timlee-fade-in var(--mc-duration) var(--mc-ease-out);
+    --timlee-enter-y: var(--mc-space-2);
+  }
+}
+
+/* Reduced motion: a toast fades in where it will sit, without rising. */
+@media (prefers-reduced-motion: reduce) {
+  timlee-toast {
+    animation: timlee-fade var(--mc-duration) var(--mc-ease-out);
+  }
+}

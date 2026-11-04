@@ -1,0 +1,19 @@
+{{- /*
+  The landing page: what Timlee does, in one sentence and one paragraph, and
+  the single way in. A signed-in reader is sent to their apps instead.
+*/ -}}
+{{ define "content" }}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero-copy">
+    <h1 id="hero-title" class="hero-title">{{ t .L "marketing.hero.title" }}</h1>
+    <p class="hero-lede">{{ t .L "marketing.hero.lede" }}</p>
+    <div class="actions">
+      {{ if .SignedIn }}
+      <timlee-button variant="primary" size="lg"><a href="{{ href .L "/apps" }}">{{ t .L "marketing.action.openApps" }}</a></timlee-button>
+      {{ else }}
+      <timlee-button variant="primary" size="lg"><a href="{{ .L.SignInPath "/apps" }}">{{ t .L "marketing.action.signIn" }}</a></timlee-button>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

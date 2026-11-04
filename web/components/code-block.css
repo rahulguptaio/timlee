@@ -1,0 +1,115 @@
+timlee-code-block {
+  --code-bg: var(--ts-surface-inset);
+  --code-fg: var(--ts-text-1);
+  --code-border: var(--ts-border);
+  --code-radius: var(--ts-radius-lg);
+  --code-padding: var(--ts-space-4);
+  --code-copy-inset: var(--ts-space-2);
+  --code-copy-border: var(--ts-border);
+  --code-copy-fg: var(--ts-text-2);
+
+  display: block;
+  position: relative;
+  border: var(--mc-border-width) solid var(--code-border);
+  border-radius: var(--code-radius);
+  background: var(--code-bg);
+  overflow: hidden;
+}
+
+timlee-code-block > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mc-space-2);
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-block-end: var(--mc-border-width) solid var(--code-border);
+  color: var(--mc-text-3);
+  font-family: var(--mc-font-sans);
+  font-size: var(--mc-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--mc-tracking-wide);
+  text-transform: uppercase;
+}
+
+timlee-code-block > pre {
+  margin: 0;
+  padding: var(--code-padding);
+  padding-inline-end: var(--mc-space-12);
+  overflow-x: auto;
+  color: var(--code-fg);
+  font-family: var(--mc-font-mono);
+  font-size: var(--mc-text-sm);
+  line-height: var(--mc-leading-normal);
+  tab-size: 2;
+}
+
+timlee-code-block > pre:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: calc(var(--mc-focus-offset) * -1);
+}
+
+timlee-code-block > pre code {
+  font: inherit;
+  background: none;
+  white-space: pre;
+}
+
+timlee-code-block[wrap] > pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.timlee-code-block__copy {
+  position: absolute;
+  inset-block-start: var(--code-copy-inset);
+  inset-inline-end: var(--code-copy-inset);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mc-space-1);
+  min-block-size: var(--mc-space-7);
+  padding-inline: var(--mc-space-2);
+  border: var(--mc-border-width) solid var(--code-copy-border);
+  border-radius: var(--mc-radius-md);
+  background: var(--mc-surface-raised);
+  box-shadow: var(--mc-elevation-1);
+  color: var(--code-copy-fg);
+  font-family: var(--mc-font-sans);
+  font-size: var(--mc-text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--mc-duration-fast) var(--mc-ease);
+}
+
+/* Revealed on hover, but always present for keyboard and touch users —
+   ":focus-within" is what keeps it from being mouse-only. */
+timlee-code-block:hover .timlee-code-block__copy,
+timlee-code-block:focus-within .timlee-code-block__copy,
+.timlee-code-block__copy:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .timlee-code-block__copy {
+    opacity: 1;
+  }
+}
+
+.timlee-code-block__copy:hover {
+  --code-copy-border: var(--ts-border-hover);
+  --code-copy-fg: var(--ts-text-1);
+}
+
+.timlee-code-block__copy:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+.timlee-code-block__copy[data-copied] {
+  --code-copy-border: var(--ts-success);
+  --code-copy-fg: var(--ts-success-ink);
+}
+
+timlee-code-block:has(> header) {
+  --code-copy-inset: calc(var(--ts-space-1) + var(--ts-border-width));
+}

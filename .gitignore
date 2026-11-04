@@ -1,0 +1,82 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+*.local
+apps/web/dist/
+
+# Go
+# Compiled binaries land at the repo root when built without -o.
+/timlee-*
+# Playwright MCP session output.
+.playwright-mcp/
+# Asset pipeline output; rebuilt by `go run ./cmd/timlee-build`.
+web/dist/
+# SQLite databases hold sessions and hashed keys.
+*.db
+*.db-wal
+*.db-shm
+.scratch-probe/
+
+# Rust / Tauri
+target/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Auth service local database (contains sessions, hashed keys)
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Smoke-test artifacts
+.smoke/
+.smoke-prod/
+.smoke-svelte/
+
+# CI scratch.
+.ci/
+
+# UX audit captures
+.ux/
+.ux[0-9]/
+
+# Mobile icon sets (regenerate with `pnpm tauri icon` if ever needed)
+desktop/src-tauri/icons/android/
+desktop/src-tauri/icons/ios/
+
+# Prod-like local environment (certs, secrets, mail outbox, data)
+.local/
+
+# Browser test output.
+playwright-report/
+test-results/
+
+# The app workspace is its own git repository (one commit per prompt or edit).
+/workspace/

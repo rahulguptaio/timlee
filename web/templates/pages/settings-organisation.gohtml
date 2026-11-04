@@ -1,0 +1,131 @@
+{{- /*
+  Organisation: its name, leaving it, and deleting it. Leaving opens a
+  confirmation that works without scripting and names the API keys it
+  revokes. Deleting asks for the organisation's name to be typed: the one
+  confirmation of that kind in settings, because it takes everyone's access
+  away and cannot be undone.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+{{- $s := $d.Shell -}}
+<header class="st-head">
+  <h1>{{ t $.L "settings.organisation.title" }}</h1>
+  <p>{{ with $s.Org }}{{ t $.L "settings.organisation.lede" "name" .Name }}{{ else }}{{ t $.L "settings.organisation.ledeNone" }}{{ end }}</p>
+</header>
+
+{{ template "settings-outcome" . }}
+
+{{ if not $s.Org }}
+<section class="st-section">
+  <p>{{ t $.L "settings.organisation.none" }}</p>
+</section>
+{{ else }}
+{{ with $d.LoadError }}<timlee-alert tone="danger"><p>{{ . }}</p></timlee-alert>{{ end }}
+
+<section class="st-section">
+  <h2 id="org-name-title">{{ t $.L "settings.organisation.nameTitle" }}</h2>
+  {{ if $s.CanManage }}
+  <form class="st-inline-form" method="post" action="/settings/organisation" data-enhance>
+    {{ $s.CSRF }}
+    <timlee-input{{ if $d.Form.NameError }} invalid{{ end }}>
+      <label for="org-name">{{ t $.L "settings.organisation.nameLabel" }}</label>
+      <input
+        id="org-name"
+        type="text"
+        name="name"
+        value="{{ $d.Form.Name }}"
+        dir="auto"
+        required
+        maxlength="80"
+        autocomplete="organization"
+        aria-describedby="org-name-hint{{ if $d.Form.NameError }} org-name-error{{ end }}"
+        {{ if $d.Form.NameError }}aria-invalid="true"{{ end }}
+      />
+      <p data-hint id="org-name-hint">{{ t $.L "settings.organisation.nameHint" }}</p>
+      <p data-error id="org-name-error">{{ template "settings-error" (dict "L" $.L "Message" $d.Form.NameError) }}</p>
+    </timlee-input>
+    <timlee-button variant="primary"><button type="submit">{{ t $.L "settings.organisation.save" }}</button></timlee-button>
+  </form>
+  {{ else }}
+  <p class="st-org-current"><bdi dir="auto">{{ $s.Org.Name }}</bdi></p>
+  {{ template "settings-ask" (dict "L" $.L "Lead" (t $.L "settings.organisation.renameAsk") "Admins" $d.Admins) }}
+  {{ end }}
+</section>
+
+<section class="st-section">
+  <h2 id="org-leave">{{ t $.L "settings.organisation.leaveTitle" "name" $s.Org.Name }}</h2>
+  {{ if $d.SoleOwner }}
+  <p class="st-lede">{{ t $.L "settings.organisation.soleOwner" }}</p>
+  {{ else }}
+  <p class="st-lede">{{ t $.L "settings.organisation.leaveLede" }}</p>
+  <div>
+    <timlee-button variant="secondary">
+      <a href="/settings/organisation?leave=1#confirm-leave" data-dialog-open="leave">{{ t $.L "settings.organisation.leaveButton" "name" $s.Org.Name }}</a>
+    </timlee-button>
+  </div>
+  <div class="st-dialogs">
+    <timlee-dialog id="leave" size="sm">
+      <dialog id="confirm-leave" aria-labelledby="leave-title"{{ if $d.Leaving }} open{{ end }}>
+        <form method="post" action="/settings/organisation/leave" data-enhance>
+          {{ $s.CSRF }}
+          <input type="hidden" name="org" value="{{ $s.Org.Name }}" />
+          <h2 id="leave-title">{{ t $.L "settings.organisation.leaveConfirmTitle" "name" $s.Org.Name }}</h2>
+          <p>{{ if $d.KeysKnown }}{{ t $.L "settings.organisation.leaveImpact" "name" $s.Org.Name "keys" (len $d.Keys) }}{{ else }}{{ t $.L "settings.organisation.leaveImpactUnknown" "name" $s.Org.Name }}{{ end }}</p>
+          {{ with $d.Keys }}
+          <ul class="st-doomed">
+            {{ range $k := . }}
+            <li>{{ with $k.LastUsed }}{{ th $.L "settings.members.keyUsed" "label" $k.Label "prefix" $k.Prefix "when" .Ago }}{{ else }}{{ th $.L "settings.members.keyUnused" "label" $k.Label "prefix" $k.Prefix }}{{ end }}</li>
+            {{ end }}
+          </ul>
+          {{ end }}
+          <menu>
+            <timlee-button variant="secondary"><button type="submit" formmethod="dialog" formnovalidate value="cancel">{{ t $.L "settings.security.cancel" }}</button></timlee-button>
+            <timlee-button variant="danger"><button type="submit">{{ t $.L "settings.organisation.leaveConfirm" "name" $s.Org.Name }}</button></timlee-button>
+          </menu>
+        </form>
+      </dialog>
+    </timlee-dialog>
+  </div>
+  {{ end }}
+</section>
+
+{{ if $d.IsOwner }}
+<section class="st-section" aria-labelledby="org-danger">
+  <h2 id="org-danger">{{ t $.L "settings.organisation.dangerTitle" }}</h2>
+  <div class="st-danger-zone">
+    <h3 id="org-delete">{{ t $.L "settings.organisation.deleteTitle" "name" $s.Org.Name }}</h3>
+    <p>{{ t $.L "settings.organisation.deleteLede" }}</p>
+    <ul class="st-doomed">
+      <li>{{ t $.L "settings.organisation.deleteMembers" "count" $d.Members }}</li>
+      <li>{{ if $d.KeysKnown }}{{ t $.L "settings.organisation.deleteKeys" "count" $d.LiveKeys }}{{ else }}{{ t $.L "settings.organisation.deleteKeysUnknown" }}{{ end }}</li>
+      <li>{{ t $.L "settings.organisation.deleteRest" }}</li>
+    </ul>
+    <form class="st-delete" method="post" action="/settings/organisation/delete" data-enhance>
+      {{ $s.CSRF }}
+      <input type="hidden" name="org" value="{{ $s.Org.Name }}" />
+      <timlee-input{{ if $d.Form.ConfirmError }} invalid{{ end }}>
+        <label for="org-delete-confirm">{{ th $.L "settings.organisation.confirmLabel" "name" $s.Org.Name }}</label>
+        <input
+          id="org-delete-confirm"
+          type="text"
+          name="confirm"
+          value="{{ $d.Form.Confirm }}"
+          dir="auto"
+          required
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+          aria-describedby="org-delete-hint{{ if $d.Form.ConfirmError }} org-delete-confirm-error{{ end }}"
+          {{ if $d.Form.ConfirmError }}aria-invalid="true"{{ end }}
+        />
+        <p data-hint id="org-delete-hint">{{ t $.L "settings.organisation.confirmHint" }}</p>
+        <p data-error id="org-delete-confirm-error">{{ template "settings-error" (dict "L" $.L "Message" $d.Form.ConfirmError) }}</p>
+      </timlee-input>
+      <timlee-button variant="danger"><button type="submit">{{ t $.L "settings.organisation.deleteButton" "name" $s.Org.Name }}</button></timlee-button>
+    </form>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+{{ end }}

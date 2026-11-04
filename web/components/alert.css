@@ -1,0 +1,136 @@
+timlee-alert {
+  --alert-bg: var(--ts-surface-1);
+  --alert-fg: var(--ts-text-1);
+  --alert-border: var(--ts-border);
+  --alert-accent: var(--ts-text-3);
+  --alert-radius: var(--ts-radius-lg);
+  --alert-padding-end: var(--ts-space-4);
+
+  display: block;
+  position: relative;
+  padding-block: var(--mc-space-3);
+  padding-inline: var(--mc-space-10) var(--alert-padding-end);
+  border: var(--mc-border-width) solid var(--alert-border);
+  border-radius: var(--alert-radius);
+  background: var(--alert-bg);
+  color: var(--alert-fg);
+  font-size: var(--mc-text-base);
+  line-height: var(--mc-leading-normal);
+}
+
+timlee-alert[dismissible] {
+  --alert-padding-end: var(--ts-space-10);
+}
+
+timlee-alert :where(p) {
+  margin: 0;
+  color: var(--mc-text-2);
+}
+
+timlee-alert :where(strong, b) {
+  color: var(--alert-fg);
+  font-weight: 650;
+}
+
+timlee-alert a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: var(--mc-focus-width);
+}
+
+/* The glyph is a token-coloured shape, so it follows the theme and needs
+   no icon font or network request. */
+timlee-alert::before {
+  content: "";
+  position: absolute;
+  /* Centred on the first line, whatever its height. */
+  inset-block-start: calc(
+    var(--mc-space-3) +
+    (var(--mc-text-base) * var(--mc-leading-normal) - var(--mc-space-4)) /
+    2
+  );
+  inset-inline-start: var(--mc-space-4);
+  inline-size: var(--mc-space-4);
+  block-size: var(--mc-space-4);
+  border-radius: var(--mc-radius-full);
+  background: var(--alert-accent);
+  clip-path: circle(50%);
+}
+
+timlee-alert[tone="info"] {
+  --alert-bg: var(--ts-info-soft);
+  --alert-border: var(--ts-info);
+  --alert-accent: var(--ts-info);
+  --alert-fg: var(--ts-text-1);
+}
+timlee-alert[tone="success"] {
+  --alert-bg: var(--ts-success-soft);
+  --alert-border: var(--ts-success);
+  --alert-accent: var(--ts-success-solid);
+}
+timlee-alert[tone="warning"] {
+  --alert-bg: var(--ts-warning-soft);
+  --alert-border: var(--ts-warning);
+  --alert-accent: var(--ts-warning-ink);
+}
+timlee-alert[tone="danger"] {
+  --alert-bg: var(--ts-danger-soft);
+  --alert-border: var(--ts-danger);
+  --alert-accent: var(--ts-danger);
+}
+
+/* Distinct shapes per tone: colour is never the only differentiator. */
+timlee-alert[tone="warning"]::before {
+  border-radius: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+timlee-alert[tone="danger"]::before {
+  clip-path: polygon(50% 0, 85% 15%, 100% 50%, 85% 85%, 50% 100%, 15% 85%, 0 50%, 15% 15%);
+}
+timlee-alert[tone="success"]::before {
+  clip-path: polygon(14% 48%, 38% 72%, 86% 22%, 96% 34%, 38% 94%, 4% 60%);
+  border-radius: 0;
+}
+
+.timlee-alert__dismiss {
+  --alert-dismiss-bg: transparent;
+
+  position: absolute;
+  inset-block-start: var(--mc-space-2);
+  inset-inline-end: var(--mc-space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--mc-space-7);
+  block-size: var(--mc-space-7);
+  padding: 0;
+  border: 0;
+  border-radius: var(--mc-radius-sm);
+  background: var(--alert-dismiss-bg);
+  color: inherit;
+  font-size: var(--mc-text-lg);
+  line-height: var(--mc-leading-none);
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.timlee-alert__dismiss:hover {
+  --alert-dismiss-bg: var(--ts-wash);
+
+  opacity: 1;
+}
+
+.timlee-alert__dismiss:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-border-width);
+  opacity: 1;
+}
+
+/* Forced colours paint backgrounds Canvas, which would erase the tone glyph,
+   the shape that says the tone without colour. */
+@media (forced-colors: active) {
+  timlee-alert::before {
+    background: CanvasText;
+  }
+}

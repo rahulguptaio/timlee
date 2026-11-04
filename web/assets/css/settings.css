@@ -1,0 +1,1147 @@
+/* =============================================================================
+   settings.css — the account and organisation console (/settings, /invite).
+
+   Quiet by design: navy-tinted neutrals, hairlines and spacing carry the
+   structure, and teal is spent only on the primary action, the current
+   section and focus. The one loud surface is the panel that shows a new API
+   key's secret, because that is the one moment on these pages that cannot be
+   repeated.
+
+   Only semantic --ts-* tokens appear below. Hairlines use the `thin` keyword
+   and the 2px markers use --ts-space-0-5, so no raw length leaks in.
+   ========================================================================== */
+
+/* --- Shell ------------------------------------------------------------------ */
+
+.settings-app {
+  min-block-size: 100dvh;
+  background: var(--ts-background);
+}
+
+.st-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ts-space-2) var(--ts-space-4);
+  padding: var(--ts-space-2-5) var(--ts-space-4);
+  border-block-end: thin solid var(--ts-border);
+  background: var(--ts-background);
+}
+
+.st-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ts-space-3);
+  min-inline-size: 0;
+}
+
+.st-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ts-space-2);
+  color: var(--ts-text-heading);
+  font-size: var(--ts-text-lg);
+  font-weight: 650;
+  letter-spacing: var(--ts-tracking-tight);
+}
+
+.st-logo svg {
+  inline-size: var(--ts-space-6);
+  block-size: var(--ts-space-6);
+}
+
+.st-logo svg rect {
+  fill: var(--ts-text-heading);
+}
+
+.st-logo svg path {
+  fill: var(--ts-background);
+}
+
+.st-brand-section {
+  padding-inline-start: var(--ts-space-3);
+  border-inline-start: thin solid var(--ts-border-strong);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-md);
+}
+
+.st-top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-1-5);
+}
+
+.st-top-link {
+  padding: var(--ts-space-2);
+  border-radius: var(--ts-radius);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-base);
+  font-weight: 600;
+}
+
+.st-top-link:hover,
+.st-brand-section:hover {
+  color: var(--ts-text-1);
+}
+
+.st-me {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ts-space-2);
+  color: var(--ts-text-1);
+  font-size: var(--ts-text-base);
+  font-weight: 600;
+}
+
+.st-me timlee-avatar,
+.st-person timlee-avatar,
+.st-you timlee-avatar {
+  --avatar-size: var(--ts-space-8);
+}
+
+.st-frame {
+  display: grid;
+  gap: var(--ts-space-6);
+  max-inline-size: 82rem;
+  margin-inline: auto;
+  padding: var(--ts-space-5) var(--ts-space-4) var(--ts-space-16);
+}
+
+/* --- Rail: organisation and sections ----------------------------------------- */
+
+.st-rail {
+  display: grid;
+  gap: var(--ts-space-4);
+  align-content: start;
+  min-inline-size: 0;
+}
+
+.st-org {
+  display: grid;
+  gap: var(--ts-space-2);
+}
+
+.st-org-name {
+  color: var(--ts-text-heading);
+  font-size: var(--ts-text-md);
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.st-org-role {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-2);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-sm);
+}
+
+.st-switch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ts-space-2);
+}
+
+.st-switch timlee-select {
+  flex: 1 1 10rem;
+}
+
+.st-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-1);
+  list-style: none;
+}
+
+.st-nav a {
+  display: block;
+  padding: var(--ts-space-2) var(--ts-space-3);
+  border-radius: var(--ts-radius);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-base);
+  font-weight: 600;
+  transition:
+    background-color var(--ts-duration-fast) var(--ts-ease),
+    color var(--ts-duration-fast) var(--ts-ease);
+}
+
+.st-nav a:hover {
+  background: var(--ts-surface-hover);
+  color: var(--ts-text-1);
+}
+
+/* The marker is a bar, not a fill: the one place teal says "you are here". */
+.st-nav a[aria-current="page"] {
+  background: var(--ts-surface-2);
+  color: var(--ts-text-heading);
+  box-shadow: inset 0 calc(-1 * var(--ts-space-0-5)) 0 var(--ts-primary);
+}
+
+@media (min-width: 64rem) {
+  .st-frame {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: var(--ts-space-10);
+    padding-inline: var(--ts-space-8);
+    padding-block-start: var(--ts-space-8);
+  }
+
+  .st-rail {
+    position: sticky;
+    inset-block-start: var(--ts-space-6);
+    align-self: start;
+    gap: var(--ts-space-6);
+  }
+
+  .st-nav ul {
+    flex-direction: column;
+  }
+
+  .st-nav a[aria-current="page"] {
+    box-shadow: inset var(--ts-space-0-5) 0 0 var(--ts-primary);
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .st-me-name {
+    display: none;
+  }
+}
+
+@media (max-width: 29.99rem) {
+  .st-brand-section {
+    display: none;
+  }
+}
+
+/* --- Page content ------------------------------------------------------------ */
+
+.st-main {
+  min-inline-size: 0;
+  max-inline-size: 60rem;
+}
+
+/* Focus lands here from the skip link and after an in-place update; the
+   container itself is not a control, so it draws no ring. */
+.st-main:focus,
+.st-solo:focus {
+  outline: none;
+}
+
+.st-head {
+  display: grid;
+  gap: var(--ts-space-2);
+  margin-block-end: var(--ts-space-6);
+}
+
+.st-head h1 {
+  font-size: var(--ts-text-3xl);
+}
+
+.st-head p,
+.st-lede {
+  max-inline-size: var(--ts-measure);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-md);
+}
+
+.st-head code,
+.st-vault-use code {
+  font-size: var(--ts-text-base);
+  overflow-wrap: anywhere;
+}
+
+.st-flash {
+  margin-block-end: var(--ts-space-6);
+}
+
+.st-error-summary {
+  margin-block-end: var(--ts-space-6);
+}
+
+.st-error-summary h2 {
+  font-size: var(--ts-text-md);
+}
+
+.st-error-summary ul {
+  display: grid;
+  gap: var(--ts-space-1);
+  margin-block-start: var(--ts-space-2);
+  padding-inline-start: var(--ts-space-5);
+}
+
+.st-error-summary a {
+  color: var(--ts-danger-ink);
+  font-weight: 600;
+}
+
+.st-error-summary:focus-visible,
+.st-flash:focus-visible {
+  outline: var(--ts-focus-ring-width) solid var(--ts-ring);
+  outline-offset: var(--ts-focus-ring-offset);
+}
+
+.st-section {
+  display: grid;
+  gap: var(--ts-space-4);
+  margin-block-start: var(--ts-space-10);
+}
+
+.st-section:first-of-type,
+.st-flash + .st-section,
+.st-error-summary + .st-section,
+.st-head + .st-section,
+.st-vault + .st-section {
+  margin-block-start: 0;
+}
+
+.st-section + .st-section {
+  padding-block-start: var(--ts-space-8);
+  border-block-start: thin solid var(--ts-border-subtle);
+}
+
+.st-section h2 {
+  font-size: var(--ts-text-xl);
+}
+
+.st-quiet {
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-sm);
+}
+
+.st-note {
+  max-inline-size: 30ch;
+  margin-block-start: var(--ts-space-1-5);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-sm);
+  line-height: var(--ts-leading-snug);
+}
+
+.st-error {
+  color: var(--ts-danger-ink);
+  font-size: var(--ts-text-sm);
+  font-weight: 600;
+}
+
+/* Overview */
+
+.st-you {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-3) var(--ts-space-4);
+}
+
+.st-you > div {
+  flex: 1 1 12rem;
+  min-inline-size: 0;
+}
+
+.st-you-name {
+  color: var(--ts-text-heading);
+  font-size: var(--ts-text-lg);
+  font-weight: 650;
+}
+
+.st-you .st-quiet {
+  overflow-wrap: anywhere;
+}
+
+.st-you > .st-you-actions {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  gap: var(--ts-space-2);
+}
+
+.st-role-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ts-space-2);
+  max-inline-size: var(--ts-measure);
+  color: var(--ts-text-2);
+}
+
+.st-summary {
+  display: grid;
+  margin: 0;
+}
+
+.st-summary > div {
+  display: grid;
+  gap: var(--ts-space-1) var(--ts-space-6);
+  padding-block: var(--ts-space-3);
+  border-block-start: thin solid var(--ts-border-subtle);
+}
+
+.st-summary > div:last-child {
+  border-block-end: thin solid var(--ts-border-subtle);
+}
+
+.st-summary dt a {
+  color: var(--ts-text-heading);
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: var(--ts-border-strong);
+  text-underline-offset: 0.2em;
+}
+
+.st-summary dt a:hover {
+  text-decoration-color: currentcolor;
+}
+
+.st-summary dd {
+  margin: 0;
+  color: var(--ts-text-2);
+}
+
+@media (min-width: 40rem) {
+  .st-summary > div {
+    grid-template-columns: 10rem minmax(0, 1fr);
+  }
+}
+
+/* "Ask an admin" */
+
+.st-ask {
+  display: grid;
+  gap: var(--ts-space-2);
+  max-inline-size: var(--ts-measure);
+  padding: var(--ts-space-4);
+  border: thin solid var(--ts-border);
+  border-inline-start: var(--ts-space-0-5) solid var(--ts-info);
+  border-radius: var(--ts-radius-md);
+  background: var(--ts-surface-1);
+  color: var(--ts-text-1);
+}
+
+.st-contacts {
+  display: grid;
+  gap: var(--ts-space-1);
+  list-style: none;
+}
+
+.st-contacts a {
+  color: var(--ts-text-heading);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.st-contacts span {
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-sm);
+  overflow-wrap: anywhere;
+}
+
+/* --- Forms ------------------------------------------------------------------- */
+
+.st-inline-form,
+.st-invite,
+.st-dev {
+  display: grid;
+  justify-items: start;
+  gap: var(--ts-space-4);
+  max-inline-size: 34rem;
+}
+
+.st-inline-form timlee-input,
+.st-invite timlee-input,
+.st-dev timlee-input {
+  justify-self: stretch;
+}
+
+.st-plain {
+  display: grid;
+  justify-items: start;
+  gap: var(--ts-space-5);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.st-plain > timlee-input {
+  justify-self: stretch;
+}
+
+.st-roles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--ts-space-2);
+  justify-self: stretch;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Each role is one card holding its name and what it allows; the component
+   boxes only the label, which would leave the description outside. */
+.st-roles timlee-radio[boxed] {
+  --choice-hint-fg: var(--ts-text-2);
+  align-content: start;
+  padding: 0 var(--ts-space-3) var(--ts-space-3);
+  border: thin solid var(--ts-border);
+  border-radius: var(--ts-radius-md);
+  background: var(--ts-surface-raised);
+  transition: border-color var(--ts-duration-fast) var(--ts-ease);
+}
+
+.st-roles timlee-radio[boxed]:hover {
+  border-color: var(--ts-border-strong);
+}
+
+/* Selected by its edge and its dot, not a fill: four teal cards' worth of
+   wash would spend the page's accent on a form control. */
+.st-roles timlee-radio[boxed]:has(input:checked) {
+  border-color: var(--ts-primary);
+  background: var(--ts-surface-1);
+  box-shadow: inset 0 0 0 thin var(--ts-primary);
+}
+
+.st-roles timlee-radio[boxed] > label,
+.st-roles timlee-radio[boxed] > label:has(input:checked) {
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  font-weight: 600;
+}
+
+.st-roles legend {
+  margin-block-end: var(--ts-space-2);
+  padding: 0;
+  color: var(--ts-text-1);
+  font-size: var(--ts-text-base);
+  font-weight: 600;
+}
+
+.st-roles .st-error {
+  grid-column: 1 / -1;
+}
+
+/* Creating a key: the label, then its lifetime as five short cards that sit
+   in one row wherever they fit. */
+.st-create {
+  display: grid;
+  justify-items: start;
+  gap: var(--ts-space-5);
+  max-inline-size: 46rem;
+}
+
+.st-create > timlee-input {
+  justify-self: stretch;
+  max-inline-size: 34rem;
+}
+
+.st-lifetimes {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 8rem), 1fr));
+}
+
+.st-legend-hint {
+  grid-column: 1 / -1;
+  margin-block-end: var(--ts-space-1);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-sm);
+}
+
+.st-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ts-space-3);
+}
+
+.st-filter timlee-select {
+  flex: 1 1 12rem;
+}
+
+.st-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-2);
+}
+
+/* The audit log's filters: the period links, then one form whose custom
+   range is a pair of dates that sit side by side wherever they fit. */
+.st-audit-filters {
+  display: grid;
+  gap: var(--ts-space-2);
+}
+
+.st-audit-filters .st-filters ul {
+  margin-block-end: 0;
+}
+
+/* The target field has a hint below it; its label lines up with the others. */
+.st-audit-filters .st-filter {
+  align-items: start;
+}
+
+.st-filter-target {
+  flex: 2 1 16rem;
+}
+
+.st-range {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+  flex: 1 1 100%;
+  gap: var(--ts-space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.st-range legend {
+  margin-block-end: var(--ts-space-1);
+  padding: 0;
+  font-weight: 600;
+}
+
+.st-retention {
+  max-inline-size: var(--ts-measure);
+}
+
+.st-export {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-2) var(--ts-space-3);
+}
+
+.st-empty-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ts-space-2) var(--ts-space-5);
+}
+
+/* --- Tables ------------------------------------------------------------------ */
+
+timlee-table.st-cards {
+  container: st-table / inline-size;
+}
+
+/* A sortable header is a link the server answers with the table sorted; the
+   column it is sorted by shows the direction beside its name. */
+.st-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ts-space-1-5);
+  color: inherit;
+  text-decoration: none;
+}
+
+.st-sort:hover {
+  color: var(--ts-text-1);
+  text-decoration: underline;
+}
+
+th[aria-sort] .st-sort {
+  color: var(--ts-text-heading);
+}
+
+th[aria-sort] .st-sort::after {
+  content: "";
+  inline-size: var(--ts-space-2);
+  block-size: var(--ts-space-1-5);
+  background: currentColor;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+th[aria-sort="descending"] .st-sort::after {
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.st-label {
+  display: none;
+}
+
+.st-primary-cell {
+  color: var(--ts-text-heading);
+  font-weight: 600;
+}
+
+.st-actions {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.st-actions > form {
+  display: inline-block;
+}
+
+.st-actions > * + * {
+  margin-inline-start: var(--ts-space-1);
+}
+
+.st-actions .st-quiet:not(.st-nowrap) {
+  white-space: normal;
+}
+
+.st-retired td {
+  color: var(--ts-text-2);
+}
+
+.st-retired .st-primary-cell {
+  font-weight: 500;
+  text-decoration: line-through;
+  text-decoration-color: var(--ts-border-hover);
+}
+
+.st-prefix {
+  color: var(--ts-text-1);
+  font-size: var(--ts-text-sm);
+  white-space: nowrap;
+}
+
+.st-badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-1);
+}
+
+.st-person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ts-space-3);
+  min-inline-size: 0;
+}
+
+.st-person > span:last-child {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.st-person-name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-2);
+}
+
+.st-person .st-quiet {
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.st-role-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-2);
+}
+
+.st-role-form timlee-select {
+  --field-height: 2.25rem;
+  /* Its label is visually hidden, so the chevron has no label line to clear. */
+  --select-chevron-top: 0rem;
+  min-inline-size: 7.5rem;
+}
+
+.st-sub {
+  display: block;
+}
+
+.st-nowrap {
+  white-space: nowrap;
+}
+
+/* Breaks a long address only when it cannot fit, rather than letting the
+   column shrink until every address breaks. */
+.st-target {
+  overflow-wrap: break-word;
+}
+
+/* The inline confirmation for revoking a key: the row under the key. */
+.st-confirm td {
+  background: var(--ts-danger-soft);
+  border-inline-start: var(--ts-space-0-5) solid var(--ts-danger-solid);
+}
+
+.st-confirm form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ts-space-3);
+}
+
+.st-confirm p {
+  flex: 1 1 22rem;
+  max-inline-size: var(--ts-measure);
+  color: var(--ts-text-1);
+  white-space: normal;
+}
+
+.st-confirm p:focus {
+  outline: none;
+}
+
+.st-confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-2);
+}
+
+/* Rotating hands a key over rather than ending it, so its confirmation is
+   edged in the accent, not in danger. */
+.st-rotate td {
+  background: var(--ts-surface-1);
+  border-inline-start-color: var(--ts-primary);
+}
+
+.st-rotate form {
+  display: grid;
+  justify-content: start;
+  gap: var(--ts-space-3);
+}
+
+.st-overlap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-2) var(--ts-space-5);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.st-overlap legend {
+  margin-block-end: var(--ts-space-2);
+  padding: 0;
+  color: var(--ts-text-1);
+  font-weight: 600;
+}
+
+/* --- Filters over a table ----------------------------------------------------- */
+
+.st-section-note {
+  max-inline-size: var(--ts-measure);
+  margin-block: calc(-1 * var(--ts-space-2)) var(--ts-space-4);
+  font-size: var(--ts-text-sm);
+}
+
+.st-filters ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-1) var(--ts-space-5);
+  margin: 0 0 var(--ts-space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.st-filters a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ts-space-1);
+  min-block-size: var(--ts-space-6);
+  border-block-end: var(--ts-space-0-5) solid transparent;
+  color: var(--ts-text-2);
+  text-decoration: none;
+}
+
+.st-filters a:hover {
+  color: var(--ts-text-1);
+}
+
+.st-filters a[aria-current="page"] {
+  border-block-end-color: var(--ts-primary);
+  color: var(--ts-text-heading);
+  font-weight: 600;
+}
+
+.st-count {
+  color: var(--ts-text-3);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.st-filter-note {
+  margin-block-end: var(--ts-space-4);
+  color: var(--ts-text-1);
+}
+
+/* --- Organisation: its name, and the one action that cannot be undone --------- */
+
+.st-org-current {
+  color: var(--ts-text-heading);
+  font-weight: 600;
+}
+
+.st-danger-zone {
+  display: grid;
+  gap: var(--ts-space-3);
+  max-inline-size: 46rem;
+  padding: var(--ts-space-5);
+  border: var(--ts-border-width) solid var(--ts-danger-solid);
+  border-radius: var(--ts-radius-lg);
+}
+
+.st-danger-zone h3 {
+  font-size: var(--ts-text-lg);
+}
+
+.st-delete {
+  display: grid;
+  justify-items: start;
+  gap: var(--ts-space-3);
+}
+
+.st-delete > timlee-input {
+  justify-self: stretch;
+  max-inline-size: 28rem;
+}
+
+/* --- What removing a member takes with them ----------------------------------- */
+
+.st-doomed {
+  display: grid;
+  gap: var(--ts-space-1);
+  margin: 0;
+  padding-inline-start: var(--ts-space-5);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-base);
+  line-height: var(--ts-leading-normal);
+}
+
+.st-doomed b {
+  color: var(--ts-text-1);
+}
+
+/* A button that names the keys it revokes can outgrow the dialog's row. */
+.st-dialogs menu {
+  flex-wrap: wrap;
+}
+
+.st-doomed code {
+  font-size: var(--ts-text-sm);
+}
+
+.st-warning-line,
+.st-attention {
+  color: var(--ts-warning-ink);
+}
+
+/* Narrow tables become one card per row. The table keeps its semantics once
+   its display changes: every engine the site supports does that natively
+   (WebKit since Safari 17; the tokens already need 17.5), so the markup
+   carries no ARIA table roles. The header row stays in the tree, only
+   clipped — so a screen reader still pairs each cell with its column, and
+   the visible labels can be aria-hidden rather than read twice. */
+@container st-table (width < 40rem) {
+  timlee-table.st-cards > table,
+  timlee-table.st-cards tbody,
+  timlee-table.st-cards tr,
+  timlee-table.st-cards td {
+    display: block;
+  }
+
+  timlee-table.st-cards caption {
+    display: block;
+  }
+
+  timlee-table.st-cards thead {
+    position: absolute;
+    inline-size: var(--ts-space-0-5);
+    block-size: var(--ts-space-0-5);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  timlee-table.st-cards tbody tr {
+    display: grid;
+    gap: var(--ts-space-2);
+    padding: var(--ts-space-4);
+    border-block-end: thin solid var(--ts-border-subtle);
+  }
+
+  timlee-table.st-cards tbody tr:last-child {
+    border-block-end: 0;
+  }
+
+  timlee-table.st-cards td {
+    padding: 0;
+    border: 0;
+  }
+
+  timlee-table.st-cards td:has(> .st-label) {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: var(--ts-space-3);
+    align-items: baseline;
+  }
+
+  timlee-table.st-cards td:has(> .st-label) > :not(.st-label) {
+    grid-column: 2;
+  }
+
+  timlee-table.st-cards .st-label {
+    display: block;
+    color: var(--ts-text-2);
+    font-size: var(--ts-text-sm);
+    font-weight: 600;
+  }
+
+  timlee-table.st-cards .st-actions {
+    text-align: start;
+    white-space: normal;
+  }
+
+  timlee-table.st-cards .st-actions:empty {
+    display: none;
+  }
+
+  timlee-table.st-cards tr.st-confirm {
+    padding: 0;
+  }
+
+  timlee-table.st-cards .st-confirm td {
+    padding: var(--ts-space-4);
+  }
+
+  timlee-table.st-cards .st-prefix,
+  timlee-table.st-cards .st-nowrap {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* --- Confirmation dialogs ------------------------------------------------------
+   With scripting these are modals. Without it, the server renders the one
+   being confirmed as an open, non-modal dialog, which sits in the page under
+   the table instead of floating over it. */
+
+.st-dialogs > timlee-dialog > dialog[open]:not(:modal) {
+  position: static;
+  inline-size: auto;
+  max-inline-size: 36rem;
+  margin: var(--ts-space-4) 0 0;
+  border-inline-start: var(--ts-space-0-5) solid var(--ts-danger-solid);
+  box-shadow: var(--ts-elevation-1);
+  /* The link that opened it lands focus here; keep the ring clear of the
+     panel's own edge. */
+  outline-offset: var(--ts-space-1);
+}
+
+/* --- The new key ----------------------------------------------------------------
+   A night panel in the light theme and a raised one in the dark, edged in
+   teal either way: the secret is the one thing here that cannot be shown
+   twice, so it is the one thing that looks unlike everything else. */
+
+.st-vault {
+  display: grid;
+  gap: var(--ts-space-4);
+  justify-items: start;
+  margin-block-end: var(--ts-space-10);
+  padding: var(--ts-space-6);
+  border: thin solid var(--ts-primary-border);
+  border-radius: var(--ts-radius-xl);
+  background: var(--ts-brand-night);
+  color: var(--ts-on-dark-text);
+  box-shadow: var(--ts-elevation-2);
+}
+
+[data-theme="dark"] .st-vault {
+  background: var(--ts-surface-raised);
+  color: var(--ts-text-1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .st-vault {
+    background: var(--ts-surface-raised);
+    color: var(--ts-text-1);
+  }
+}
+
+.st-vault:focus {
+  outline: none;
+}
+
+.st-vault:focus-visible {
+  outline: var(--ts-space-0-5) solid var(--ts-ring);
+  outline-offset: var(--ts-space-1);
+}
+
+.st-vault h2 {
+  color: inherit;
+  font-size: var(--ts-text-2xl);
+}
+
+.st-vault p {
+  max-inline-size: var(--ts-measure);
+}
+
+.st-vault code {
+  color: inherit;
+}
+
+.st-secret {
+  justify-self: stretch;
+}
+
+/* One click selects the whole key, which is how it gets copied without
+   scripting; with scripting the component adds a copy button, kept visible
+   here because copying is the point of this panel. */
+.st-secret pre code {
+  font-size: var(--ts-text-md);
+  user-select: all;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.st-secret .timlee-code-block__copy {
+  opacity: 1;
+}
+
+/* --- Standalone pages ------------------------------------------------------------- */
+
+.st-solo {
+  display: grid;
+  place-items: start center;
+  padding: var(--ts-space-12) var(--ts-space-4) var(--ts-space-16);
+}
+
+.st-card {
+  display: grid;
+  justify-items: start;
+  gap: var(--ts-space-4);
+  inline-size: min(100%, 34rem);
+  padding: var(--ts-space-8) var(--ts-space-6);
+  border: thin solid var(--ts-border);
+  border-radius: var(--ts-radius-xl);
+  background: var(--ts-surface-raised);
+  box-shadow: var(--ts-elevation-1);
+}
+
+.st-card h1 {
+  font-size: var(--ts-text-2xl);
+}
+
+.st-card p {
+  color: var(--ts-text-2);
+}
+
+.st-card strong {
+  color: var(--ts-text-1);
+  overflow-wrap: anywhere;
+}
+
+.st-dev {
+  justify-self: stretch;
+  margin-block-start: var(--ts-space-2);
+  padding-block-start: var(--ts-space-5);
+  border-block-start: thin solid var(--ts-border-subtle);
+}
+
+.st-not-you p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ts-space-1);
+  font-size: var(--ts-text-sm);
+}

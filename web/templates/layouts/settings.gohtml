@@ -1,0 +1,130 @@
+{{- /*
+  settings — the account and organisation shell.
+
+  Rendered only after the handler has resolved the session, the organisation
+  and the reader's role, so nothing here asks the browser who is reading. The
+  organisation switcher and the section links are forms and links that work
+  with scripting switched off; settings.ts only enhances them.
+*/ -}}
+{{ define "settings" -}}
+{{- $s := .Data.Shell -}}
+<!doctype html>
+<html lang="{{ .L.Locale.Lang }}" dir="{{ .L.Locale.Dir }}"{{ with .Theme }} data-theme="{{ . }}"{{ end }}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="{{ .Favicon }}" />
+    {{- template "theme-meta" . }}
+    {{ with .Robots }}<meta name="robots" content="{{ . }}" />{{ end }}
+    <title>{{ .Title }}</title>
+    <meta name="description" content="{{ .Description }}" />
+    {{ template "styles" . }}
+    <script type="application/json" id="timlee-i18n" nonce="{{ .Nonce }}">{{ $s.ClientMessages }}</script>
+  </head>
+
+  <body class="settings-app">
+    <a class="skip-link" href="#main">{{ t .L "settings.shell.skip" }}</a>
+
+    <header class="st-top">
+      <div class="st-brand">
+        {{ template "logo" (dict "Href" (href .L "/") "Class" "st-logo" "L" .L) }}
+        <a class="st-brand-section" href="/settings">{{ t .L "settings.shell.title" }}</a>
+      </div>
+      <div class="st-top-actions">
+        <a class="st-top-link" href="/apps">{{ t .L "settings.shell.apps" }}</a>
+        {{ template "theme-toggle" (dict "Page" .) }}
+        <span class="st-me">
+          {{ template "settings-avatar" (dict "Name" .User.Display "URL" .User.AvatarURL "Initials" .User.Initials) }}
+          <span class="st-me-name"><bdi dir="auto">{{ .User.Display }}</bdi></span>
+        </span>
+        <form method="post" action="/sign-out">
+          <input type="hidden" name="returnTo" value="{{ href .L "/" }}" />
+          <timlee-button variant="ghost" size="sm"><button type="submit">{{ t .L "settings.shell.signOut" }}</button></timlee-button>
+        </form>
+      </div>
+    </header>
+
+    <div class="st-frame">
+      <div class="st-rail" data-st-rail>
+        <section class="st-org" aria-label="{{ t .L "settings.shell.organisation" }}">
+          {{ if gt (len $s.Orgs) 1 }}
+          <form class="st-switch" method="post" action="/settings/org">
+            {{ $s.CSRF }}
+            <input type="hidden" name="returnTo" value="{{ $s.Path }}" />
+            <timlee-select>
+              <label for="st-org-select">{{ t $.L "settings.shell.organisation" }}</label>
+              <select id="st-org-select" name="orgId">
+                {{ range $s.Orgs }}
+                <option value="{{ .ID }}" dir="auto"{{ if and $s.Org (eq .ID $s.Org.ID) }} selected{{ end }}>{{ .Name }}</option>
+                {{ end }}
+              </select>
+            </timlee-select>
+            <timlee-button variant="secondary" size="sm"><button type="submit">{{ t $.L "settings.shell.switch" }}</button></timlee-button>
+          </form>
+          {{ else if $s.Org }}
+          <p class="st-org-name"><bdi dir="auto">{{ $s.Org.Name }}</bdi></p>
+          {{ else }}
+          <p class="st-org-name">{{ t $.L "settings.shell.noOrganisation" }}</p>
+          {{ end }}
+          {{ if $s.Org }}
+          <p class="st-org-role">{{ t $.L "settings.shell.yourRole" }} <timlee-badge tone="{{ if $s.CanManage }}info{{ else }}neutral{{ end }}">{{ $s.RoleLabel }}</timlee-badge></p>
+          {{ end }}
+        </section>
+
+        <nav class="st-nav" aria-label="{{ t .L "settings.shell.title" }}">
+          <ul>
+            {{ range $s.Nav }}
+            <li><a href="{{ .Href }}"{{ if .Current }} aria-current="page"{{ end }}>{{ .Label }}</a></li>
+            {{ end }}
+          </ul>
+        </nav>
+      </div>
+
+      <main id="main" class="st-main" tabindex="-1" data-st-main>
+        {{ template "content" . }}
+      </main>
+    </div>
+    {{ template "scripts" . }}
+  </body>
+</html>
+{{ end }}
+
+{{- /*
+  settings-solo — one message or one decision, with nothing else to navigate:
+  accepting an invitation, an outage, a form that could not be verified.
+*/ -}}
+{{ define "settings-solo" -}}
+<!doctype html>
+<html lang="{{ .L.Locale.Lang }}" dir="{{ .L.Locale.Dir }}"{{ with .Theme }} data-theme="{{ . }}"{{ end }}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="{{ .Favicon }}" />
+    {{- template "theme-meta" . }}
+    {{ with .Robots }}<meta name="robots" content="{{ . }}" />{{ end }}
+    <title>{{ .Title }}</title>
+    <meta name="description" content="{{ .Description }}" />
+    {{ template "styles" . }}
+  </head>
+
+  <body class="settings-app settings-solo">
+    <a class="skip-link" href="#main">{{ t .L "settings.shell.skip" }}</a>
+    <header class="st-top">
+      <div class="st-brand">
+        {{ template "logo" (dict "Href" (href .L "/") "Class" "st-logo" "L" .L) }}
+      </div>
+      <div class="st-top-actions">
+        {{ block "solo-actions" . }}{{ template "theme-toggle" (dict "Page" .) }}{{ end }}
+      </div>
+    </header>
+    <main id="main" class="st-solo" tabindex="-1">
+      {{- template "locale-banner" . }}
+      {{ template "content" . }}
+    </main>
+    {{ with .ClientMessages }}
+    <script type="application/json" id="timlee-i18n" nonce="{{ $.Nonce }}">{{ . }}</script>
+    {{ end }}
+    {{ template "scripts" . }}
+  </body>
+</html>
+{{ end }}

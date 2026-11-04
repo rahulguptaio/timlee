@@ -1,0 +1,53 @@
+{{- /*
+  The apps list: every app in the workspace, and the form that creates one
+  (optionally with its first prompt).
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+<section class="section apps-page" aria-labelledby="apps-title">
+  <div class="wrap">
+    <h1 id="apps-title">{{ t .L "apps.list.heading" }}</h1>
+
+    {{- with $d.Flash }}
+    <timlee-alert tone="{{ .Tone }}" role="alert">{{ .Message }}</timlee-alert>
+    {{- end }}
+
+    {{ if $d.Apps }}
+    <ul class="apps-grid" role="list">
+      {{- range $d.Apps }}
+      <li>
+        <a class="app-card" href="/apps/{{ .Slug }}" aria-label="{{ t $.L "apps.list.open" "name" .Name }}">
+          <span class="app-card-name">{{ .Name }}</span>
+          <span class="app-card-desc">{{ .Description }}</span>
+          <code class="app-card-slug">apps/{{ .Slug }}</code>
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+    {{ else }}
+    <p class="lede">{{ t .L "apps.list.empty" }}</p>
+    {{ end }}
+
+    <section class="apps-new" aria-labelledby="apps-new-title">
+      <h2 id="apps-new-title">{{ t .L "apps.new.heading" }}</h2>
+      <form method="post" action="/apps" class="apps-new-form">
+        {{ $d.CSRF }}
+        <timlee-input>
+          <label for="app-name">{{ t .L "apps.new.name" }}</label>
+          <input id="app-name" name="name" type="text" required maxlength="80" autocomplete="off" dir="auto" />
+        </timlee-input>
+        <timlee-input>
+          <label for="app-description">{{ t .L "apps.new.description" }}</label>
+          <input id="app-description" name="description" type="text" maxlength="300" autocomplete="off" dir="auto" aria-describedby="app-description-hint" />
+          <p data-hint id="app-description-hint">{{ t .L "apps.new.descriptionHint" }}</p>
+        </timlee-input>
+        <timlee-textarea>
+          <label for="app-prompt">{{ t .L "apps.new.prompt" }}</label>
+          <textarea id="app-prompt" name="prompt" rows="5" maxlength="8000" dir="auto"></textarea>
+        </timlee-textarea>
+        <timlee-button variant="primary"><button type="submit">{{ t .L "apps.new.submit" }}</button></timlee-button>
+      </form>
+    </section>
+  </div>
+</section>
+{{ end }}

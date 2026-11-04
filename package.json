@@ -1,0 +1,57 @@
+{
+  "name": "timlee",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Timlee — describe an app and Timlee builds it. Frontend tooling for the server-rendered site, components and desktop shell.",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "lint": "biome check --error-on-warnings .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --config web/components/vitest.config.ts",
+    "test:watch": "vitest --config web/components/vitest.config.ts",
+    "verify": "biome check --error-on-warnings . && tsc --noEmit -p tsconfig.json && vitest run --config web/components/vitest.config.ts && go run ./cmd/timlee-build",
+    "dev": "go run ./cmd/timlee-dev",
+    "dev:desktop": "concurrently -k -n stack,desktop -c green,yellow \"go build -o .local/bin/timlee-dev ./cmd/timlee-dev && .local/bin/timlee-dev\" \"pnpm --dir desktop exec tauri dev\"",
+    "build": "go run ./cmd/timlee-build",
+    "tauri": "pnpm --dir desktop exec tauri",
+    "tauri:install": "pnpm --dir desktop install --ignore-workspace --frozen-lockfile",
+    "tauri:dev": "pnpm --dir desktop exec tauri dev",
+    "tauri:build": "pnpm --dir desktop exec tauri build",
+    "tauri:smoke": "desktop/scripts/smoke-macos.sh",
+    "build:macos": "pnpm --dir desktop exec tauri build --bundles app,dmg",
+    "build:windows": "pnpm --dir desktop exec tauri build --bundles msi,nsis",
+    "components:size": "node web/components/scripts/measure.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.4",
+    "@types/node": "^22.19.0",
+    "@vitest/browser": "^5.0.5",
+    "@vitest/browser-playwright": "^5.0.5",
+    "axe-core": "^4.14.0",
+    "concurrently": "^9.2.1",
+    "esbuild": "0.28.2",
+    "playwright": "^1.64.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.12",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
+    "@lezer/highlight": "^1.2.5"
+  }
+}

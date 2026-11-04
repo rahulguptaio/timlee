@@ -1,0 +1,21 @@
+{{- /*
+  Document-level assets.
+
+  The stylesheet is linked, not imported from JavaScript, so the browser can
+  start fetching it while the HTML is still arriving. The inline block carries
+  only the proportional widths the page's own data produced, authorised by
+  this response's nonce rather than by 'unsafe-inline'.
+*/ -}}
+{{ define "styles" }}
+    <link rel="stylesheet" href="{{ asset "app.css" }}" integrity="{{ assetIntegrity "app.css" }}" crossorigin="anonymous" />
+    <style nonce="{{ .Nonce }}">{{ .FillCSS }}</style>
+{{ end }}
+
+{{- /*
+  The bundle is an ES module, so it is deferred by definition and never
+  blocks the parser. Nothing on the page waits for it: it enhances markup
+  that already works.
+*/ -}}
+{{ define "scripts" }}
+    <script type="module" src="{{ asset "app.js" }}" integrity="{{ assetIntegrity "app.js" }}" crossorigin="anonymous"></script>
+{{ end }}

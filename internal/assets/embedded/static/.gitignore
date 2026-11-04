@@ -1,0 +1,7 @@
+# Written by `go run ./cmd/timlee-build -embed internal/assets/embedded/static`.
+#
+# The build output is generated, so it is never committed; this file keeps the
+# directory present in a fresh clone so the //go:embed directive next door
+# always has something to match and `go build ./...` stays green.
+*
+!.gitignore

@@ -1,0 +1,17 @@
+{{- /*
+  The error page. Still a complete document with the site's own chrome, so a
+  wrong URL leaves a reader somewhere they can navigate from.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+<section class="section error-page" aria-labelledby="error-title">
+  <div class="wrap">
+    <p class="error-code"><span class="visually-hidden">{{ t .L "common.error.prefix" }} </span><bdi dir="ltr">{{ $d.Status }}</bdi></p>
+    <h1 id="error-title">{{ $d.Title }}</h1>
+    <p class="lede">{{ $d.Body }}</p>
+    <div class="actions">
+      <timlee-button variant="primary" size="lg"><a href="{{ href .L "/" }}">{{ t .L "common.error.backHome" }}</a></timlee-button>
+    </div>
+  </div>
+</section>
+{{ end }}

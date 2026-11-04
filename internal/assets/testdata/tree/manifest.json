@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "base": "/assets/",
+  "entries": {
+    "app.css": {
+      "path": "/assets/app-FEPGMDJK.css",
+      "file": "app-FEPGMDJK.css",
+      "integrity": "sha384-EVzoo4dggmrIott4oRm5M49WHOszBef4lUVDn4Dss17xC3M8m9+9G43sG9UVBWlQ",
+      "size": 13
+    },
+    "app.js": {
+      "path": "/assets/app-TVWDLM6W.js",
+      "file": "app-TVWDLM6W.js",
+      "integrity": "sha384-T2hO7zKkY8LxiAArzsPXNjINCGbwMTu1In0Aopy4beZlBxSrGoWPBhGCG2rh7418",
+      "size": 20
+    }
+  }
+}

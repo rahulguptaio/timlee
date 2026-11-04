@@ -1,0 +1,12 @@
+-- PKCE binding for desktop sign-in codes.
+--
+-- A login_token is a bearer credential: whoever holds it gets a session. That
+-- is acceptable for a magic link, which is delivered to a mailbox only its
+-- owner can read. It is not acceptable for the desktop flow, where the code
+-- is handed to a loopback listener that any local process could have opened
+-- first (RFC 8252 §8.9).
+--
+-- When this column is set, the token can only be redeemed by presenting the
+-- verifier whose SHA-256 it holds — so possession of the code alone is no
+-- longer enough. NULL means an unbound token, which is what a magic link is.
+ALTER TABLE login_token ADD COLUMN code_challenge TEXT;

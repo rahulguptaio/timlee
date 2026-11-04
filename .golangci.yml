@@ -1,0 +1,149 @@
+version: "2"
+
+# Bug-finding Go lint for Timlee (golangci-lint v2). Every linter and exclusion
+# here was kept because its findings on this codebase were mostly real.
+
+run:
+  # Concurrent commits wait for the cache lock instead of failing.
+  allow-serial-runners: true
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - errorlint
+    - gocritic
+    - gosec
+    - govet
+    - ineffassign
+    - misspell
+    - nilerr
+    - noctx
+    - revive
+    - rowserrcheck
+    - sloglint
+    - sqlclosecheck
+    - staticcheck
+    - unconvert
+    - unused
+    - usestdlibvars
+  settings:
+    errcheck:
+      # Best-effort calls whose error has nowhere useful to go. Close on a
+      # writer is deliberately NOT here: (*gzip.Writer).Close, Flush and
+      # friends still report, because ignoring them loses data. Deferred
+      # Close calls are excluded below.
+      exclude-functions:
+        - (io.Closer).Close # response bodies and other read-side handles
+        - (io/fs.File).Close
+        - (*os.File).Close # mostly read-only opens; write paths are listed in the report
+        - (*database/sql.Rows).Close # iteration errors surface through rows.Err
+        - (*database/sql.Tx).Rollback # deferred after Commit, returns ErrTxDone
+        - (*database/sql.DB).Close
+        - os.Remove # cleanup on a path that already failed
+        - os.RemoveAll
+        - fmt.Fprint # terminals, hashes and http.ResponseWriter
+        - fmt.Fprintf
+        - fmt.Fprintln
+        - io.WriteString
+        - (net/http.ResponseWriter).Write # the client has gone; nothing to do
+    gocritic:
+      # Diagnostic checks only: subtracting the other tags also removes the
+      # style checks gocritic enables by default.
+      enabled-tags:
+        - diagnostic
+      disabled-tags:
+        - opinionated
+        - performance
+        - style
+      disabled-checks:
+        - exitAfterDefer # every hit was a deferred cancel() before os.Exit: harmless
+        - sprintfQuotedString # style, and %#q changes the output
+    gosec:
+      excludes:
+        - G101 # credential-shaped names; secrets are scanned by L5 (gitleaks)
+        - G104 # duplicate of errcheck
+        - G115 # integer-conversion overflow: guarded conversions are flagged anyway
+        - G124 # cookie flags come from config (Secure: m.secure), never constants
+        - G204 # dev tooling runs the binaries it is configured to run
+        - G301 # build output and fixtures are meant to be world-readable
+        - G302
+        - G304 # tools read the files they are told to read
+        - G306
+        - G703 # taint rules do not see the safePath/safeReturnTo sanitisers
+        - G704
+        - G706
+        - G710
+    govet:
+      enable:
+        - atomicalign
+        - deepequalerrors
+        - nilness
+        - reflectvaluecompare
+        - sortslice
+        - unusedwrite
+    revive:
+      rules:
+        - name: datarace
+        - name: defer
+        - name: identical-branches
+        - name: modifies-value-receiver
+        - name: time-equal
+        - name: unconditional-recursion
+        - name: waitgroup-by-value
+    sloglint:
+      forbidden-keys: [time, level, msg, source] # collide with the handler's own keys
+      key-naming-case: snake
+    staticcheck:
+      # Correctness checks only. Style (ST), simplification (S) and quick-fix
+      # (QF) suggestions are not bugs.
+      checks:
+        - SA*
+
+  exclusions:
+    generated: lax
+    rules:
+      # Fixtures and httptest requests: no secrets, no cancellation to plumb.
+      - path: _test\.go
+        linters: [gosec, noctx]
+      # Teardown: a failed Close cannot change a test's verdict.
+      - path: _test\.go
+        linters: [errcheck]
+        text: Error return value of `[^`]+\.Close` is not checked
+      # A deferred Close is cleanup. A writer whose Close reports lost data
+      # must be closed, and checked, before its output is used.
+      - linters: [errcheck]
+        source: ^\s*defer\s+[\w.]+\.Close\(\)\s*$
+      # Listen does not block, DialTimeout is bounded, and every exec.Command
+      # child is supervised by hand (process group, SIGTERM then SIGKILL),
+      # which CommandContext would weaken to killing the direct child only.
+      - linters: [noctx]
+        text: ^(net\.(Listen|DialTimeout)|os/exec\.Command) must not be called
+      # Modernisation advice, not a defect.
+      - linters: [sloglint]
+        text: use slog.DiscardHandler instead
+      # Explicit Close on every path is correct; only a missing Close is a leak.
+      - linters: [sqlclosecheck]
+        text: Close should use defer
+      # Reviewed trust conversions: constant CSS and favicon, and json.Marshal
+      # output, which escapes <, > and &.
+      - path: ^internal/render/funcs\.go$
+        linters: [gosec]
+        text: G203
+        source: template\.(CSS|URL)\(
+      - path: ^internal/render/page\.go$
+        linters: [gosec]
+        text: G203
+        source: template\.JS\(raw\)
+      # SHA-1 only fingerprints a body for an ETag in httpx.
+      - path: ^internal/httpx/respond\.go$
+        linters: [gosec]
+        text: G(401|505)
+      # The error after Process.Kill is the expected "signal: killed".
+      - path: ^cmd/timlee-auth/main_test\.go$
+        linters: [errcheck]
+        source: ^\s*<-exited$
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

@@ -1,0 +1,181 @@
+/* Layout and controls for the pages bundled into the app. Tokens only. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ts-background);
+  color: var(--ts-text-1);
+  font: var(--ts-text-md) / var(--ts-leading-normal) var(--ts-font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  /* Optical centre: a little above the middle reads as centred in a window. */
+  grid-template-rows: 2fr auto 3fr;
+  padding: var(--ts-space-8);
+}
+
+main {
+  grid-row: 2;
+  width: 100%;
+  max-width: var(--ts-measure);
+  justify-self: center;
+}
+
+/* Revealed by the page once it knows which state it is in. */
+[hidden] {
+  display: none !important;
+}
+
+/* Hidden until locale.js has put the page in the app's language, so it never
+   shows in one language and then another. A second later it shows anyway, so
+   a failure is visible; that is not motion, so reduced motion keeps it. */
+[data-localizing] body {
+  visibility: hidden;
+  animation: localized 0s 1s forwards !important;
+}
+
+@keyframes localized {
+  to {
+    visibility: visible;
+  }
+}
+
+.mark {
+  display: block;
+  width: var(--ts-size-mark);
+  height: var(--ts-size-mark);
+  margin-bottom: var(--ts-space-6);
+}
+
+h1 {
+  margin: 0 0 var(--ts-space-3);
+  font-size: var(--ts-text-2xl);
+  line-height: var(--ts-leading-tight);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0 0 var(--ts-space-6);
+  color: var(--ts-text-2);
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ts-space-3);
+  align-items: center;
+}
+
+button {
+  min-height: var(--ts-size-control);
+  padding: 0 var(--ts-space-4);
+  border-radius: var(--ts-radius);
+  border: 1px solid var(--ts-input);
+  background: transparent;
+  color: var(--ts-text-1);
+  font: inherit;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background-color var(--ts-duration-fast) var(--ts-ease);
+}
+
+button:hover {
+  background: var(--ts-surface-hover);
+}
+
+button.primary {
+  border-color: var(--ts-primary);
+  background: var(--ts-primary);
+  color: var(--ts-primary-foreground);
+}
+
+button.primary:hover {
+  border-color: var(--ts-primary-hover);
+  background: var(--ts-primary-hover);
+}
+
+button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ts-ring);
+  outline-offset: 2px;
+  border-radius: var(--ts-radius-sm);
+}
+
+/* Headings take focus only so a screen reader announces the new state; they
+   are not controls, so they show no ring. */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* One line that says what the app is doing right now. */
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--ts-space-2);
+  min-height: 1lh;
+  margin: var(--ts-space-6) 0 0;
+  padding-top: var(--ts-space-4);
+  border-top: 1px solid var(--ts-border);
+  color: var(--ts-text-2);
+  font-size: var(--ts-text-sm);
+}
+
+.status::before {
+  content: "";
+  flex: none;
+  width: var(--ts-size-dot);
+  height: var(--ts-size-dot);
+  border-radius: 50%;
+  background: var(--ts-input);
+}
+
+.status[data-state="busy"]::before {
+  background: var(--ts-primary);
+  animation: pulse var(--ts-duration-slower) var(--ts-ease) infinite alternate;
+}
+
+.error {
+  color: var(--ts-danger-ink);
+}
+
+/* The boot page is never seen while the site loads normally; if loading is
+   slow, the window appears and this fades in rather than popping. */
+.connecting {
+  color: var(--ts-text-2);
+  animation: appear var(--ts-duration-slower) var(--ts-ease) 1.5s both;
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0.35;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}

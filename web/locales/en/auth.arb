@@ -1,0 +1,327 @@
+{
+  "@@locale": "en",
+  "@@context": "Sign-in and invitation acceptance.",
+  "auth.signIn.errorTitle": "Error: {title}",
+  "@auth.signIn.errorTitle": {
+    "description": "Document title of the sign-in page when something failed, so a screen reader says so first. title is the page's usual title.",
+    "placeholders": {
+      "title": {
+        "type": "text"
+      }
+    }
+  },
+  "auth.sent.title": "Check your inbox — Timlee",
+  "@auth.sent.title": {
+    "description": "Document title of the page shown after a sign-in link was emailed."
+  },
+  "auth.sent.lede": "We sent a sign-in link to <b>{email}</b>. It expires in 15 minutes and works once.",
+  "@auth.sent.lede": {
+    "description": "Confirmation after a sign-in link was emailed. email is the address it went to.",
+    "placeholders": {
+      "email": {
+        "type": "text"
+      }
+    }
+  },
+  "auth.sent.ledeNoAddress": "We sent a sign-in link to the address you entered. It expires in 15 minutes and works once.",
+  "@auth.sent.ledeNoAddress": {
+    "description": "The same confirmation when the page no longer knows the address, because its 15 minutes have passed or cookies are off."
+  },
+  "auth.sent.arrival": "It can take a minute to arrive. If it does not, check your spam or junk folder.",
+  "@auth.sent.arrival": {
+    "description": "Advice under the sign-in link confirmation."
+  },
+  "auth.email.missing": "Enter your email address",
+  "@auth.email.missing": {
+    "description": "Error under the sign-in email field when it was left empty."
+  },
+  "auth.email.invalid": "Enter an email address like name@company.com",
+  "@auth.email.invalid": {
+    "description": "Error under the sign-in email field when the text is not an email address. Keep the example address."
+  },
+  "auth.email.errorPrefix": "Error:",
+  "@auth.email.errorPrefix": {
+    "description": "Read by screen readers before the error under the email field; not shown."
+  },
+  "auth.failure.unreachable": "Timlee could not reach its sign-in service. Try again in a moment.",
+  "@auth.failure.unreachable": {
+    "description": "The sign-in service did not answer."
+  },
+  "auth.failure.unreachableNothingSent": "Timlee could not reach its sign-in service. Nothing was sent. Try again in a moment.",
+  "@auth.failure.unreachableNothingSent": {
+    "description": "The sign-in service did not answer a request for an email link, so no email went out."
+  },
+  "auth.failure.linkRateLimited": "Too many sign-in links have been requested for this address. Wait a minute, then try again.",
+  "@auth.failure.linkRateLimited": {
+    "description": "Rate limit on emailed sign-in links."
+  },
+  "auth.failure.rateLimited": "Too many sign-in attempts. Wait a minute, then try again.",
+  "@auth.failure.rateLimited": {
+    "description": "Rate limit on any other way of signing in."
+  },
+  "auth.failure.mailUnavailable": "Email sign-in is not available on this server.",
+  "@auth.failure.mailUnavailable": {
+    "description": "The server has no way to send email, so sign-in links cannot be sent."
+  },
+  "auth.failure.linkNotSent": "Timlee could not send the sign-in link. Try again in a moment.",
+  "@auth.failure.linkNotSent": {
+    "description": "The sign-in service failed while preparing or sending the email."
+  },
+  "auth.failure.notSignedIn": "Timlee could not sign you in. Try again in a moment.",
+  "@auth.failure.notSignedIn": {
+    "description": "The sign-in service failed during a sign-in that does not use email."
+  },
+  "auth.failure.refused": "That sign-in could not start. Reload the page and try again.",
+  "@auth.failure.refused": {
+    "description": "The sign-in service refused the request for a reason the reader cannot fix in the form."
+  },
+
+  "auth.signIn.documentTitle": "Sign in — Timlee",
+  "@auth.signIn.documentTitle": {
+    "description": "Document title of the sign-in page."
+  },
+  "auth.signIn.description": "Sign in to Timlee, or create an account, to chat with served models and manage API keys.",
+  "@auth.signIn.description": {
+    "description": "Meta description of the sign-in page."
+  },
+  "auth.signIn.heading": "Sign in or create an account",
+  "@auth.signIn.heading": {
+    "description": "Heading of the sign-in page."
+  },
+  "auth.signIn.lede": "Your first sign-in creates your Timlee account and a workspace, with the console and API keys.",
+  "@auth.signIn.lede": {
+    "description": "Explanation under the sign-in heading."
+  },
+  "auth.signIn.continueWith": "Continue with {provider}",
+  "@auth.signIn.continueWith": {
+    "description": "Sign-in button for an identity provider. provider is a brand such as GitHub.",
+    "placeholders": {
+      "provider": {
+        "type": "text",
+        "example": "GitHub"
+      }
+    }
+  },
+  "auth.signIn.emailDivider": "or continue with email",
+  "@auth.signIn.emailDivider": {
+    "description": "Divider between identity-provider buttons and the email form."
+  },
+  "auth.signIn.emailLabel": "Work email",
+  "@auth.signIn.emailLabel": {
+    "description": "Label of the sign-in email field."
+  },
+  "auth.signIn.emailHintStart": "We",
+  "@auth.signIn.emailHintStart": {
+    "description": "Text before the apostrophe in the sign-in email hint. It is joined to auth.signIn.emailHintEnd as “We'll email you a one-time link.” to preserve the existing HTML bytes."
+  },
+  "auth.signIn.emailHintEnd": "ll email you a one-time link.",
+  "@auth.signIn.emailHintEnd": {
+    "description": "Text after the apostrophe in the sign-in email hint. It is joined to auth.signIn.emailHintStart as “We'll email you a one-time link.” to preserve the existing HTML bytes."
+  },
+  "auth.signIn.emailSubmit": "Email me a sign-in link",
+  "@auth.signIn.emailSubmit": {
+    "description": "Button that requests a sign-in link by email."
+  },
+  "auth.signIn.localDevelopment": "Local development",
+  "@auth.signIn.localDevelopment": {
+    "description": "Divider above the development-only sign-in form."
+  },
+  "auth.signIn.devSubmit": "Continue with dev sign-in",
+  "@auth.signIn.devSubmit": {
+    "description": "Button that uses the development-only sign-in method."
+  },
+  "auth.signIn.devNote": "Development only. Signs in as <code>dev@timlee.local</code> without a password.",
+  "@auth.signIn.devNote": {
+    "description": "Explanation of the development-only sign-in method."
+  },
+  "auth.signIn.noneConfigured": "No sign-in method is configured on this server. Set an identity provider or a mail transport and\n      reload.",
+  "@auth.signIn.noneConfigured": {
+    "description": "Shown when this server has no identity provider, email sign-in, or development sign-in."
+  },
+  "auth.signIn.legal": "Timlee uses your email only to sign you in. Only allowlisted accounts can submit prompts.",
+  "@auth.signIn.legal": {"description": "Note under the sign-in options about how the address is used."},
+  "auth.signIn.unknownMethod": "Unknown sign-in method.",
+  "@auth.signIn.unknownMethod": {
+    "description": "Plain error response when a sign-in form contains an unsupported intent."
+  },
+
+  "auth.sent.heading": "Check your inbox",
+  "@auth.sent.heading": {
+    "description": "Heading after a sign-in link was emailed."
+  },
+  "auth.sent.desktop": "Open it on this computer: the link signs you in to the Timlee app here.",
+  "@auth.sent.desktop": {
+    "description": "Instruction when the desktop app started the emailed sign-in."
+  },
+  "auth.sent.resend": "Resend link",
+  "@auth.sent.resend": {
+    "description": "Button that emails another sign-in link."
+  },
+  "auth.sent.otherEmail": "Use a different email",
+  "@auth.sent.otherEmail": {
+    "description": "Link that returns to the empty sign-in form."
+  },
+  "auth.sent.outbox": "Local environment: the sign-in link is written to <code>.local/mail</code> and printed by the service\n      that sent it.",
+  "@auth.sent.outbox": {
+    "description": "Development-only note explaining where the sign-in link is written."
+  },
+
+  "auth.desktop.heading": "Signing in to the Timlee app",
+  "@auth.desktop.heading": {
+    "description": "Heading of the notice shown when the desktop app started sign-in."
+  },
+  "auth.desktop.lede": "When you finish here, the app opens on its own and you can close this tab.",
+  "@auth.desktop.lede": {
+    "description": "Explanation under the desktop sign-in notice."
+  },
+  "auth.callback.linkExpired": "That sign-in link has expired or was already used. Request a new one.",
+  "@auth.callback.linkExpired": {
+    "description": "Sign-in callback error after an expired or already-used email link."
+  },
+  "auth.callback.accessDenied": "That sign-in was cancelled before it finished.",
+  "@auth.callback.accessDenied": {
+    "description": "Sign-in callback error after the reader cancels at an identity provider."
+  },
+  "auth.callback.providerFailed": "The identity provider could not complete the sign-in. Try again.",
+  "@auth.callback.providerFailed": {
+    "description": "Sign-in callback error after an identity provider fails."
+  },
+  "auth.callback.desktopFlow": "That sign-in can only be finished in the Timlee app that started it. Open Timlee and sign in from there.",
+  "@auth.callback.desktopFlow": {
+    "description": "Sign-in callback error when a desktop handoff is opened outside the app that started it."
+  },
+  "auth.callback.default": "That sign-in did not complete. Try again.",
+  "@auth.callback.default": {
+    "description": "Fallback sign-in callback error for an unknown failure code."
+  },
+  "auth.failure.desktopComplete": "The desktop sign-in could not be completed. Try again.",
+  "@auth.failure.desktopComplete": {
+    "description": "Plain error response when a completed desktop sign-in has no valid loopback delivery."
+  },
+
+  "auth.invite.documentTitle": "Accept your invitation — Timlee",
+  "@auth.invite.documentTitle": {
+    "description": "Document title of the invitation acceptance page."
+  },
+  "auth.invite.errorTitle": "Error: {title}",
+  "@auth.invite.errorTitle": {
+    "description": "Document title of the invitation page when the invitation cannot be accepted. title is the usual document title.",
+    "placeholders": {
+      "title": {
+        "type": "text"
+      }
+    }
+  },
+  "auth.invite.missingTitle": "This invitation link is incomplete",
+  "@auth.invite.missingTitle": {
+    "description": "Heading when an invitation URL has no token."
+  },
+  "auth.invite.missingBody": "The link is missing its invitation code. Open the email again and use the whole link, or ask the person who invited you to send it again.",
+  "@auth.invite.missingBody": {
+    "description": "Explanation when an invitation URL has no token."
+  },
+  "auth.invite.home": "Go to the Timlee homepage",
+  "@auth.invite.home": {
+    "description": "Link from an incomplete invitation to the homepage."
+  },
+  "auth.invite.signedOutTitle": "You have been invited to Timlee",
+  "@auth.invite.signedOutTitle": {
+    "description": "Heading when a signed-out reader opens an invitation."
+  },
+  "auth.invite.signedOutBody": "Sign in with the email address this invitation was sent to, and you will come straight back here to accept it.",
+  "@auth.invite.signedOutBody": {
+    "description": "Explanation when a signed-out reader opens an invitation."
+  },
+  "auth.invite.signIn": "Sign in to accept",
+  "@auth.invite.signIn": {
+    "description": "Link that signs in before accepting an invitation."
+  },
+  "auth.invite.emailLabel": "Email address",
+  "@auth.invite.emailLabel": {
+    "description": "Label of the development sign-in email field on an invitation."
+  },
+  "auth.invite.devHint": "Development only: signs in as this address without a password.",
+  "@auth.invite.devHint": {
+    "description": "Hint under the development sign-in email field on an invitation."
+  },
+  "auth.invite.mismatchTitle": "This invitation is for a different email address",
+  "@auth.invite.mismatchTitle": {
+    "description": "Heading when the signed-in account does not match the invitation."
+  },
+  "auth.invite.signedInAs": "You are signed in as",
+  "@auth.invite.signedInAs": {
+    "description": "Text immediately before the signed-in email address on an invitation."
+  },
+  "auth.invite.mismatchAfterEmail": ", and invitations only work for the address they were sent to. Sign out, then sign in with that address.",
+  "@auth.invite.mismatchAfterEmail": {
+    "description": "Rest of the mismatch explanation immediately after the signed-in email address. Keep the leading comma."
+  },
+  "auth.invite.switchAccount": "Sign out and switch account",
+  "@auth.invite.switchAccount": {
+    "description": "Button shown when an invitation belongs to another email address."
+  },
+  "auth.invite.goneTitle": "This invitation can no longer be used",
+  "@auth.invite.goneTitle": {
+    "description": "Heading when an invitation expired, was revoked, or was already accepted."
+  },
+  "auth.invite.goneBody": "It has expired, been revoked, or already been accepted. Ask an owner or admin of the organisation to send you a new one.",
+  "@auth.invite.goneBody": {
+    "description": "Explanation when an invitation can no longer be used."
+  },
+  "auth.invite.settings": "Go to your settings",
+  "@auth.invite.settings": {
+    "description": "Link from a used invitation to settings."
+  },
+  "auth.invite.readyTitle": "Accept your invitation",
+  "@auth.invite.readyTitle": {
+    "description": "Heading of an invitation that is ready to accept."
+  },
+  "auth.invite.failedTitle": "Timlee could not accept the invitation just now",
+  "@auth.invite.failedTitle": {
+    "description": "Heading after the invitation service fails."
+  },
+  "auth.invite.failedBody": "Nothing was changed. Try again in a moment.",
+  "@auth.invite.failedBody": {
+    "description": "Explanation after the invitation service fails."
+  },
+  "auth.invite.readyAfterEmail": ". Accepting adds this account to the organisation that invited you, at the role they chose.",
+  "@auth.invite.readyAfterEmail": {
+    "description": "Rest of the invitation explanation immediately after the signed-in email address. Keep the leading full stop."
+  },
+  "auth.invite.accept": "Accept invitation",
+  "@auth.invite.accept": {
+    "description": "Button that accepts an invitation."
+  },
+  "auth.invite.not": "Not",
+  "@auth.invite.not": {
+    "description": "Text immediately before the signed-in email address in the account-switch prompt."
+  },
+  "auth.invite.signOut": "Sign out",
+  "@auth.invite.signOut": {
+    "description": "Button in the invitation account-switch prompt."
+  },
+  "auth.invite.accepted": "Accepted your invitation to {org}. You joined as {role, select, owner {an Owner} admin {an Admin} member {a Member} viewer {a Viewer} other {a Member}}.",
+  "@auth.invite.accepted": {
+    "description": "Confirmation after an invitation was accepted. org is the organisation name and role is owner, admin, member, or viewer.",
+    "placeholders": {
+      "org": {
+        "type": "text"
+      },
+      "role": {
+        "type": "text"
+      }
+    }
+  },
+  "auth.invite.acceptedNotSwitched": "Accepted your invitation to {org}. You joined as {role, select, owner {an Owner} admin {an Admin} member {a Member} viewer {a Viewer} other {a Member}}. Use the organisation switcher to open it.",
+  "@auth.invite.acceptedNotSwitched": {
+    "description": "Confirmation after an invitation was accepted but the new organisation could not be opened automatically.",
+    "placeholders": {
+      "org": {
+        "type": "text"
+      },
+      "role": {
+        "type": "text"
+      }
+    }
+  }
+}

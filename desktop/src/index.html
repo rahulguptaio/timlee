@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-localizing>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Timlee</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="app.css" />
+    <script type="module" src="boot.js"></script>
+  </head>
+  <body>
+    <main>
+      <img class="mark" src="mark.svg" alt="" width="40" height="40" />
+
+      <p class="connecting" data-view="connecting" data-i18n="boot.start.connecting">Connecting to Timlee…</p>
+
+      <section data-view="offline" aria-labelledby="offline-title" hidden>
+        <h1 id="offline-title" tabindex="-1" data-i18n="boot.offline.heading">Timlee can’t reach the server</h1>
+        <p data-i18n="boot.offline.body">
+          Check your internet connection. Timlee keeps trying, and opens the site as soon as the
+          site responds.
+        </p>
+        <div class="actions">
+          <button type="button" class="primary" data-retry data-i18n="boot.offline.retry">Try again</button>
+        </div>
+        <p class="status" role="status" data-status></p>
+      </section>
+    </main>
+  </body>
+</html>

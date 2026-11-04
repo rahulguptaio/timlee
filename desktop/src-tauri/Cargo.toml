@@ -1,0 +1,53 @@
+[package]
+name = "timlee-desktop"
+version = "0.1.0"
+description = "Timlee for macOS and Windows: a native shell around the hosted Timlee site"
+authors = ["Timlee"]
+edition = "2021"
+rust-version = "1.90"
+default-run = "timlee-desktop"
+
+[lib]
+# Tauri's mobile targets link the app as a library, so the crate is built both
+# ways and `main.rs` stays a thin shim over `lib.rs`.
+name = "timlee_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.7.4", features = [] }
+
+[dependencies]
+tauri = { version = "2.12.5", features = [] }
+# Only the free function `open_url` is used. The plugin itself is never
+# registered, so no webview can ask it to open anything.
+tauri-plugin-opener = "2.7.2"
+tauri-plugin-window-state = "2.5.0"
+tauri-plugin-dialog = "2.8.4"
+tauri-plugin-updater = "2.14.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+base64 = "0.23"
+getrandom = "0.3"
+semver = "1"
+# The system's preferred languages, for the app's own words until the site's
+# language is known (src/i18n.rs): a direct call to CFLocaleCopyPreferredLanguages
+# on macOS and GetUserPreferredUILanguages on Windows, with no dependencies there.
+sys-locale = "0.3"
+
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-single-instance = "2.5.5"
+
+[profile.release]
+# A desktop shell benefits more from a small binary than from aggressive
+# inlining: the webview does the heavy lifting.
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+incremental = false
+
+[profile.dev]
+# Keep `tauri dev` rebuilds quick.
+incremental = true

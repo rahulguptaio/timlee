@@ -1,0 +1,67 @@
+{{- /*
+  Settings overview: who you are, which organisation you are acting in, what
+  your role lets you do there, and where each part of it is managed.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+{{- $s := $d.Shell -}}
+<header class="st-head">
+  <h1>{{ t .L "settings.overview.title" }}</h1>
+  <p>{{ if $s.Org }}{{ t .L "settings.overview.ledeOrg" "org" $s.Org.Name }}{{ else }}{{ t .L "settings.overview.lede" }}{{ end }}</p>
+</header>
+
+{{ template "settings-outcome" . }}
+
+<section class="st-section st-you">
+  <h2 id="ov-you" class="visually-hidden">{{ t .L "settings.overview.account" }}</h2>
+  {{ template "settings-avatar" (dict "Name" .User.Display "URL" $s.User.AvatarURL "Initials" $d.Initials) }}
+  <div>
+    <p class="st-you-name"><bdi dir="auto">{{ .User.Display }}</bdi></p>
+    <p class="st-quiet"><bdi dir="ltr">{{ $s.User.Email }}</bdi></p>
+  </div>
+  <div class="st-you-actions">
+    <timlee-button variant="secondary" size="sm"><a href="/settings/profile">{{ t .L "settings.overview.editProfile" }}</a></timlee-button>
+    <timlee-button variant="secondary" size="sm"><a href="/settings/security">{{ t $.L "settings.overview.security" }}</a></timlee-button>
+  </div>
+</section>
+
+{{ if $s.Org }}
+<section class="st-section">
+  <h2 id="ov-access">{{ t .L "settings.overview.access" "org" $s.Org.Name }}</h2>
+  <p class="st-role-line"><timlee-badge tone="{{ if $s.CanManage }}info{{ else }}neutral{{ end }}">{{ $s.RoleLabel }}</timlee-badge> {{ $s.RoleBlurb }}</p>
+  {{ if not $s.CanManage }}
+  {{ template "settings-ask" (dict "L" $.L "Lead" (t $.L "settings.overview.managedByAdmins") "Admins" $d.Admins) }}
+  {{ end }}
+</section>
+
+<section class="st-section">
+  <h2 id="ov-org"><bdi dir="auto">{{ $s.Org.Name }}</bdi></h2>
+  <dl class="st-summary">
+    <div>
+      <dt><a href="/settings/organisation">{{ t $.L "settings.nav.organisation" }}</a></dt>
+      <dd>{{ if eq $s.Role "owner" }}{{ t $.L "settings.overview.orgOwner" }}{{ else if $s.CanManage }}{{ t $.L "settings.overview.orgAdmin" }}{{ else }}{{ t $.L "settings.overview.orgMember" }}{{ end }}</dd>
+    </div>
+    <div>
+      <dt><a href="/settings/members">{{ t $.L "settings.nav.members" }}</a></dt>
+      <dd>{{ t $.L "settings.overview.membersSummary" "members" $d.MemberCount "pending" $d.Pending }}</dd>
+    </div>
+    <div>
+      <dt><a href="/settings/keys">{{ t $.L "settings.nav.keys" }}</a></dt>
+      <dd>
+        {{ if not $s.CanManage }}{{ t $.L "settings.overview.keysManaged" }}{{ else if $d.KeysKnown }}{{ t $.L "settings.overview.activeKeys" "count" $d.ActiveKeys }}{{ else }}{{ t $.L "settings.overview.keysUnknown" }}{{ end }}
+        {{ with $d.ExpiringKeys }}<a class="st-sub st-attention" href="/settings/keys?status=expiring">{{ tn $.L "settings.overview.keysExpiring" . }}</a>{{ end }}
+      </dd>
+    </div>
+    <div>
+      <dt><a href="/settings/audit">{{ t $.L "settings.nav.audit" }}</a></dt>
+      <dd>{{ if $s.CanManage }}{{ t $.L "settings.overview.auditManaged" }}{{ else }}{{ t $.L "settings.overview.auditRestricted" }}{{ end }}</dd>
+    </div>
+  </dl>
+</section>
+{{ else }}
+<section class="st-section">
+  <h2 id="ov-none">{{ t .L "settings.overview.noOrgTitle" }}</h2>
+  <p>{{ t .L "settings.overview.noOrgBody" }}</p>
+</section>
+{{ end }}
+{{ end }}

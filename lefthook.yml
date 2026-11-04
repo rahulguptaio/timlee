@@ -1,0 +1,30 @@
+# Git hooks for Timlee, run by lefthook pinned in tools/hooks/go.mod.
+#
+#   Install once per clone:   go tool -modfile=tools/hooks/go.mod lefthook install
+#   Skip for one command:     LEFTHOOK=0 git commit ...  (or git commit --no-verify)
+
+# The installed .git/hooks scripts run this command, so every clone uses the
+# pinned lefthook rather than whichever one is on PATH.
+lefthook: go tool -modfile=tools/hooks/go.mod lefthook
+
+# Only an explicit `lefthook install` may write .git/hooks.
+no_auto_install: true
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: gofmt
+      glob: "*.go"
+      run: bash tools/hooks/go.sh fmt {staged_files}
+    - name: go vet
+      run: bash tools/hooks/go.sh vet
+    - name: go test -short
+      run: bash tools/hooks/go.sh test
+    - name: biome
+      glob: "web/**/*.{ts,js,mjs,json,css}"
+      run: corepack pnpm exec biome check --error-on-warnings --no-errors-on-unmatched {staged_files}
+
+commit-msg:
+  jobs:
+    - name: conventional commits
+      run: bash scripts/checks/commit-msg.sh {1}

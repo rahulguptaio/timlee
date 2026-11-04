@@ -1,0 +1,4 @@
+# Used by shellcheck for every script. Follow `source` statements relative to
+# the sourcing script, so shared libraries are checked in context.
+source-path=SCRIPTDIR
+external-sources=true

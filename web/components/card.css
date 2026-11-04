@@ -1,0 +1,126 @@
+timlee-card {
+  --card-bg: var(--ts-surface-raised);
+  --card-border: var(--ts-border);
+  --card-radius: var(--ts-radius-xl);
+  --card-padding: var(--ts-space-5);
+  --card-shadow: var(--ts-elevation-1);
+  --card-gap: var(--ts-space-3);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+  position: relative;
+  padding: var(--card-padding);
+  border: var(--mc-border-width) solid var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-bg);
+  color: var(--mc-text-1);
+  /* --ts-elevation-* carry the inset top highlight a raised surface needs
+     in dark, so one declaration covers both themes. */
+  box-shadow: var(--card-shadow);
+  min-inline-size: 0;
+}
+
+timlee-card[padding="none"] {
+  --card-padding: 0;
+}
+timlee-card[padding="sm"] {
+  --card-padding: var(--ts-space-3);
+}
+timlee-card[padding="lg"] {
+  --card-padding: var(--ts-space-8);
+}
+
+timlee-card[elevation="raised"] {
+  --card-shadow: var(--ts-elevation-2);
+}
+timlee-card[elevation="flat"] {
+  --card-shadow: none;
+  --card-bg: var(--ts-surface-1);
+}
+
+timlee-card[tone="primary"] {
+  --card-border: var(--ts-primary);
+  --card-bg: var(--ts-primary-soft);
+}
+timlee-card[tone="danger"] {
+  --card-border: var(--ts-danger);
+  --card-bg: var(--ts-danger-soft);
+}
+
+timlee-card > header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--mc-space-3);
+}
+
+timlee-card > header :where(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  font-size: var(--mc-text-lg);
+  font-weight: 650;
+  line-height: var(--mc-leading-snug);
+  color: var(--mc-text-heading);
+}
+
+timlee-card > footer {
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-2);
+  margin-block-start: auto;
+  padding-block-start: var(--mc-space-3);
+  border-block-start: var(--mc-border-width) solid var(--mc-border-subtle);
+}
+
+timlee-card > :where(p) {
+  margin: 0;
+  color: var(--mc-text-2);
+  font-size: var(--mc-text-base);
+  line-height: var(--mc-leading-normal);
+}
+
+timlee-card > [data-media] {
+  margin: calc(var(--card-padding) * -1) calc(var(--card-padding) * -1) 0;
+  border-start-start-radius: var(--card-radius);
+  border-start-end-radius: var(--card-radius);
+  overflow: hidden;
+}
+
+/* --- Interactive -------------------------------------------------------- */
+
+timlee-card[interactive] {
+  transition:
+    border-color var(--mc-duration-fast) var(--mc-ease),
+    box-shadow var(--mc-duration-fast) var(--mc-ease);
+}
+
+timlee-card[interactive]:hover {
+  --card-border: var(--ts-border-hover);
+  --card-shadow: var(--ts-elevation-2);
+}
+
+timlee-card[interactive] [data-card-link]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* The ring belongs on the card, not on the stretched link, so the focus
+   indicator surrounds what the user is about to activate. */
+timlee-card[interactive]:has([data-card-link]:focus-visible) {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+timlee-card[interactive] [data-card-link]:focus-visible {
+  outline: none;
+}
+
+/* Anything genuinely clickable inside a stretched card has to sit above
+   the overlay or it becomes unreachable with a pointer. */
+timlee-card[interactive]
+  :where(a, button, input, timlee-button, timlee-icon-button):not([data-card-link]) {
+  position: relative;
+  z-index: 1;
+}

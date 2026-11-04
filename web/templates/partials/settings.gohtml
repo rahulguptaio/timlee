@@ -1,0 +1,99 @@
+{{- /*
+  Pieces shared by the settings pages.
+*/ -}}
+
+{{- /*
+  A person's avatar. The initials are rendered here rather than left to the
+  component, so the avatar is complete without scripting; the component sees
+  the text and leaves it alone. Decorative: the name is always beside it.
+  Takes a dict of Name, URL, Initials and Lazy: only avatars that start below
+  the fold (a members list) may load lazily.
+*/ -}}
+{{ define "settings-avatar" }}
+{{- if .URL -}}
+<timlee-avatar size="sm"><img src="{{ .URL }}" alt="" width="32" height="32"{{ if .Lazy }} loading="lazy"{{ end }} decoding="async" referrerpolicy="no-referrer" /></timlee-avatar>
+{{- else -}}
+<timlee-avatar size="sm" name="{{ .Name }}" aria-hidden="true"><span aria-hidden="true">{{ .Initials }}</span></timlee-avatar>
+{{- end -}}
+{{ end }}
+
+{{- /*
+  What the last submission did. A form answered with errors gets a summary
+  first, linking to each field; autofocus moves a reader there on load
+  without scripting. The outcome of a form that redirected is a labelled
+  region, reachable by landmark, and one that needs attention takes focus.
+  settings.ts turns outcomes that arrive without a page load into toasts.
+  Takes the page.
+*/ -}}
+{{ define "settings-outcome" }}
+{{- $s := .Data.Shell -}}
+{{- with $s.Problems }}
+<timlee-alert tone="danger" class="st-error-summary" tabindex="-1" autofocus aria-labelledby="error-summary-title" data-error-summary>
+  <h2 id="error-summary-title">{{ t $.L "settings.problems.title" }}</h2>
+  <ul>
+    {{- range . }}
+    <li><a href="#{{ .Field }}">{{ .Message }}</a></li>
+    {{- end }}
+  </ul>
+</timlee-alert>
+{{- end }}
+{{- with $s.Flash }}
+<timlee-alert tone="{{ .Tone }}" class="st-flash" data-flash="{{ .Tone }}" role="region" aria-labelledby="flash-title"{{ if or (eq .Tone "danger") (eq .Tone "warning") }} tabindex="-1" autofocus{{ end }}>
+  <h2 id="flash-title" class="visually-hidden">{{ t $.L "settings.flash.title" }}</h2>
+  <p>{{ .Message }}</p>
+</timlee-alert>
+{{- end }}
+{{ end }}
+
+{{- /*
+  A field's error message, after a hidden "Error:" so a screen reader that
+  meets the message out of context still knows what it is. Takes a dict of
+  L and Message.
+*/ -}}
+{{ define "settings-error" }}{{ with .Message }}<span class="visually-hidden">{{ t $.L "settings.problems.prefix" }} </span>{{ . }}{{ end }}{{ end }}
+
+{{- /*
+  What a reader without access can do instead: who to ask. Takes a dict of
+  Lead (the sentence saying what is restricted) and Admins.
+*/ -}}
+{{ define "settings-ask" }}
+<div class="st-ask">
+  <p>{{ .Lead }}</p>
+  {{ with .Admins }}
+  <p>{{ t $.L "settings.ask.heading" }}</p>
+  <ul class="st-contacts">
+    {{ range . }}
+    <li><a href="mailto:{{ .Email }}"><bdi dir="auto">{{ .Name }}</bdi></a>{{ if ne .Name .Email }} <span><bdi dir="ltr">{{ .Email }}</bdi></span>{{ end }}</li>
+    {{ end }}
+  </ul>
+  {{ end }}
+</div>
+{{ end }}
+
+{{- /* A moment, readable now and exact on demand. Takes a stamp. */ -}}
+{{ define "settings-when" }}<time datetime="{{ .ISO }}" title="{{ .Full }}">{{ .Ago }}</time>{{ end }}
+
+{{- /*
+  A sortable column header: a link that sorts the table by the column, the
+  server doing the sorting. Only the column the table is sorted by carries
+  aria-sort. Takes a sortHeader.
+*/ -}}
+{{ define "settings-th" }}<th scope="col"{{ with .Sort }} aria-sort="{{ . }}"{{ end }}><a class="st-sort" href="{{ .Href }}">{{ .Label }}<span class="visually-hidden"> {{ .Action }}</span></a></th>{{ end }}
+
+{{- /*
+  Links to a table's other pages. Takes a dict of L, Label (what the
+  navigation is called) and Paging.
+*/ -}}
+{{ define "settings-pages" }}
+{{- with .Paging.Pages }}
+<timlee-pagination>
+  <nav aria-label="{{ $.Label }}">
+    {{ with $.Paging.Prev }}<a href="{{ . }}" rel="prev">{{ t $.L "settings.table.previous" }}</a>{{ end }}
+    {{ range . }}
+    {{ if .Gap }}<span data-ellipsis>&hellip;</span>{{ else }}<a href="{{ .Href }}"{{ if .Current }} aria-current="page"{{ end }}><span class="visually-hidden">{{ t $.L "settings.table.page" }} </span>{{ .N }}</a>{{ end }}
+    {{ end }}
+    {{ with $.Paging.Next }}<a href="{{ . }}" rel="next">{{ t $.L "settings.table.next" }}</a>{{ end }}
+  </nav>
+</timlee-pagination>
+{{- end }}
+{{ end }}

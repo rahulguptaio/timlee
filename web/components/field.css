@@ -1,0 +1,206 @@
+timlee-input,
+timlee-textarea,
+timlee-select {
+  --field-bg: var(--ts-surface-raised);
+  --field-fg: var(--ts-text-1);
+  --field-border: var(--ts-input);
+  --field-ring: var(--ts-ring);
+  --field-radius: var(--ts-radius-md);
+  --field-padding-inline: var(--ts-space-3);
+  --field-height: var(--ts-space-10);
+  --field-font-size: var(--ts-text-base);
+  --field-label-fg: var(--ts-text-1);
+  --field-hint-fg: var(--ts-text-3);
+  --field-shadow: var(--ts-elevation-1);
+
+  display: grid;
+  gap: var(--mc-space-1);
+  min-inline-size: 0;
+}
+
+timlee-input[size="sm"],
+timlee-select[size="sm"] {
+  --field-height: calc(var(--ts-space-8) + var(--ts-space-1));
+  --field-font-size: var(--ts-text-sm);
+}
+
+timlee-input[size="lg"],
+timlee-select[size="lg"] {
+  --field-height: var(--ts-space-12);
+  --field-font-size: var(--ts-text-md);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select) > label {
+  color: var(--field-label-fg);
+  font-size: var(--mc-text-sm);
+  font-weight: 600;
+  line-height: var(--mc-leading-snug);
+}
+
+/* A required field says so in text as well as in the attribute: the marker
+   alone is a colour-and-glyph-only signal. */
+:where(timlee-input, timlee-textarea, timlee-select):has([required]) > label::after {
+  content: " *";
+  color: var(--mc-danger-ink);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select) > :where(input, textarea, select) {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--field-height);
+  padding-inline: var(--field-padding-inline);
+  padding-block: var(--mc-space-2);
+  border: var(--mc-border-width) solid var(--field-border);
+  border-radius: var(--field-radius);
+  background: var(--field-bg);
+  color: var(--field-fg);
+  box-shadow: var(--field-shadow);
+  font-family: var(--mc-font-sans);
+  font-size: var(--field-font-size);
+  line-height: var(--mc-leading-snug);
+  transition:
+    border-color var(--mc-duration-fast) var(--mc-ease),
+    box-shadow var(--mc-duration-fast) var(--mc-ease);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select)
+  > :where(input, textarea, select)::placeholder {
+  color: var(--mc-text-3);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select)
+  > :where(input, textarea, select):hover:not(:disabled) {
+  --field-border: var(--ts-input-hover);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select)
+  > :where(input, textarea, select):focus-visible {
+  --field-border: var(--ts-ring);
+  outline: var(--mc-focus-width) solid var(--field-ring);
+  outline-offset: calc(var(--mc-border-width) * -1);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select) > :where(input, textarea, select):disabled {
+  --field-bg: var(--ts-surface-inset);
+  --field-fg: var(--ts-text-3);
+  --field-shadow: none;
+  cursor: not-allowed;
+}
+
+:where(timlee-input, timlee-textarea, timlee-select) > :where(input, textarea, select):read-only {
+  --field-bg: var(--ts-surface-inset);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select)[invalid] {
+  --field-border: var(--ts-danger);
+  --field-ring: var(--ts-danger);
+  --field-label-fg: var(--ts-danger-ink);
+}
+
+/* The browser's own verdict (required, type, pattern, length) shows the same
+   error state as a server-reported error, without the round trip. It waits
+   until the reader has committed a value or tried to submit, so a half-typed
+   address is not an error yet. */
+:where(timlee-input, timlee-textarea, timlee-select):has(> :user-invalid) {
+  --field-border: var(--ts-danger);
+  --field-ring: var(--ts-danger);
+  --field-label-fg: var(--ts-danger-ink);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select) > [data-hint] {
+  margin: 0;
+  color: var(--field-hint-fg);
+  font-size: var(--mc-text-xs);
+  line-height: var(--mc-leading-snug);
+}
+
+:where(timlee-input, timlee-textarea, timlee-select) > [data-error] {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-1);
+  color: var(--mc-danger-ink);
+  font-size: var(--mc-text-xs);
+  font-weight: 600;
+  line-height: var(--mc-leading-snug);
+}
+
+/* An empty error node occupies no space, so Go can render the slot
+   unconditionally and leave it blank. */
+:where(timlee-input, timlee-textarea, timlee-select) > [data-error]:empty {
+  display: none;
+}
+
+/* --- Textarea ----------------------------------------------------------- */
+
+timlee-textarea > textarea {
+  resize: vertical;
+  /* Four lines of the field's text, padding and edges included. */
+  min-block-size: var(--mc-space-24);
+  /* "field-sizing: content" grows the box with its text natively (Chrome
+     123+, Edge 123+). It is ignored elsewhere, which is why the "autosize"
+     attribute still ships a scriptless-safe JS fallback below. */
+  field-sizing: content;
+}
+
+timlee-textarea[autosize] > textarea {
+  resize: none;
+  overflow-y: hidden;
+}
+
+.timlee-field__counter {
+  --field-counter-fg: var(--ts-text-3);
+
+  justify-self: end;
+  color: var(--field-counter-fg);
+  font-size: var(--mc-text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.timlee-field__counter[data-over] {
+  --field-counter-fg: var(--ts-danger-ink);
+  font-weight: 600;
+}
+
+/* --- Select ------------------------------------------------------------- */
+
+timlee-select {
+  --select-chevron-top: 0rem;
+  position: relative;
+}
+
+timlee-select > select {
+  appearance: none;
+  padding-inline-end: var(--mc-space-8);
+  cursor: pointer;
+}
+
+/* The chevron is drawn on the host rather than injected, so it is there
+   before the element upgrades — and it is a solid fill tinted from a token,
+   so it follows the theme, which a data-URI background-image cannot.
+   ":has()" (Baseline Dec 2023) shifts it down by exactly one label line
+   when the field has a label, since the host is the positioning context. */
+timlee-select::after {
+  content: "";
+  position: absolute;
+  inline-size: var(--mc-space-2-5);
+  block-size: var(--mc-space-2-5);
+  inset-inline-end: var(--mc-space-3);
+  inset-block-start: calc(var(--select-chevron-top) + var(--field-height) / 2);
+  translate: 0 -50%;
+  background: var(--mc-text-3);
+  clip-path: polygon(0 30%, 50% 70%, 100% 30%, 100% 48%, 50% 88%, 0 48%);
+  pointer-events: none;
+}
+
+timlee-select:has(> label) {
+  --select-chevron-top: calc(var(--mc-text-sm) * var(--mc-leading-snug) + var(--mc-space-1));
+}
+
+/* Windows contrast themes paint every background Canvas, which would erase
+   the chevron, the select's only arrow: draw it in the theme's text colour. */
+@media (forced-colors: active) {
+  timlee-select::after {
+    background: CanvasText;
+  }
+}

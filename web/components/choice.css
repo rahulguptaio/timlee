@@ -1,0 +1,107 @@
+timlee-checkbox,
+timlee-radio,
+timlee-switch {
+  --choice-size: var(--ts-space-4-5);
+  --choice-accent: var(--ts-primary);
+  --choice-fg: var(--ts-text-1);
+  --choice-hint-fg: var(--ts-text-3);
+  --choice-gap: var(--ts-space-2);
+
+  display: grid;
+  gap: var(--mc-space-1);
+}
+
+:where(timlee-checkbox, timlee-radio) > label {
+  display: inline-flex;
+  align-items: start;
+  gap: var(--choice-gap);
+  /* 2.25rem of vertical reach clears SC 2.5.8's 24px minimum target even
+     when the label text is a single short line. */
+  min-block-size: calc(var(--mc-space-8) + var(--mc-space-1));
+  padding-block: calc((var(--mc-space-8) + var(--mc-space-1) - var(--choice-size)) / 2);
+  color: var(--choice-fg);
+  font-size: var(--mc-text-base);
+  line-height: var(--mc-leading-snug);
+  cursor: pointer;
+}
+
+:where(timlee-checkbox, timlee-radio)
+  > label
+  > :where(input[type="checkbox"], input[type="radio"]) {
+  flex: none;
+  inline-size: var(--choice-size);
+  block-size: var(--choice-size);
+  margin: 0;
+  /* Keeps the native control, so forced-colors mode and the platform focus
+     ring keep working; only the fill colour is ours. */
+  accent-color: var(--choice-accent);
+  cursor: pointer;
+}
+
+:where(timlee-checkbox, timlee-radio):has(input:disabled) {
+  --choice-fg: var(--ts-text-3);
+}
+
+:where(timlee-checkbox, timlee-radio) > label:has(input:disabled) {
+  cursor: not-allowed;
+}
+
+:where(timlee-checkbox, timlee-radio) > label > input:disabled {
+  cursor: not-allowed;
+}
+
+:where(timlee-checkbox, timlee-radio) > label > input:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+:where(timlee-checkbox, timlee-radio, timlee-switch) > [data-hint] {
+  margin: 0;
+  padding-inline-start: calc(var(--choice-size) + var(--choice-gap));
+  color: var(--choice-hint-fg);
+  font-size: var(--mc-text-xs);
+  line-height: var(--mc-leading-snug);
+}
+
+:where(timlee-checkbox, timlee-radio, timlee-switch) > [data-error] {
+  margin: 0;
+  padding-inline-start: calc(var(--choice-size) + var(--choice-gap));
+  color: var(--mc-danger-ink);
+  font-size: var(--mc-text-xs);
+  font-weight: 600;
+}
+
+:where(timlee-checkbox, timlee-radio, timlee-switch) > [data-error]:empty {
+  display: none;
+}
+
+timlee-checkbox[invalid],
+timlee-radio[invalid] {
+  --choice-accent: var(--ts-danger);
+}
+
+/* A boxed choice reads as one target, which matters in a list of plans: a
+   raised control, like a card you can pick. */
+:where(timlee-checkbox, timlee-radio)[boxed] {
+  --choice-box-bg: var(--ts-surface-raised);
+  --choice-box-border: var(--ts-border);
+  --choice-box-shadow: var(--ts-elevation-1);
+}
+
+:where(timlee-checkbox, timlee-radio)[boxed] > label {
+  padding: var(--mc-space-3);
+  border: var(--mc-border-width) solid var(--choice-box-border);
+  border-radius: var(--mc-radius-md);
+  background: var(--choice-box-bg);
+  box-shadow: var(--choice-box-shadow);
+  transition: border-color var(--mc-duration-fast) var(--mc-ease);
+}
+
+:where(timlee-checkbox, timlee-radio)[boxed] > label:hover {
+  --choice-box-border: var(--ts-border-hover);
+}
+
+:where(timlee-checkbox, timlee-radio)[boxed] > label:has(input:checked) {
+  --choice-box-border: var(--ts-primary);
+  --choice-box-bg: var(--ts-primary-soft);
+}

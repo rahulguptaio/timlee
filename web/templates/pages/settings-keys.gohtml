@@ -1,0 +1,228 @@
+{{- /*
+  API keys: create one with a lifetime (its secret is shown exactly once),
+  see what exists and where each key is in its life, rotate a key to a
+  replacement with an overlap window, and revoke. Rotating and revoking open
+  an inline confirmation: a link the server answers without scripting.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+{{- $s := $d.Shell -}}
+<header class="st-head">
+  <h1>{{ t .L "settings.keys.title" }}</h1>
+  <p>{{ if $s.Org }}{{ th .L "settings.keys.ledeOrg" "org" $s.Org.Name }}{{ else }}{{ th .L "settings.keys.lede" }}{{ end }}</p>
+</header>
+
+{{ template "settings-outcome" . }}
+
+{{ if not $s.Org }}
+<section class="st-section">
+  <p>{{ t .L "settings.keys.noOrg" }}</p>
+</section>
+{{ else if not $s.CanManage }}
+<section class="st-section">
+  {{ template "settings-ask" (dict "L" $.L "Lead" (t $.L "settings.keys.restricted") "Admins" $d.Admins) }}
+</section>
+{{ else }}
+
+{{ with $d.Reveal }}
+<section class="st-vault" id="new-key-{{ .ID }}" aria-labelledby="vault-title-{{ .ID }}" tabindex="-1" autofocus data-vault>
+  <h2 id="vault-title-{{ .ID }}">{{ t $.L "settings.keys.revealTitle" }}</h2>
+  <p>{{ th $.L "settings.keys.revealBody" "label" .Label }}</p>
+  <timlee-code-block label="{{ t $.L "settings.keys.revealLabel" }}" language="text" class="st-secret">
+    <pre><code>{{ .Secret }}</code></pre>
+  </timlee-code-block>
+  <p class="st-vault-use">
+    {{ th $.L "settings.keys.revealUse" }}
+  </p>
+  <p class="st-vault-use">{{ th $.L "settings.keys.revealEnv" "name" "TIMLEE_API_KEY" }}</p>
+  <timlee-button variant="primary">
+    <a href="/settings/keys#key-{{ .ID }}" data-vault-done>{{ t $.L "settings.keys.revealDone" }}</a>
+  </timlee-button>
+</section>
+{{ end }}
+
+<section class="st-section">
+  <h2 id="keys-new">{{ t .L "settings.keys.createTitle" }}</h2>
+  <form class="st-create" method="post" action="/settings/keys" data-enhance>
+    {{ $s.CSRF }}
+    <timlee-input{{ if $d.Form.Error }} invalid{{ end }}>
+      <label for="key-label">{{ t $.L "settings.keys.label" }}</label>
+      <input
+        id="key-label"
+        type="text"
+        name="label"
+        value="{{ $d.Form.Label }}"
+        dir="auto"
+        required
+        maxlength="64"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        aria-describedby="key-label-hint{{ if $d.Form.Error }} key-label-error{{ end }}"
+        {{ if $d.Form.Error }}aria-invalid="true"{{ end }}
+      />
+      <p data-hint id="key-label-hint">{{ t $.L "settings.keys.labelHint" }}</p>
+      <p data-error id="key-label-error">{{ template "settings-error" (dict "L" $.L "Message" $d.Form.Error) }}</p>
+    </timlee-input>
+
+    <fieldset class="st-roles st-lifetimes" aria-describedby="key-expires-hint{{ if $d.Form.ExpiresError }} key-expires-error{{ end }}">
+      <legend>{{ t $.L "settings.keys.expiresLegend" }}</legend>
+      <p class="st-legend-hint" id="key-expires-hint">{{ t $.L "settings.keys.expiresHint" }}</p>
+      {{ range $d.Lifetimes }}
+      <timlee-radio boxed>
+        <label>
+          <input type="radio" id="key-expires-input-{{ .Value }}" name="expires" value="{{ .Value }}"{{ if .Selected }} checked{{ end }} aria-describedby="key-expires-{{ .Value }}" />
+          <span>{{ .Label }}</span>
+        </label>
+        <p data-hint id="key-expires-{{ .Value }}">{{ .Hint }}</p>
+      </timlee-radio>
+      {{ end }}
+      {{ with $d.Form.ExpiresError }}<p class="st-error" id="key-expires-error">{{ template "settings-error" (dict "L" $.L "Message" .) }}</p>{{ end }}
+    </fieldset>
+
+    <timlee-button variant="primary"><button type="submit">{{ t $.L "settings.keys.create" }}</button></timlee-button>
+  </form>
+</section>
+
+<section class="st-section">
+  <h2 id="keys-list" tabindex="-1">{{ t .L "settings.keys.listTitle" }}</h2>
+  <p class="st-quiet st-section-note">{{ t $.L "settings.keys.stopNote" }}</p>
+  {{ with $d.LoadError }}<timlee-alert tone="danger"><p>{{ . }}</p></timlee-alert>{{ end }}
+
+  {{ if and $d.Total (gt (len $d.Filters) 2) }}
+  <nav class="st-filters" aria-label="{{ t $.L "settings.keys.filterLabel" }}">
+    <ul>
+      {{ range $d.Filters }}
+      <li><a href="{{ .Href }}"{{ if .Current }} aria-current="page"{{ end }}>{{ .Label }} <span class="st-count">({{ .Count }})</span></a></li>
+      {{ end }}
+    </ul>
+  </nav>
+  {{ end }}
+  {{ with $d.Creator }}
+  <p class="st-filter-note">{{ th $.L "settings.keys.creatorFilter" "name" . }} <a href="/settings/keys">{{ t $.L "settings.keys.showEvery" }}</a></p>
+  {{ end }}
+
+  {{ if $d.Keys }}
+  <timlee-table label="{{ t $.L "settings.keys.title" }}" class="st-cards">
+    <table>
+      <caption>{{ if $d.Filtered }}{{ t $.L "settings.keys.captionFiltered" "shown" $d.Shown "total" $d.Total }}{{ else }}{{ t $.L "settings.keys.caption" "live" $d.Live "expired" $d.Expired "revoked" $d.Revoked }}{{ end }}{{ with $d.Paging.Pages }}{{ t $.L "settings.table.showing" "from" $d.Paging.From "to" $d.Paging.To }}{{ end }}</caption>
+      <thead>
+        <tr>
+          {{ template "settings-th" (index $d.Headers "label") }}
+          <th scope="col">{{ t $.L "settings.keys.columnPrefix" }}</th>
+          {{ template "settings-th" (index $d.Headers "created") }}
+          {{ template "settings-th" (index $d.Headers "used") }}
+          {{ template "settings-th" (index $d.Headers "expires") }}
+          <th scope="col"><span class="visually-hidden">{{ t $.L "settings.keys.columnStatusActions" }}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range $d.Keys }}
+        <tr id="key-{{ .ID }}"{{ if not .Live }} class="st-retired"{{ end }}>
+          <td class="st-primary-cell">
+            <span><bdi dir="auto">{{ .Label }}</bdi>{{ with .Replaces }} <span class="st-quiet st-sub">{{ th $.L "settings.keys.replaces" "prefix" . }}</span>{{ end }}</span>
+          </td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.keys.columnPrefix" }}</span><code class="st-prefix" dir="ltr">{{ .Prefix }}…</code></td>
+          <td>
+            <span class="st-label" aria-hidden="true">{{ t $.L "settings.keys.col.created" }}</span>
+            <span><span class="st-nowrap"><bdi dir="auto">{{ .Creator }}</bdi></span> <span class="st-quiet st-sub">{{ template "settings-when" .Created }}</span></span>
+          </td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.keys.col.used" }}</span>{{ with .LastUsed }}{{ template "settings-when" . }}{{ else }}{{ t $.L "settings.keys.never" }}{{ end }}</td>
+          <td>
+            <span class="st-label" aria-hidden="true">{{ t $.L "settings.keys.columnExpires" }}</span>
+            {{- if .Revoked }}<span>—</span>
+            {{- else if eq .State "expired" }}<span><time datetime="{{ .Expires.ISO }}">{{ .Expires.Date }}</time></span>
+            {{- else if eq .State "replaced" }}<span><time datetime="{{ .Expires.ISO }}">{{ t $.L "settings.keys.worksUntil" "date" .Expires.Full }}</time></span>
+            {{- else if eq .State "expiring" }}<span><timlee-badge tone="warning">{{ t $.L "settings.keys.expiresIn" "when" .Expires.Ago }}</timlee-badge> <span class="st-quiet st-sub"><time datetime="{{ .Expires.ISO }}">{{ .Expires.Full }}</time></span></span>
+            {{- else if .Expires }}{{ template "settings-when" .Expires }}
+            {{- else }}<span>{{ t $.L "settings.keys.never" }}</span>{{ end }}
+          </td>
+          <td class="st-actions">
+            {{ if .Revoked }}
+            <timlee-badge>{{ t $.L "settings.keys.stateRevoked" }}</timlee-badge> <span class="st-quiet st-nowrap">{{ template "settings-when" .Revoked }}</span>
+            {{ else if eq .State "expired" }}
+            <timlee-badge>{{ t $.L "settings.keys.stateExpired" }}</timlee-badge>
+            {{ else }}
+            {{ if eq .State "replaced" }}<timlee-badge tone="info">{{ t $.L "settings.keys.stateReplaced" }}</timlee-badge>{{ end }}
+            {{ if .Rotatable }}
+            <timlee-button variant="ghost" size="sm">
+              <a
+                href="/settings/keys?rotate={{ .ID }}#rotate-{{ .ID }}"
+                data-inline-confirm="rotate-{{ .ID }}"
+                aria-controls="rotate-{{ .ID }}"
+                aria-expanded="{{ if .Rotating }}true{{ else }}false{{ end }}"
+              >{{ t $.L "settings.keys.rotateAction" }}<span class="visually-hidden"> <bdi dir="auto">{{ .Label }}</bdi></span></a>
+            </timlee-button>
+            {{ end }}
+            <timlee-button variant="ghost" size="sm">
+              <a
+                href="/settings/keys?revoke={{ .ID }}#revoke-{{ .ID }}"
+                data-inline-confirm="revoke-{{ .ID }}"
+                aria-controls="revoke-{{ .ID }}"
+                aria-expanded="{{ if .Confirming }}true{{ else }}false{{ end }}"
+              >{{ t $.L "settings.keys.revokeAction" }}<span class="visually-hidden"> <bdi dir="auto">{{ .Label }}</bdi></span></a>
+            </timlee-button>
+            {{ end }}
+          </td>
+        </tr>
+        {{ if .Rotatable }}
+        <tr class="st-confirm st-rotate" id="rotate-{{ .ID }}"{{ if not .Rotating }} hidden{{ end }}>
+          <td colspan="6">
+            <form method="post" action="/settings/keys/{{ .ID }}/rotate" data-enhance>
+              {{ $s.CSRF }}
+              <input type="hidden" name="label" value="{{ .Label }}" />
+              <p id="rotate-{{ .ID }}-question" tabindex="-1">{{ th $.L "settings.keys.rotateQuestion" "label" .Label }}</p>
+              <fieldset class="st-overlap">
+                <legend>{{ t $.L "settings.keys.overlapLegend" }}</legend>
+                {{ range $d.Overlaps }}
+                <timlee-radio>
+                  <label><input type="radio" name="overlap" value="{{ .Value }}"{{ if .Selected }} checked{{ end }} /><span>{{ .Label }}</span></label>
+                </timlee-radio>
+                {{ end }}
+              </fieldset>
+              <div class="st-confirm-actions">
+                <timlee-button variant="primary" size="sm"><button type="submit">{{ t $.L "settings.keys.rotateSubmit" }}</button></timlee-button>
+                <timlee-button variant="ghost" size="sm"><a href="/settings/keys#key-{{ .ID }}" data-inline-cancel="rotate-{{ .ID }}">{{ t $.L "settings.keys.rotateCancel" }}</a></timlee-button>
+              </div>
+            </form>
+          </td>
+        </tr>
+        {{ end }}
+        {{ if .Live }}
+        <tr class="st-confirm" id="revoke-{{ .ID }}"{{ if not .Confirming }} hidden{{ end }}>
+          <td colspan="6">
+            <form method="post" action="/settings/keys/{{ .ID }}/revoke" data-enhance>
+              {{ $s.CSRF }}
+              <input type="hidden" name="label" value="{{ .Label }}" />
+              <p id="revoke-{{ .ID }}-question" tabindex="-1">
+                {{ th $.L "settings.keys.revokeQuestion" "label" .Label }}
+              </p>
+              <div class="st-confirm-actions">
+                <timlee-button variant="danger" size="sm"><button type="submit">{{ t $.L "settings.keys.revokeSubmit" }}</button></timlee-button>
+                <timlee-button variant="ghost" size="sm"><a href="/settings/keys#key-{{ .ID }}" data-inline-cancel="revoke-{{ .ID }}">{{ t $.L "settings.keys.revokeCancel" }}</a></timlee-button>
+              </div>
+            </form>
+          </td>
+        </tr>
+        {{ end }}
+        {{ end }}
+      </tbody>
+    </table>
+  </timlee-table>
+  {{ template "settings-pages" (dict "L" $.L "Label" (t $.L "settings.keys.pagesLabel") "Paging" $d.Paging) }}
+  {{ else if $d.Filtered }}
+  <timlee-empty-state>
+    <h3>{{ t $.L "settings.keys.filteredEmpty" }}</h3>
+    <p>{{ t $.L "settings.keys.filteredEmptyBody" }}</p>
+    <timlee-button variant="secondary"><a href="/settings/keys">{{ t $.L "settings.keys.showEvery" }}</a></timlee-button>
+  </timlee-empty-state>
+  {{ else if not $d.LoadError }}
+  <timlee-empty-state>
+    <h3>{{ t $.L "settings.keys.emptyTitle" }}</h3>
+    <p>{{ t $.L "settings.keys.emptyBody" }}</p>
+    <timlee-button variant="secondary"><a href="#key-label">{{ t $.L "settings.keys.firstKey" }}</a></timlee-button>
+  </timlee-empty-state>
+  {{ end }}
+</section>
+{{ end }}
+{{ end }}

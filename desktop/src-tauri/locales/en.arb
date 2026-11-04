@@ -1,0 +1,287 @@
+{
+  "@@locale": "en",
+  "@@context": "The desktop app's own words: the native menus, the update dialogs, the starting, offline and sign-in pages bundled into the app, and the page the browser shows once it has handed a sign-in back. Keys start with the surface (menu, update, boot, signIn, callback). Timlee is the product name: never translate it. Messages take only {name} arguments, filled in by the app.",
+  "menu.app.about": "About Timlee",
+  "@menu.app.about": {
+    "description": "Menu item that opens the About panel (the application menu on macOS, Help on Windows)."
+  },
+  "menu.app.settings": "Settings…",
+  "@menu.app.settings": {
+    "description": "Menu item that opens the account and organisation settings in the window. The ellipsis says it opens a page."
+  },
+  "menu.app.signOut": "Sign Out",
+  "@menu.app.signOut": {
+    "description": "Menu item that signs the reader out of Timlee."
+  },
+  "menu.app.services": "Services",
+  "@menu.app.services": {
+    "description": "macOS application menu: the standard Services submenu. Use the operating system's own term."
+  },
+  "menu.app.hide": "Hide Timlee",
+  "@menu.app.hide": {
+    "description": "macOS application menu: hides the app. Use the operating system's own wording."
+  },
+  "menu.app.hideOthers": "Hide Others",
+  "@menu.app.hideOthers": {
+    "description": "macOS application menu: hides every other app. Use the operating system's own wording."
+  },
+  "menu.app.showAll": "Show All",
+  "@menu.app.showAll": {
+    "description": "macOS application menu: shows every hidden app. Use the operating system's own wording."
+  },
+  "menu.app.quit": "Quit Timlee",
+  "@menu.app.quit": {
+    "description": "macOS application menu: quits the app. Use the operating system's own wording."
+  },
+  "menu.file.title": "File",
+  "@menu.file.title": {
+    "description": "Title of the File menu in the menu bar."
+  },
+  "menu.file.closeWindow": "Close Window",
+  "@menu.file.closeWindow": {
+    "description": "macOS File menu: closes the window; the app keeps running."
+  },
+  "menu.file.exit": "Exit",
+  "@menu.file.exit": {
+    "description": "Windows File menu: quits the app. Use the operating system's own wording."
+  },
+  "menu.edit.title": "Edit",
+  "@menu.edit.title": {
+    "description": "Title of the Edit menu in the menu bar (macOS)."
+  },
+  "menu.edit.undo": "Undo",
+  "@menu.edit.undo": {
+    "description": "Edit menu: undoes the last change in a text field."
+  },
+  "menu.edit.redo": "Redo",
+  "@menu.edit.redo": {
+    "description": "Edit menu: redoes the change just undone."
+  },
+  "menu.edit.cut": "Cut",
+  "@menu.edit.cut": {
+    "description": "Edit menu: cuts the selected text."
+  },
+  "menu.edit.copy": "Copy",
+  "@menu.edit.copy": {
+    "description": "Edit menu: copies the selected text."
+  },
+  "menu.edit.paste": "Paste",
+  "@menu.edit.paste": {
+    "description": "Edit menu: pastes into a text field."
+  },
+  "menu.edit.selectAll": "Select All",
+  "@menu.edit.selectAll": {
+    "description": "Edit menu: selects all the text in a field or on the page."
+  },
+  "menu.view.title": "View",
+  "@menu.view.title": {
+    "description": "Title of the View menu in the menu bar."
+  },
+  "menu.view.reload": "Reload",
+  "@menu.view.reload": {
+    "description": "View menu: loads the page in the window again."
+  },
+  "menu.view.actualSize": "Actual Size",
+  "@menu.view.actualSize": {
+    "description": "View menu: resets the page zoom to 100%."
+  },
+  "menu.view.zoomIn": "Zoom In",
+  "@menu.view.zoomIn": {
+    "description": "View menu: makes the page larger."
+  },
+  "menu.view.zoomOut": "Zoom Out",
+  "@menu.view.zoomOut": {
+    "description": "View menu: makes the page smaller."
+  },
+  "menu.view.fullScreen": "Full Screen",
+  "@menu.view.fullScreen": {
+    "description": "View menu: switches the window to full screen and back. macOS renames this item itself while the window is in full screen."
+  },
+  "menu.window.title": "Window",
+  "@menu.window.title": {
+    "description": "Title of the Window menu in the menu bar (macOS)."
+  },
+  "menu.window.minimize": "Minimize",
+  "@menu.window.minimize": {
+    "description": "macOS Window menu: minimises the window to the Dock. Use the operating system's own wording."
+  },
+  "menu.window.zoom": "Zoom",
+  "@menu.window.zoom": {
+    "description": "macOS Window menu: toggles the window between its size and filling the screen. Use the operating system's own wording."
+  },
+  "menu.window.bringAllToFront": "Bring All to Front",
+  "@menu.window.bringAllToFront": {
+    "description": "macOS Window menu: brings all of the app's windows forward. Use the operating system's own wording."
+  },
+  "menu.help.title": "Help",
+  "@menu.help.title": {
+    "description": "Title of the Help menu in the menu bar."
+  },
+  "menu.help.docs": "Timlee Documentation",
+  "@menu.help.docs": {
+    "description": "Help menu: opens the Timlee documentation in the window."
+  },
+  "update.menu.check": "Check for Updates…",
+  "@update.menu.check": {
+    "description": "Menu item that checks for a newer version of the app."
+  },
+  "update.menu.checking": "Checking for Updates…",
+  "@update.menu.checking": {
+    "description": "The same menu item, greyed out while the check runs."
+  },
+  "update.menu.restart": "Restart to Update Timlee {version}",
+  "@update.menu.restart": {
+    "description": "The same menu item once a new version has downloaded: choosing it installs that version and restarts the app. version is a version number such as 0.2.0.",
+    "placeholders": { "version": { "type": "text" } }
+  },
+  "update.current.title": "Timlee is up to date",
+  "@update.current.title": {
+    "description": "Title of the dialog after the reader checked for updates and there were none."
+  },
+  "update.current.message": "Version {version} is the newest version.",
+  "@update.current.message": {
+    "description": "Text of that dialog. version is the version running, such as 0.1.0.",
+    "placeholders": { "version": { "type": "text" } }
+  },
+  "update.checkFailed.title": "Couldn’t check for updates",
+  "@update.checkFailed.title": {
+    "description": "Title of the dialog when the update check failed."
+  },
+  "update.checkFailed.message": "Timlee couldn’t reach the update server. Check your connection, then try again.",
+  "@update.checkFailed.message": {
+    "description": "Text of that dialog."
+  },
+  "update.ready.title": "Timlee {version} is ready to install",
+  "@update.ready.title": {
+    "description": "Title of the one-time question about a downloaded update. version is its version number, such as 0.2.0.",
+    "placeholders": { "version": { "type": "text" } }
+  },
+  "update.ready.message": "Timlee restarts to finish, and opens where you left off.",
+  "@update.ready.message": {
+    "description": "Text of that question."
+  },
+  "update.ready.restart": "Restart Now",
+  "@update.ready.restart": {
+    "description": "Button of that question: installs the update and restarts the app."
+  },
+  "update.ready.later": "Later",
+  "@update.ready.later": {
+    "description": "Button of that question: keeps the current version; the app does not ask about this version again."
+  },
+  "update.installFailed.title": "Update not installed",
+  "@update.installFailed.title": {
+    "description": "Title of the dialog when installing a downloaded update failed."
+  },
+  "update.installFailed.message": "Timlee couldn’t install the update and is still on the version you had. Try again later.",
+  "@update.installFailed.message": {
+    "description": "Text of that dialog."
+  },
+  "boot.start.connecting": "Connecting to {host}…",
+  "@boot.start.connecting": {
+    "description": "Shown only when the site is slow to answer as the app starts. host is the site's address, such as timlee.example.",
+    "placeholders": { "host": { "type": "text" } }
+  },
+  "boot.offline.heading": "Timlee can’t reach {host}",
+  "@boot.offline.heading": {
+    "description": "Heading of the screen shown when the site cannot be reached. host is the site's address, such as timlee.example.",
+    "placeholders": { "host": { "type": "text" } }
+  },
+  "boot.offline.body": "Check your internet connection. Timlee keeps trying, and opens the site as soon as the site responds.",
+  "@boot.offline.body": {
+    "description": "Text under that heading."
+  },
+  "boot.offline.retry": "Try again",
+  "@boot.offline.retry": {
+    "description": "Button on that screen: checks whether the site can be reached now."
+  },
+  "boot.status.checking": "Checking now…",
+  "@boot.status.checking": {
+    "description": "Status line on that screen while a check runs."
+  },
+  "boot.status.lastChecked": "Last checked at {time}. Timlee tries again every 15 seconds.",
+  "@boot.status.lastChecked": {
+    "description": "Status line on that screen between checks. time is a time of day already formatted for the language, such as 14:05.",
+    "placeholders": { "time": { "type": "text" } }
+  },
+  "signIn.page.title": "Sign in — Timlee",
+  "@signIn.page.title": {
+    "description": "Title of the app's sign-in screen, shown in the window's title bar."
+  },
+  "signIn.start.heading": "Sign in to Timlee",
+  "@signIn.start.heading": {
+    "description": "Heading of the app's sign-in screen."
+  },
+  "signIn.start.body": "Timlee signs you in through your web browser, where your saved passwords and security keys already work. You come straight back here afterwards.",
+  "@signIn.start.body": {
+    "description": "Text under that heading: why signing in happens in the web browser."
+  },
+  "signIn.start.button": "Sign in with browser",
+  "@signIn.start.button": {
+    "description": "Button that opens the sign-in page in the reader's web browser."
+  },
+  "signIn.waiting.heading": "Continue in your browser",
+  "@signIn.waiting.heading": {
+    "description": "Heading while the app waits for the reader to sign in in their web browser."
+  },
+  "signIn.waiting.body": "Timlee opened {host} in your browser. Sign in there and this window picks up where you left off.",
+  "@signIn.waiting.body": {
+    "description": "Text under that heading. host is the site's address, such as timlee.example.",
+    "placeholders": { "host": { "type": "text" } }
+  },
+  "signIn.waiting.again": "Open browser again",
+  "@signIn.waiting.again": {
+    "description": "Button that starts the sign-in again in a new browser tab."
+  },
+  "signIn.waiting.cancel": "Cancel",
+  "@signIn.waiting.cancel": {
+    "description": "Button that stops waiting for the browser and goes back to the sign-in screen."
+  },
+  "signIn.waiting.status": "Waiting for your browser…",
+  "@signIn.waiting.status": {
+    "description": "Status line while the app waits for the browser."
+  },
+  "signIn.error.timeout": "Timlee stopped waiting for your browser after 15 minutes. Sign in again when you are ready.",
+  "@signIn.error.timeout": {
+    "description": "Error on the sign-in screen when nothing came back from the browser in 15 minutes."
+  },
+  "signIn.error.listener": "Timlee couldn’t start a sign-in on this computer. Try again, or restart Timlee.",
+  "@signIn.error.listener": {
+    "description": "Error on the sign-in screen when the app could not open the local connection the browser hands the sign-in back on."
+  },
+  "signIn.error.browser": "Timlee couldn’t open your browser. Check that a default browser is set, then try again.",
+  "@signIn.error.browser": {
+    "description": "Error on the sign-in screen when the operating system did not open a web browser."
+  },
+  "signIn.error.linkExpired": "That sign-in link has expired or was already used. Sign in again.",
+  "@signIn.error.linkExpired": {
+    "description": "Error on the sign-in screen when the site refused the sign-in the browser handed back."
+  },
+  "signIn.error.desktopFlow": "Timlee couldn’t finish that sign-in in this window. Sign in again.",
+  "@signIn.error.desktopFlow": {
+    "description": "Error on the sign-in screen when the site refused to finish a sign-in in this window, because this window did not start it or no longer holds it."
+  },
+  "signIn.error.accessDenied": "That sign-in was cancelled before it finished.",
+  "@signIn.error.accessDenied": {
+    "description": "Error on the sign-in screen when the reader cancelled at the identity provider."
+  },
+  "signIn.error.providerFailed": "The identity provider could not complete the sign-in. Try again.",
+  "@signIn.error.providerFailed": {
+    "description": "Error on the sign-in screen when the identity provider (such as Google or GitHub) failed."
+  },
+  "signIn.error.other": "That sign-in did not finish. Try again.",
+  "@signIn.error.other": {
+    "description": "Error on the sign-in screen for any other failure."
+  },
+  "callback.page.title": "Return to Timlee",
+  "@callback.page.title": {
+    "description": "Title of the browser tab the app shows once the browser has handed the sign-in back to it."
+  },
+  "callback.page.heading": "Return to Timlee",
+  "@callback.page.heading": {
+    "description": "Heading of that browser tab."
+  },
+  "callback.page.body": "Timlee is finishing your sign-in. You can close this tab.",
+  "@callback.page.body": {
+    "description": "Text of that browser tab. The sign-in is not finished yet: the app finishes it."
+  }
+}

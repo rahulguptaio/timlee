@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Merged into the bundle's Info.plist by the Tauri bundler. The app localizes
+  its own words at run time (src/i18n.rs), not with .lproj folders, so it
+  lists its languages here: macOS then words its own menu items and panels
+  (Start Dictation, the About panel) in the reader's language. One entry per
+  locale in src/i18n.rs; a test checks it.
+-->
+<plist version="1.0">
+<dict>
+  <key>CFBundleLocalizations</key>
+  <array>
+    <string>en</string>
+  </array>
+</dict>
+</plist>

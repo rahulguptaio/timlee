@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-localizing>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title data-i18n="signIn.page.title">Sign in — Timlee</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="app.css" />
+    <script type="module" src="signin.js"></script>
+  </head>
+  <body>
+    <main>
+      <img class="mark" src="mark.svg" alt="" width="40" height="40" />
+
+      <section data-view="start" aria-labelledby="start-title">
+        <h1 id="start-title" tabindex="-1" data-i18n="signIn.start.heading">Sign in to Timlee</h1>
+        <p data-i18n="signIn.start.body">
+          Timlee signs you in through your web browser, where your saved passwords and security keys
+          already work. You come straight back here afterwards.
+        </p>
+        <p class="error" role="alert" data-error hidden></p>
+        <div class="actions">
+          <button type="button" class="primary" data-start data-i18n="signIn.start.button">Sign in with browser</button>
+        </div>
+      </section>
+
+      <section data-view="waiting" aria-labelledby="waiting-title" hidden>
+        <h1 id="waiting-title" tabindex="-1" data-i18n="signIn.waiting.heading">Continue in your browser</h1>
+        <p data-i18n="signIn.waiting.body">
+          Timlee opened the sign-in page in your browser. Sign in there and this window picks up
+          where you left off.
+        </p>
+        <div class="actions">
+          <button type="button" class="primary" data-start data-i18n="signIn.waiting.again">Open browser again</button>
+          <button type="button" data-cancel data-i18n="signIn.waiting.cancel">Cancel</button>
+        </div>
+        <p class="status" data-state="busy" data-i18n="signIn.waiting.status">Waiting for your browser…</p>
+      </section>
+    </main>
+  </body>
+</html>

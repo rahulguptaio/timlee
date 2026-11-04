@@ -1,0 +1,56 @@
+{{- /*
+  The links every public document head carries.
+
+  The icons, manifest and social image are plain files at the site root
+  (web/public), served with a validator because their names are fixed.
+*/ -}}
+{{ define "head-links" }}
+    <link rel="icon" type="image/svg+xml" href="{{ .Favicon }}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    {{- range .Alternates }}
+    <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Href }}" />
+    {{- end }}
+{{ end }}
+
+{{- /*
+  The colour scheme, settled before anything paints. Without a choice the
+  document declares both schemes and the browser takes the system's; a choice
+  names one, so even the canvas shown before the stylesheet arrives is right.
+  The browser-chrome colour follows the same rule, per system scheme.
+*/ -}}
+{{ define "theme-meta" }}
+    <meta name="color-scheme" content="{{ with .Theme }}{{ . }}{{ else }}light dark{{ end }}" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ .ThemeColor "light" }}" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ .ThemeColor "dark" }}" />
+{{ end }}
+
+{{- /*
+  Speculation rules: start loading the next page once a pointer rests on a
+  link to it (moderate eagerness), so moving between the site and sign-in
+  feels instant.
+
+  The two public pages are prerendered; the apps area is only prefetched,
+  because it is personalised. The page being read is never a target,
+  and tab links and in-page anchors are left alone: they never leave the
+  document. The JSON is literal template text, so html/template has nothing
+  to escape; the nonce is what the CSP admits.
+*/ -}}
+{{ define "speculation-rules" }}
+    <script type="speculationrules" nonce="{{ .Nonce }}">
+      {
+        "prerender": [{
+          "where": { "and": [
+            { "href_matches": [{{ if ne .Path "/" }}"/"{{ end }}{{ if not (or (eq .Path "/") (eq .Path "/sign-in")) }}, {{ end }}{{ if ne .Path "/sign-in" }}"/sign-in"{{ end }}] },
+            { "not": { "selector_matches": "[data-tablist] a, a[href^='#']" } }
+          ] },
+          "eagerness": "moderate"
+        }],
+        "prefetch": [{
+          "where": { "href_matches": "/apps" },
+          "eagerness": "moderate"
+        }]
+      }
+    </script>
+{{ end }}

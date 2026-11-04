@@ -1,0 +1,92 @@
+{{- /*
+  Security: the ways this account signs in, and where it is signed in now.
+  Unlinking opens a confirmation that works without scripting. Signing out
+  elsewhere is a single form: it ends nothing in this browser, and anything it
+  ends can be signed in again.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+{{- $s := $d.Shell -}}
+<header class="st-head">
+  <h1>{{ t $.L "settings.security.title" }}</h1>
+  <p>{{ t $.L "settings.security.lede" }}</p>
+</header>
+
+{{ template "settings-outcome" . }}
+
+<section class="st-section">
+  <h2 id="pf-ids">{{ t $.L "settings.security.methods" }}</h2>
+  <p class="st-lede">{{ t $.L "settings.security.methodsLede" }}</p>
+
+  <timlee-table label="{{ t $.L "settings.security.methods" }}" class="st-cards">
+    <table>
+      <caption>{{ t $.L "settings.security.methodsCaption" "count" (len $d.Identities) }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ t $.L "settings.security.colMethod" }}</th>
+          <th scope="col">{{ t $.L "settings.security.colEmail" }}</th>
+          <th scope="col">{{ t $.L "settings.security.colLinked" }}</th>
+          <th scope="col">{{ t $.L "settings.security.colLastUsed" }}</th>
+          <th scope="col"><span class="visually-hidden">{{ t $.L "settings.security.colActions" }}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range $d.Identities }}
+        <tr id="identity-{{ .ID }}">
+          <td class="st-primary-cell"><bdi dir="auto">{{ .Provider }}</bdi></td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.security.colEmail" }}</span>{{ with .Email }}<bdi dir="ltr">{{ . }}</bdi>{{ else }}—{{ end }}</td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.security.colLinked" }}</span>{{ template "settings-when" .Linked }}</td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.security.colLastUsed" }}</span>{{ with .LastUsed }}{{ template "settings-when" . }}{{ else }}{{ t $.L "settings.security.never" }}{{ end }}</td>
+          <td class="st-actions">
+            {{ if $d.OnlyOne }}
+            <span class="st-quiet">{{ t $.L "settings.security.onlyMethod" }}</span>
+            {{ else }}
+            <timlee-button variant="ghost" size="sm">
+              <a href="/settings/security?unlink={{ .ID }}#confirm-unlink-{{ .ID }}" data-dialog-open="unlink-{{ .ID }}">{{ t $.L "settings.security.unlink" }}<span class="visually-hidden"> <bdi dir="auto">{{ .Provider }}</bdi></span></a>
+            </timlee-button>
+            {{ end }}
+          </td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </timlee-table>
+
+  {{ if not $d.OnlyOne }}
+  <div class="st-dialogs">
+    {{ range $d.Identities }}
+    <timlee-dialog id="unlink-{{ .ID }}" size="sm">
+      <dialog id="confirm-unlink-{{ .ID }}" aria-labelledby="unlink-{{ .ID }}-title"{{ if .Confirming }} open{{ end }}>
+        <form method="post" action="/settings/security/identities/{{ .ID }}/unlink" data-enhance>
+          {{ $s.CSRF }}
+          <input type="hidden" name="provider" value="{{ .Provider }}" />
+          <h2 id="unlink-{{ .ID }}-title">{{ t $.L "settings.security.unlinkTitle" "provider" .Provider }}</h2>
+          <p>{{ if .Email }}{{ t $.L "settings.security.unlinkBodyEmail" "provider" .Provider "email" .Email }}{{ else }}{{ t $.L "settings.security.unlinkBody" "provider" .Provider }}{{ end }}</p>
+          <menu>
+            <timlee-button variant="secondary"><button type="submit" formmethod="dialog" formnovalidate value="cancel">{{ t $.L "settings.security.cancel" }}</button></timlee-button>
+            <timlee-button variant="danger"><button type="submit">{{ t $.L "settings.security.unlinkButton" "provider" .Provider }}</button></timlee-button>
+          </menu>
+        </form>
+      </dialog>
+    </timlee-dialog>
+    {{ end }}
+  </div>
+  {{ end }}
+</section>
+
+<section class="st-section">
+  <h2 id="sec-sessions" tabindex="-1">{{ t $.L "settings.security.sessions" }}</h2>
+  {{ if not $d.SessionsKnown }}
+  <p class="st-quiet">{{ t $.L "settings.security.sessionsUnknown" }}</p>
+  {{ else if $d.Others }}
+  <p>{{ t $.L "settings.security.others" "count" $d.Others }}</p>
+  <form class="st-inline-form" method="post" action="/settings/security/sessions/end-others" data-enhance>
+    {{ $s.CSRF }}
+    <timlee-button variant="secondary"><button type="submit" aria-describedby="sec-end-note">{{ t $.L "settings.security.endOthers" }}</button></timlee-button>
+  </form>
+  <p class="st-quiet" id="sec-end-note">{{ t $.L "settings.security.endOthersNote" }}</p>
+  {{ else }}
+  <p>{{ t $.L "settings.security.noOthers" }}</p>
+  {{ end }}
+</section>
+{{ end }}

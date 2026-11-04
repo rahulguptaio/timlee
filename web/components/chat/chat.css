@@ -1,0 +1,64 @@
+/* =============================================================================
+   chat.css — behaviour-level styles for <timlee-chat>.
+
+   This file holds only what the element's behaviour depends on, keyed to the
+   data attributes it reads; the look of messages and the composer belongs to
+   the page that uses the element. It is imported by web/assets/app.css, not
+   by components.css.
+   ========================================================================== */
+
+timlee-chat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+
+/* The element keeps the reader's place itself (see #onResize); the browser's
+   own anchoring would move it a second time. */
+timlee-chat [data-transcript] {
+  overflow-anchor: none;
+}
+
+/* A transcript the server laid out as a reversed column, so a page without
+   script opens at its end, runs forwards once upgraded and is held there by
+   its scroll position (see hydrate). */
+timlee-chat[data-forward] [data-transcript] {
+  flex-direction: column;
+}
+
+/* A streaming reply is plain text: its line breaks show as written until the
+   server's rendering of the finished reply replaces it. */
+timlee-chat [data-stream] {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* The composer is dir="auto" so a prompt takes its own direction, but an
+   empty dir="auto" field resolves to ltr whatever the page's direction,
+   which would start the caret and the placeholder on the wrong side of a
+   right-to-left page. Until there is text to judge by, follow the page. */
+timlee-chat [data-composer-input]:placeholder-shown {
+  direction: inherit;
+}
+
+/* Back to the latest message: centred above the composer, out of flow so
+   showing it moves nothing. Centred with auto margins between both inline
+   insets, which needs no physical side in either direction. */
+timlee-chat [data-jump-wrap] {
+  position: absolute;
+  z-index: var(--ts-z-sticky);
+  inset-block-end: calc(100% + var(--ts-space-2));
+  inset-inline: 0;
+  inline-size: max-content;
+  margin-inline: auto;
+}
+
+@media (forced-colors: active) {
+  /* Fills are what tell a reply from a prompt; forced colours drop them, so
+     each message body gets an edge. */
+  timlee-chat [data-body] {
+    border: var(--ts-border-width) solid CanvasText;
+  }
+}

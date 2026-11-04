@@ -1,0 +1,118 @@
+timlee-badge {
+  --badge-bg: var(--ts-surface-3);
+  --badge-fg: var(--ts-text-2);
+  --badge-border: transparent;
+  --badge-dot: var(--ts-idle);
+  --badge-radius: var(--ts-radius-full);
+  --badge-padding-inline: var(--ts-space-2);
+  --badge-padding-block: var(--ts-space-0-5);
+  --badge-font-size: var(--ts-text-xs);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mc-space-1);
+  padding-inline: var(--badge-padding-inline);
+  padding-block: var(--badge-padding-block);
+  border: var(--mc-border-width) solid var(--badge-border);
+  border-radius: var(--badge-radius);
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--mc-font-sans);
+  font-size: var(--badge-font-size);
+  font-weight: 600;
+  line-height: var(--mc-leading-snug);
+  letter-spacing: var(--mc-tracking-normal);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+timlee-badge[tone="success"] {
+  --badge-bg: var(--ts-success-soft);
+  --badge-fg: var(--ts-success-ink);
+  --badge-dot: var(--ts-success);
+}
+timlee-badge[tone="warning"] {
+  --badge-bg: var(--ts-warning-soft);
+  --badge-fg: var(--ts-warning-ink);
+  --badge-dot: var(--ts-warning);
+}
+timlee-badge[tone="danger"] {
+  --badge-bg: var(--ts-danger-soft);
+  --badge-fg: var(--ts-danger-ink);
+  --badge-dot: var(--ts-danger);
+}
+timlee-badge[tone="info"] {
+  --badge-bg: var(--ts-info-soft);
+  --badge-fg: var(--ts-info-ink);
+  --badge-dot: var(--ts-info);
+}
+timlee-badge[tone="primary"] {
+  --badge-bg: var(--ts-primary-soft);
+  --badge-fg: var(--ts-primary-soft-foreground);
+  --badge-dot: var(--ts-primary);
+}
+timlee-badge[tone="byoc"] {
+  --badge-bg: var(--ts-byoc-soft);
+  --badge-fg: var(--ts-byoc-soft-foreground);
+  --badge-dot: var(--ts-byoc);
+}
+
+timlee-badge[variant="outline"] {
+  --badge-bg: transparent;
+  --badge-border: var(--ts-border);
+}
+
+timlee-badge[size="lg"] {
+  --badge-padding-inline: var(--ts-space-3);
+  --badge-padding-block: var(--ts-space-1);
+  --badge-font-size: var(--ts-text-sm);
+}
+
+/* Shape, not just colour: the dot is a second channel for the same state. */
+timlee-badge[dot]::before {
+  content: "";
+  inline-size: var(--mc-space-2);
+  block-size: var(--mc-space-2);
+  border-radius: var(--mc-radius-full);
+  background: var(--badge-dot);
+  flex: none;
+}
+
+.timlee-badge__remove {
+  --badge-remove-bg: transparent;
+  --badge-remove-fg: inherit;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Smaller than SC 2.5.8's 24px floor on its own, so the padding below
+     extends the hit area past the glyph without moving the layout. */
+  inline-size: var(--mc-space-4);
+  block-size: var(--mc-space-4);
+  margin-inline-end: calc(var(--mc-space-0-5) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--mc-radius-full);
+  background: var(--badge-remove-bg);
+  color: var(--badge-remove-fg);
+  font-size: var(--mc-space-4);
+  line-height: var(--mc-leading-none);
+  cursor: pointer;
+  position: relative;
+}
+
+.timlee-badge__remove::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--mc-space-1-5) * -1);
+}
+
+.timlee-badge__remove:hover {
+  --badge-remove-bg: var(--badge-fg);
+  --badge-remove-fg: var(--badge-bg);
+}
+
+.timlee-badge__remove:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-border-width);
+}

@@ -1,0 +1,94 @@
+{
+  "@@locale": "en",
+  "@@context": "Transactional sign-in and organisation invitation email.",
+  "email.magic.subject": "Sign in to Timlee",
+  "@email.magic.subject": {
+    "description": "Subject of the magic-link sign-in email."
+  },
+  "email.magic.heading": "Sign in to Timlee",
+  "@email.magic.heading": {
+    "description": "Heading of the magic-link sign-in email."
+  },
+  "email.magic.body": "Use the link below to sign in as <b>{email}</b>. It expires at {expiresAt} ({duration} from now) and can only be used once.",
+  "@email.magic.body": {
+    "description": "Magic-link instructions. expiresAt and duration are already formatted for the recipient's locale.",
+    "placeholders": {
+      "email": { "type": "text" },
+      "expiresAt": { "type": "text" },
+      "duration": { "type": "text" }
+    }
+  },
+  "email.magic.action": "Sign in to Timlee",
+  "@email.magic.action": {
+    "description": "Magic-link button label."
+  },
+  "email.magic.ignore": "If you didn't request this, you can safely ignore this email. Nobody can sign in without the link.",
+  "@email.magic.ignore": {
+    "description": "Safety note in the magic-link email."
+  },
+  "email.link.paste": "Or paste this link into your browser:",
+  "@email.link.paste": {
+    "description": "Instruction before the plain URL fallback in transactional email."
+  },
+  "email.link.value": "{url}",
+  "@email.link.value": {
+    "description": "A transactional email URL on its own line. The formatter isolates it for bidirectional safety.",
+    "placeholders": {
+      "url": { "type": "text" }
+    }
+  },
+  "email.duration.minutes": "{count, plural, one {# minute} other {# minutes}}",
+  "@email.duration.minutes": {
+    "description": "Whole-minute lifetime of an email link.",
+    "placeholders": {
+      "count": { "type": "integer" }
+    }
+  },
+  "email.duration.days": "{count, plural, one {# day} other {# days}}",
+  "@email.duration.days": {
+    "description": "Whole-day lifetime of an email link.",
+    "placeholders": {
+      "count": { "type": "integer" }
+    }
+  },
+  "email.invite.subject": "You have been invited to {org} on Timlee",
+  "@email.invite.subject": {
+    "description": "Subject of an organisation invitation.",
+    "placeholders": {
+      "org": { "type": "text" }
+    }
+  },
+  "email.invite.heading": "Join {org} on Timlee",
+  "@email.invite.heading": {
+    "description": "Heading of an organisation invitation.",
+    "placeholders": {
+      "org": { "type": "text" }
+    }
+  },
+  "email.invite.body": "{hasInviter, select, yes {<b>{inviter}</b> has invited you to join <b>{org}</b> as {email}.} other {A teammate has invited you to join <b>{org}</b> as {email}.}}",
+  "@email.invite.body": {
+    "description": "Invitation explanation. hasInviter is yes when the inviter has an address to name.",
+    "placeholders": {
+      "hasInviter": { "type": "text" },
+      "inviter": { "type": "text" },
+      "org": { "type": "text" },
+      "email": { "type": "text" }
+    }
+  },
+  "email.invite.action": "Accept the invitation",
+  "@email.invite.action": {
+    "description": "Invitation button label."
+  },
+  "email.invite.expiry": "The invitation expires at {expiresAt} ({duration} from now) and can only be used once. Sign in with this address to accept it.",
+  "@email.invite.expiry": {
+    "description": "Invitation expiry and acceptance instruction. expiresAt and duration are already formatted.",
+    "placeholders": {
+      "expiresAt": { "type": "text" },
+      "duration": { "type": "text" }
+    }
+  },
+  "email.invite.ignore": "If you were not expecting this, you can safely ignore this email. Nothing happens until you open the link.",
+  "@email.invite.ignore": {
+    "description": "Safety note in the invitation email."
+  }
+}

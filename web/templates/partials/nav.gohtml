@@ -1,0 +1,98 @@
+{{- /*
+  The site header.
+
+  Which call to action appears is decided here, on the server, from the
+  session the handler already resolved — a signed-in reader is offered their
+  apps, a signed-out one is offered the way in. No branch of this is left
+  for the browser to work out.
+
+  The links are the site's own pages, the same on every page, and the one
+  being read is marked by the server.
+
+  The small-screen menu is a popover opened by its button's popovertarget,
+  so it opens with no script at all, and the browser supplies what used to
+  take code: Escape and a click outside close it, focus returns to the
+  button, and Tab moves from the button into the menu. The island in
+  web/assets/ts/nav.ts only closes it when an in-page link is followed.
+*/ -}}
+{{ define "nav" }}
+<header class="nav" id="top">
+  <div class="wrap nav-inner">
+    {{ template "logo" (dict "Href" (href .L "/") "Class" "logo" "L" .L) }}
+
+    <nav aria-label="{{ t .L "common.nav.main" }}" class="nav-links">
+      {{ range .Site.Nav }}
+      <a href="{{ href $.L .Href }}"{{ if eq .Href $.Path }} aria-current="page"{{ end }}>{{ .Label }}</a>
+      {{ end }}
+    </nav>
+
+    <div class="nav-cta">
+      {{ template "theme-toggle" (dict "Page" . "Class" "nav-theme") }}
+      {{ if .SignedIn }}
+      <timlee-button variant="secondary" size="sm" class="nav-wide"><a href="{{ href .L "/apps" }}">{{ t .L "common.nav.apps" }}</a></timlee-button>
+      {{ template "account-menu" . }}
+      {{ else }}
+      <timlee-button variant="secondary" size="sm" class="nav-wide"><a href="{{ href .L "/sign-in" }}">{{ t .L "common.nav.signIn" }}</a></timlee-button>
+      {{ end }}
+      <timlee-icon-button class="nav-burger">
+        <button type="button" popovertarget="site-menu" aria-label="{{ t .L "common.nav.menu" }}" data-nav-toggle>
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+            <path class="i-open" d="M4 7h16M4 12h16M4 17h16" />
+            <path class="i-close" d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </timlee-icon-button>
+    </div>
+  </div>
+
+  <nav id="site-menu" class="nav-menu" popover aria-label="{{ t .L "common.nav.menu" }}">
+    {{ range .Site.Nav }}
+    <a href="{{ href $.L .Href }}"{{ if eq .Href $.Path }} aria-current="page"{{ end }}>{{ .Label }}</a>
+    {{ end }}
+    <div class="nav-menu-cta">
+      {{ if .SignedIn }}
+      <timlee-button variant="primary" block><a href="{{ href .L "/apps" }}">{{ t .L "common.nav.apps" }}</a></timlee-button>
+      <timlee-button variant="secondary" block><a href="{{ href .L "/settings" }}">{{ t .L "common.nav.settings" }}</a></timlee-button>
+      {{ else }}
+      <timlee-button variant="primary" block><a href="{{ href .L "/sign-in" }}">{{ t .L "common.nav.signIn" }}</a></timlee-button>
+      {{ end }}
+    </div>
+  </nav>
+</header>
+{{ end }}
+
+{{- /*
+  The account control, shown only when a session resolved. A popover for the
+  same reasons as the menu above. Sign-out is a form because it changes
+  state, and a link that changes state is a link a prefetcher can follow.
+*/ -}}
+{{ define "account-menu" }}
+{{ if .SignedIn }}
+<timlee-button variant="ghost" size="sm" class="account-trigger">
+  {{- /* Named by what it shows, so a voice command that reads the name off
+         the screen finds it; the hidden words say what it opens. */}}
+  <button type="button" popovertarget="account-menu">
+    {{ if .User.AvatarURL }}
+    <img class="avatar" src="{{ .User.AvatarURL }}" alt="" width="28" height="28" referrerpolicy="no-referrer" />
+    {{ else }}
+    <span class="avatar" aria-hidden="true" dir="auto">{{ .User.Initials }}</span>
+    {{ end }}
+    <span class="account-name" dir="auto">{{ .User.Display }}</span>
+    <span class="visually-hidden">{{ t .L "common.nav.accountMenu" }}</span>
+  </button>
+</timlee-button>
+<div id="account-menu" class="account-panel" popover>
+  <p class="account-id">
+    <b dir="auto">{{ .User.Display }}</b>
+    <span dir="ltr">{{ .User.Email }}</span>
+    {{ with .User.Org }}<span class="account-org" dir="auto">{{ . }}</span>{{ end }}
+  </p>
+  <a href="{{ href .L "/apps" }}">{{ t .L "common.nav.apps" }}</a>
+  <a href="{{ href .L "/settings" }}">{{ t .L "common.nav.settings" }}</a>
+  <form method="post" action="/sign-out">
+    <input type="hidden" name="returnTo" value="{{ href .L "/" }}" />
+    <timlee-button variant="ghost" block class="account-signout"><button type="submit">{{ t .L "common.nav.signOut" }}</button></timlee-button>
+  </form>
+</div>
+{{ end }}
+{{ end }}

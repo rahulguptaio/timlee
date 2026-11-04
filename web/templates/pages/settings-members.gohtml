@@ -1,0 +1,274 @@
+{{- /*
+  Members: who belongs to the organisation and at which role, invitations
+  waiting to be accepted, and a form to invite someone.
+
+  Every control here exists only if the control plane would accept it from
+  this reader: a role is offered only if they may grant it, to someone they
+  may act on. The rules themselves live in Go; this file only renders them.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+{{- $s := $d.Shell -}}
+<header class="st-head">
+  <h1>{{ t .L "settings.members.title" }}</h1>
+  <p>{{ if $s.Org }}{{ t .L "settings.members.ledeOrg" "org" $s.Org.Name }}{{ else }}{{ t .L "settings.members.lede" }}{{ end }}</p>
+</header>
+
+{{ template "settings-outcome" . }}
+
+{{ if not $s.Org }}
+<section class="st-section">
+  <p>{{ t .L "settings.members.noOrg" }}</p>
+</section>
+{{ else }}
+
+{{ if $s.CanManage }}
+<section class="st-section">
+  <h2 id="mb-invite">{{ t .L "settings.members.inviteTitle" }}</h2>
+  {{ if $d.MailOff }}
+  <timlee-alert tone="warning" id="mb-mail-off">
+    <strong>{{ t $.L "settings.members.mailOffTitle" }}</strong>
+    <p>{{ t $.L "settings.members.mailOffBody" }}</p>
+  </timlee-alert>
+  {{ end }}
+  <form class="st-invite" method="post" action="/settings/members/invite" data-enhance>
+    {{ $s.CSRF }}
+    <fieldset class="st-plain"{{ if $d.MailOff }} disabled aria-describedby="mb-mail-off"{{ end }}>
+      <legend class="visually-hidden">{{ t $.L "settings.members.invitationLegend" }}</legend>
+      <timlee-input{{ if $d.Form.EmailError }} invalid{{ end }}>
+        <label for="invite-email">{{ t $.L "settings.members.emailLabel" }}</label>
+        <input
+          id="invite-email"
+          name="email"
+          type="email"
+          inputmode="email"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+          value="{{ $d.Form.Email }}"
+          dir="ltr"
+          required
+          aria-describedby="invite-email-hint{{ if $d.Form.EmailError }} invite-email-error{{ end }}"
+          {{ if $d.Form.EmailError }}aria-invalid="true"{{ end }}
+        />
+        <p data-hint id="invite-email-hint">{{ t $.L "settings.members.emailHint" }}</p>
+        <p data-error id="invite-email-error">{{ template "settings-error" (dict "L" $.L "Message" $d.Form.EmailError) }}</p>
+      </timlee-input>
+
+      <fieldset class="st-roles"{{ if $d.Form.RoleError }} aria-describedby="invite-role-error"{{ end }}>
+        <legend>{{ t $.L "settings.members.roleLabel" }}</legend>
+        {{ range $d.RoleChoices }}
+        <timlee-radio boxed>
+          <label>
+            <input type="radio" id="invite-role-input-{{ .Value }}" name="role" value="{{ .Value }}"{{ if .Selected }} checked{{ end }} aria-describedby="invite-role-{{ .Value }}" />
+            <span>{{ .Label }}</span>
+          </label>
+          <p data-hint id="invite-role-{{ .Value }}">{{ .Blurb }}</p>
+        </timlee-radio>
+        {{ end }}
+        {{ with $d.Form.RoleError }}<p class="st-error" id="invite-role-error">{{ template "settings-error" (dict "L" $.L "Message" .) }}</p>{{ end }}
+      </fieldset>
+
+      <timlee-button variant="primary"><button type="submit">{{ t $.L "settings.members.sendInvitation" }}</button></timlee-button>
+    </fieldset>
+  </form>
+</section>
+{{ end }}
+
+<section class="st-section">
+  <h2 id="mb-people" tabindex="-1">{{ t .L "settings.members.peopleTitle" }}</h2>
+  {{ with $d.LoadError }}<timlee-alert tone="danger"><p>{{ . }}</p></timlee-alert>{{ end }}
+  {{ if not $s.CanManage }}
+  {{ template "settings-ask" (dict "L" $.L "Lead" (t $.L "settings.members.restricted") "Admins" $d.Admins) }}
+  {{ end }}
+
+  {{ if $d.Members }}
+  <timlee-table label="{{ t $.L "settings.members.title" }}" class="st-cards">
+    <table>
+      <caption>{{ t $.L "settings.members.caption" "count" $d.Count "owners" $d.Owners }}{{ with $d.Paging.Pages }}{{ t $.L "settings.table.showing" "from" $d.Paging.From "to" $d.Paging.To }}{{ end }}</caption>
+      <thead>
+        <tr>
+          {{ template "settings-th" (index $d.Headers "name") }}
+          {{ template "settings-th" (index $d.Headers "role") }}
+          {{ template "settings-th" (index $d.Headers "joined") }}
+          <th scope="col"><span class="visually-hidden">{{ t $.L "settings.members.actions" }}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range $d.Members }}
+        <tr id="member-{{ .ID }}">
+          <td class="st-primary-cell">
+            <span class="st-person">
+              {{ template "settings-avatar" (dict "Name" .Name "URL" .AvatarURL "Initials" .Initials "Lazy" true) }}
+              <span>
+                <span class="st-person-name"><bdi dir="auto">{{ .Name }}</bdi>{{ if .IsSelf }} <timlee-badge tone="info">{{ t $.L "settings.members.you" }}</timlee-badge>{{ end }}</span>
+                {{ if ne .Name .Email }}<span class="st-quiet"><bdi dir="ltr">{{ .Email }}</bdi></span>{{ end }}
+              </span>
+            </span>
+          </td>
+          <td>
+            <span class="st-label" aria-hidden="true">{{ t $.L "settings.members.roleLabel" }}</span>
+            {{ if .Options }}
+            <form class="st-role-form" method="post" action="/settings/members/{{ .ID }}/role" data-enhance>
+              {{ $s.CSRF }}
+              <input type="hidden" name="name" value="{{ .Name }}" />
+              {{ if .IsSelf }}<input type="hidden" name="self" value="1" />{{ end }}
+              <timlee-select>
+                <label for="role-{{ .ID }}" class="visually-hidden">{{ t $.L "settings.members.roleFor" "name" .Name }}</label>
+                <select id="role-{{ .ID }}" name="role"{{ if .SoleOwner }} aria-describedby="role-{{ .ID }}-note"{{ end }}>
+                  {{ range .Options }}<option value="{{ .Value }}"{{ if .Selected }} selected{{ end }}>{{ .Label }}</option>{{ end }}
+                </select>
+              </timlee-select>
+              <timlee-button variant="secondary" size="sm"><button type="submit">{{ t $.L "settings.members.changeRole" }}<span class="visually-hidden"> {{ t $.L "settings.members.forName" "name" .Name }}</span></button></timlee-button>
+            </form>
+            {{ if .SoleOwner }}<p class="st-note" id="role-{{ .ID }}-note">{{ if .IsSelf }}{{ t $.L "settings.members.soleOwnerSelf" }}{{ else }}{{ t $.L "settings.members.soleOwnerOther" "name" .Name }}{{ end }}</p>{{ end }}
+            {{ else }}
+            <timlee-badge>{{ .RoleLabel }}</timlee-badge>
+            {{ if $s.CanManage }}<p class="st-note">{{ t $.L "settings.members.ownerOnly" }}</p>{{ end }}
+            {{ end }}
+          </td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.members.col.joined" }}</span>{{ template "settings-when" .Joined }}</td>
+          <td class="st-actions">
+            {{ if .CanRemove }}
+            <timlee-button variant="ghost" size="sm">
+              <a href="/settings/members?remove={{ .ID }}#confirm-remove-{{ .ID }}" data-dialog-open="remove-{{ .ID }}">{{ t $.L "settings.members.removeAction" }}<span class="visually-hidden"> <bdi dir="auto">{{ .Name }}</bdi></span></a>
+            </timlee-button>
+            {{ end }}
+          </td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </timlee-table>
+  {{ template "settings-pages" (dict "L" $.L "Label" (t $.L "settings.members.pagesLabel") "Paging" $d.Paging) }}
+
+  {{ with $d.Confirm }}
+  <div class="st-dialogs">
+    <timlee-dialog id="role-confirm-{{ .ID }}" size="sm">
+      <dialog id="confirm-role-{{ .ID }}" aria-labelledby="confirm-role-{{ .ID }}-title" open>
+        <form method="post" action="/settings/members/{{ .ID }}/role" data-enhance>
+          {{ $s.CSRF }}
+          <input type="hidden" name="role" value="{{ .To }}" />
+          <input type="hidden" name="name" value="{{ .Name }}" />
+          {{ if .Self }}<input type="hidden" name="self" value="1" />{{ end }}
+          <input type="hidden" name="confirm" value="1" />
+          <h2 id="confirm-role-{{ .ID }}-title">{{ .Title }}</h2>
+          <p>{{ .Body }}</p>
+          <menu>
+            <timlee-button variant="secondary"><a href="/settings/members#member-{{ .ID }}">{{ .Keep }}</a></timlee-button>
+            <timlee-button variant="{{ if .Danger }}danger{{ else }}primary{{ end }}"><button type="submit">{{ .Confirm }}</button></timlee-button>
+          </menu>
+        </form>
+      </dialog>
+    </timlee-dialog>
+  </div>
+  {{ end }}
+
+  <div class="st-dialogs">
+    {{ range $d.Members }}{{ if .CanRemove }}
+    <timlee-dialog id="remove-{{ .ID }}" size="sm">
+      <dialog id="confirm-remove-{{ .ID }}" aria-labelledby="remove-{{ .ID }}-title"{{ if .Confirming }} open{{ end }}>
+        <form method="post" action="/settings/members/{{ .ID }}/remove" data-enhance>
+          {{ $s.CSRF }}
+          <input type="hidden" name="name" value="{{ .Name }}" />
+          <h2 id="remove-{{ .ID }}-title">{{ t $.L "settings.members.removeTitle" "name" .Name }}</h2>
+          {{ if not .KeysKnown }}
+          <p>{{ t $.L "settings.members.removeImpactUnknown" "org" $s.Org.Name }}</p>
+          {{ else }}
+          <p id="remove-{{ .ID }}-impact">{{ t $.L "settings.members.removeImpact" "name" .Name "org" $s.Org.Name "keys" (len .Keys) }}</p>
+          {{ with .Keys }}
+          <ul class="st-doomed">
+            {{ range $k := . }}
+            <li>{{ with $k.LastUsed }}{{ th $.L "settings.members.keyUsed" "label" $k.Label "prefix" $k.Prefix "when" .Ago }}{{ else }}{{ th $.L "settings.members.keyUnused" "label" $k.Label "prefix" $k.Prefix }}{{ end }}</li>
+            {{ end }}
+          </ul>
+          {{ end }}
+          {{ with .RecentKeys }}<p class="st-warning-line">{{ t $.L "settings.members.keysRecentlyUsed" "count" . }}</p>{{ end }}
+          {{ if .Keys }}<p><a href="/settings/keys?createdBy={{ .ID }}&amp;status=active">{{ t $.L "settings.members.rotateFirst" }}</a></p>{{ end }}
+          {{ end }}
+          <menu>
+            <timlee-button variant="secondary"><button type="submit" formmethod="dialog" formnovalidate value="cancel">{{ t $.L "settings.security.cancel" }}</button></timlee-button>
+            <timlee-button variant="danger"><button type="submit">{{ if .Keys }}{{ t $.L "settings.members.removeAndRevoke" "name" .Name "keys" (len .Keys) }}{{ else }}{{ t $.L "settings.members.removeMember" }}{{ end }}</button></timlee-button>
+          </menu>
+        </form>
+      </dialog>
+    </timlee-dialog>
+    {{ end }}{{ end }}
+  </div>
+  {{ end }}
+</section>
+
+{{ if $s.CanManage }}
+<section class="st-section">
+  <h2 id="mb-pending" tabindex="-1">{{ t .L "settings.members.pendingTitle" }}</h2>
+  {{ with $d.InviteError }}<timlee-alert tone="danger"><p>{{ . }}</p></timlee-alert>{{ end }}
+  {{ if $d.Invitations }}
+  <p class="st-lede">{{ t $.L "settings.members.resendNote" }}</p>
+  <timlee-table label="{{ t $.L "settings.members.pendingTitle" }}" class="st-cards">
+    <table>
+      <caption>{{ t $.L "settings.members.pendingCaption" "count" (len $d.Invitations) }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ t $.L "settings.members.emailColumn" }}</th>
+          <th scope="col">{{ t $.L "settings.members.roleLabel" }}</th>
+          <th scope="col">{{ t $.L "settings.members.invitedBy" }}</th>
+          <th scope="col">{{ t $.L "settings.members.expires" }}</th>
+          <th scope="col"><span class="visually-hidden">{{ t $.L "settings.members.actions" }}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range $d.Invitations }}
+        <tr id="invitation-{{ .ID }}">
+          <td class="st-primary-cell"><bdi dir="ltr">{{ .Email }}</bdi></td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.members.roleLabel" }}</span>{{ .RoleLabel }}</td>
+          <td><span class="st-label" aria-hidden="true">{{ t $.L "settings.members.invitedBy" }}</span><span><bdi dir="auto">{{ .InvitedBy }}</bdi> <span class="st-quiet st-sub">{{ template "settings-when" .Sent }}</span></span></td>
+          <td>
+            <span class="st-label" aria-hidden="true">{{ t $.L "settings.members.expires" }}</span>
+            {{ if .Expired }}<timlee-badge tone="warning">{{ t $.L "settings.members.expiredOn" "date" .Expires.Date }}</timlee-badge>{{ else }}{{ template "settings-when" .Expires }}{{ end }}
+          </td>
+          <td class="st-actions">
+            {{ if .CanResend }}
+            <form method="post" action="/settings/members/invite" data-enhance>
+              {{ $s.CSRF }}
+              <input type="hidden" name="email" value="{{ .Email }}" />
+              <input type="hidden" name="role" value="{{ .Role }}" />
+              <input type="hidden" name="resend" value="1" />
+              <timlee-button variant="ghost" size="sm"><button type="submit">{{ if .Expired }}{{ t $.L "settings.members.resendExpired" }}{{ else }}{{ t $.L "settings.members.resend" }}{{ end }}<span class="visually-hidden"> {{ t $.L "settings.members.resendHidden" "email" .Email }}</span></button></timlee-button>
+            </form>
+            {{ end }}
+            <timlee-button variant="ghost" size="sm">
+              <a href="/settings/members?revoke={{ .ID }}#confirm-revoke-{{ .ID }}" data-dialog-open="revoke-{{ .ID }}">{{ t $.L "settings.members.revokeInvitationAction" }}<span class="visually-hidden"> {{ t $.L "settings.members.invitationFor" "email" .Email }}</span></a>
+            </timlee-button>
+          </td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </timlee-table>
+
+  <div class="st-dialogs">
+    {{ range $d.Invitations }}
+    <timlee-dialog id="revoke-{{ .ID }}" size="sm">
+      <dialog id="confirm-revoke-{{ .ID }}" aria-labelledby="revoke-{{ .ID }}-title"{{ if .Confirming }} open{{ end }}>
+        <form method="post" action="/settings/members/invitations/{{ .ID }}/revoke" data-enhance>
+          {{ $s.CSRF }}
+          <input type="hidden" name="email" value="{{ .Email }}" />
+          <h2 id="revoke-{{ .ID }}-title">{{ t $.L "settings.members.revokeInvitationTitle" "email" .Email }}</h2>
+          <p>{{ t $.L "settings.members.revokeInvitationBody" }}</p>
+          <menu>
+            <timlee-button variant="secondary"><button type="submit" formmethod="dialog" formnovalidate value="cancel">{{ t $.L "settings.security.cancel" }}</button></timlee-button>
+            <timlee-button variant="danger"><button type="submit">{{ t $.L "settings.members.revokeInvitation" }}</button></timlee-button>
+          </menu>
+        </form>
+      </dialog>
+    </timlee-dialog>
+    {{ end }}
+  </div>
+  {{ else if not $d.InviteError }}
+  <p class="st-quiet">{{ t $.L "settings.members.noInvitations" }}{{ if not $d.MailOff }} <a href="#invite-email">{{ t $.L "settings.members.inviteSomeone" }}</a>{{ end }}</p>
+  {{ end }}
+</section>
+{{ end }}
+{{ end }}
+{{ end }}

@@ -1,0 +1,135 @@
+timlee-dialog {
+  display: contents;
+}
+
+timlee-dialog > dialog {
+  --dialog-bg: var(--ts-surface-raised);
+  --dialog-border: var(--ts-border);
+  --dialog-radius: var(--ts-radius-xl);
+  --dialog-padding: var(--ts-space-6);
+  --dialog-width: 32rem;
+  --dialog-shadow: var(--ts-elevation-3);
+
+  inline-size: min(var(--dialog-width), 100% - var(--mc-space-8));
+  max-block-size: min(85dvh, 48rem);
+  padding: 0;
+  border: var(--mc-border-width) solid var(--dialog-border);
+  border-radius: var(--dialog-radius);
+  background: var(--dialog-bg);
+  color: var(--mc-text-1);
+  box-shadow: var(--dialog-shadow);
+  /* The form inside scrolls; the dialog only has to be a scroll container
+     for overscroll-behavior below to hold scroll gestures in. */
+  overflow: hidden;
+}
+
+timlee-dialog[size="sm"] > dialog {
+  --dialog-width: 24rem;
+}
+timlee-dialog[size="lg"] > dialog {
+  --dialog-width: 48rem;
+}
+
+/* "::backdrop" inherits custom properties from its originating element in
+   Chrome 122+, Safari 17.4+ and Firefox 125+. Older engines fall back to
+   the UA's own translucent backdrop, which is dimmer but not broken. */
+timlee-dialog > dialog::backdrop {
+  background: var(--mc-overlay);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+/* The page behind a modal stays put without touching the root, whose hidden
+   overflow would take the scrollbar away and shift the layout: a scroll
+   gesture inside the dialog or over its backdrop (made a scroll container
+   above) goes no further. Engines that only contain scrolling containers
+   that overflow, WebKit among them, let a gesture over the backdrop scroll
+   the page; the dialog stays modal either way. */
+timlee-dialog > dialog:modal {
+  overscroll-behavior: contain;
+}
+
+timlee-dialog > dialog > :where(form, div) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-3);
+  max-block-size: inherit;
+  padding: var(--dialog-padding);
+  margin: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+timlee-dialog > dialog :where(h1, h2, h3) {
+  margin: 0;
+  padding-inline-end: var(--mc-space-8);
+  color: var(--mc-text-heading);
+  font-size: var(--mc-text-xl);
+  line-height: var(--mc-leading-snug);
+}
+
+timlee-dialog > dialog p {
+  margin: 0;
+  color: var(--mc-text-2);
+  font-size: var(--mc-text-base);
+  line-height: var(--mc-leading-normal);
+}
+
+timlee-dialog > dialog menu {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--mc-space-2);
+  margin: var(--mc-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timlee-dialog__close {
+  --dialog-close-bg: transparent;
+  --dialog-close-fg: var(--ts-text-3);
+
+  position: absolute;
+  inset-block-start: var(--mc-space-3);
+  inset-inline-end: var(--mc-space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: calc(var(--mc-space-8) + var(--mc-space-1));
+  block-size: calc(var(--mc-space-8) + var(--mc-space-1));
+  border: 0;
+  border-radius: var(--mc-radius-md);
+  background: var(--dialog-close-bg);
+  color: var(--dialog-close-fg);
+  font-size: var(--mc-text-xl);
+  line-height: var(--mc-leading-none);
+  cursor: pointer;
+}
+
+.timlee-dialog__close:hover {
+  --dialog-close-bg: var(--ts-surface-hover);
+  --dialog-close-fg: var(--ts-text-1);
+}
+
+.timlee-dialog__close:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  timlee-dialog > dialog[open] {
+    animation: timlee-fade-in var(--mc-duration) var(--mc-ease-out);
+    --timlee-enter-y: var(--mc-space-2);
+  }
+  timlee-dialog > dialog[open]::backdrop {
+    animation: timlee-fade-in var(--mc-duration) var(--mc-ease-out);
+  }
+}
+
+/* Reduced motion: the dialog still fades in, so it is clear what appeared,
+   but it no longer rises into place. */
+@media (prefers-reduced-motion: reduce) {
+  timlee-dialog > dialog[open],
+  timlee-dialog > dialog[open]::backdrop {
+    animation: timlee-fade var(--mc-duration) var(--mc-ease-out);
+  }
+}

@@ -1,0 +1,65 @@
+{{- /*
+  base — the document shell for the public, indexable pages.
+
+  Everything a reader needs is already here when the response arrives: the
+  theme on <html>, the nav's signed-in state, and the page's own content.
+*/ -}}
+{{ define "base" -}}
+<!doctype html>
+<html lang="{{ .L.Locale.Lang }}" dir="{{ .L.Locale.Dir }}"{{ with .Theme }} data-theme="{{ . }}"{{ end }}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {{- template "head-links" . }}
+    {{- template "theme-meta" . }}
+    {{ with .Canonical }}<link rel="canonical" href="{{ . }}" />{{ end }}
+    {{ with .Robots }}<meta name="robots" content="{{ . }}" />{{ end }}
+
+    <title>{{ .Title }}</title>
+    <meta name="description" content="{{ .Description }}" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Timlee" />
+    {{ if .Alternates }}{{ with .L.Locale.OG }}<meta property="og:locale" content="{{ . }}" />{{ end }}{{ end }}
+    {{- range .Alternates }}{{ if and .OG (ne .Lang $.L.Locale.Lang) }}
+    <meta property="og:locale:alternate" content="{{ .OG }}" />
+    {{- end }}{{ end }}
+    <meta property="og:title" content="{{ .Title }}" />
+    <meta property="og:description" content="{{ .Description }}" />
+    {{ with .Canonical }}<meta property="og:url" content="{{ . }}" />{{ end }}
+    {{ with .OGImage }}
+    <meta property="og:image" content="{{ . }}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="{{ t $.L "common.meta.ogImageAlt" }}" />
+    {{ end }}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ .Title }}" />
+    <meta name="twitter:description" content="{{ .Description }}" />
+    {{ with .OGImage }}<meta name="twitter:image" content="{{ . }}" />{{ end }}
+
+    {{ with .JSONLD }}
+    <script type="application/ld+json" nonce="{{ $.Nonce }}">{{ . }}</script>
+    {{ end }}
+    {{ with .ClientMessages }}
+    <script type="application/json" id="timlee-i18n" nonce="{{ $.Nonce }}">{{ . }}</script>
+    {{ end }}
+
+    {{ template "styles" . }}
+    {{- block "page-styles" . }}{{ end }}
+    {{- block "page-head" . }}{{ end }}
+    {{- template "speculation-rules" . }}
+  </head>
+
+  <body{{ with .BodyClass }} class="{{ . }}"{{ end }}>
+    <a class="skip-link" href="#main">{{ t .L "common.skip.content" }}</a>
+    {{ template "nav" . }}
+    <main id="main">
+      {{- template "locale-banner" . }}
+      {{ template "content" . }}
+    </main>
+    {{ template "footer" . }}
+    {{ template "scripts" . }}
+  </body>
+</html>
+{{ end }}

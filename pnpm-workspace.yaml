@@ -1,0 +1,7 @@
+# The root package contains the frontend toolchain. The desktop app is
+# intentionally separate: it has its own lockfile and needs only the Tauri CLI.
+
+# Dependency install scripts are off unless allowed here. Settings live in
+# this file rather than .npmrc because pnpm 11 reads only auth from .npmrc.
+allowBuilds:
+  esbuild: true

@@ -1,0 +1,1198 @@
+/* =============================================================================
+   Timlee design tokens
+   -----------------------------------------------------------------------------
+   Three layers, one direction:
+
+     --prim-*   primitive   a colour, with no opinion about where it goes
+     --ts-*     semantic    a job ("page background", "danger ink"): the same
+                            name in both themes, a different primitive under it
+     --<comp>-* component   a widget's local contract, assigned only from --ts-*
+
+   The rule that keeps this honest: a literal colour may appear only in layer 1.
+   Everything below it is var() all the way down.
+
+   Light and dark are not two palettes. Every colour that changes with the theme
+   is declared once, as light-dark(<light>, <dark>), and the theme itself is
+   nothing but the color-scheme property (layer 2a). The explicit dark theme and
+   the OS-preference fallback therefore cannot drift: there is no second copy of
+   the palette for either of them to drift from.
+
+   Accent discipline: vermilion is the brand and is rationed. It marks the primary
+   call to action and live state, and nothing else, and covers no more than 10%
+   of any viewport — an accent that fills a third of the screen has stopped
+   being an accent. Everything structural is the navy-tinted neutral.
+
+   Reference, measured contrast and the verification commands:
+   docs/design-tokens.md.
+   ========================================================================== */
+
+/* =============================================================================
+   LAYER 1 — PRIMITIVES
+   -----------------------------------------------------------------------------
+   Context-free. A primitive names a colour, never a job. Nothing outside this
+   layer may contain a literal colour.
+
+   Step roles (Radix model):
+      1  app background
+      2  subtle app background
+      3  element background
+      4  element hover
+      5  element active / selected
+      6  subtle border
+      7  border, focus ring
+      8  hover border
+      9  solid fill
+     10  solid hover
+     11  low-contrast text
+     12  high-contrast text
+
+   The light and dark ramps are separate, independently tuned scales: the dark
+   scale compresses steps 1-5 (so near-black surfaces stay distinguishable) and
+   pushes 9-12 far brighter than an inversion of the light scale would, which is
+   what stops dark midtones from washing out.
+
+   Each step is declared twice: hex, then the oklch() the hex was generated
+   from. OKLCH lightness is perceptually uniform, so the ramp is computed rather
+   than eyeballed. The oklch() half sits behind @supports because a custom
+   property accepts *any* token sequence — unlike a normal declaration, a later
+   oklch() value is not discarded by a browser that cannot parse it, it is
+   stored and then poisons every var() that reads it. @supports is the only
+   fallback that actually works at this layer.
+   ========================================================================== */
+
+:root {
+  /* navy */
+  --prim-navy-1: #ffffff;
+  --prim-navy-2: #f8fafc;
+  --prim-navy-3: #f3f5f8;
+  --prim-navy-4: #eceff4;
+  --prim-navy-5: #e4e8ee;
+  --prim-navy-6: #dbe0e7;
+  --prim-navy-7: #ccd2db;
+  --prim-navy-8: #b4bcc8;
+  --prim-navy-9: #7c8593;
+  --prim-navy-10: #5d6877;
+  --prim-navy-11: #515c6c;
+  --prim-navy-12: #1b2a41;
+
+  /* vermilion (brand) */
+  --prim-vermilion-1: #fffaf8;
+  --prim-vermilion-2: #fef4f1;
+  --prim-vermilion-3: #ffeae4;
+  --prim-vermilion-4: #fee0d6;
+  --prim-vermilion-5: #fed3c6;
+  --prim-vermilion-6: #ffc3b0;
+  --prim-vermilion-7: #f9ad95;
+  --prim-vermilion-8: #ed896a;
+  --prim-vermilion-9: #b73902;
+  --prim-vermilion-10: #a23102;
+  --prim-vermilion-11: #922b01;
+  --prim-vermilion-12: #661d02;
+
+  /* green */
+  --prim-green-1: #f7fcf7;
+  --prim-green-2: #edf9ee;
+  --prim-green-3: #ddf4df;
+  --prim-green-4: #cdeed0;
+  --prim-green-5: #bde7c1;
+  --prim-green-6: #abddb1;
+  --prim-green-7: #94ce9b;
+  --prim-green-8: #70b97b;
+  --prim-green-9: #21a548;
+  --prim-green-10: #10943d;
+  --prim-green-11: #00772a;
+  --prim-green-12: #124a20;
+
+  /* amber */
+  --prim-amber-1: #fffbf5;
+  --prim-amber-2: #fff7ea;
+  --prim-amber-3: #ffeed4;
+  --prim-amber-4: #ffe5bb;
+  --prim-amber-5: #ffda9f;
+  --prim-amber-6: #fccd81;
+  --prim-amber-7: #f2c16f;
+  --prim-amber-8: #e8b04d;
+  --prim-amber-9: #fab62e;
+  --prim-amber-10: #e7a621;
+  --prim-amber-11: #8b6100;
+  --prim-amber-12: #553a00;
+
+  /* red */
+  --prim-red-1: #fffbfa;
+  --prim-red-2: #fff6f4;
+  --prim-red-3: #ffebe9;
+  --prim-red-4: #ffe0dc;
+  --prim-red-5: #ffd3cd;
+  --prim-red-6: #ffc2ba;
+  --prim-red-7: #f9ada4;
+  --prim-red-8: #ed8f85;
+  --prim-red-9: #d83a35;
+  --prim-red-10: #c42d2a;
+  --prim-red-11: #b62c29;
+  --prim-red-12: #67221e;
+
+  /* blue */
+  --prim-blue-1: #fafcff;
+  --prim-blue-2: #f3f8ff;
+  --prim-blue-3: #e6f1ff;
+  --prim-blue-4: #d9eaff;
+  --prim-blue-5: #c9e1ff;
+  --prim-blue-6: #b4d6ff;
+  --prim-blue-7: #9ac6fc;
+  --prim-blue-8: #77aff3;
+  --prim-blue-9: #1876d5;
+  --prim-blue-10: #0866c0;
+  --prim-blue-11: #095eb1;
+  --prim-blue-12: #0f3763;
+
+  /* navy-dark */
+  --prim-navy-dark-1: #0b1424;
+  --prim-navy-dark-2: #0f1c30;
+  --prim-navy-dark-3: #14233a;
+  --prim-navy-dark-4: #1a2c45;
+  --prim-navy-dark-5: #22334c;
+  --prim-navy-dark-6: #2d3d54;
+  --prim-navy-dark-7: #3b4a61;
+  --prim-navy-dark-8: #526076;
+  --prim-navy-dark-9: #738196;
+  --prim-navy-dark-10: #8d9baf;
+  --prim-navy-dark-11: #9ca9bd;
+  --prim-navy-dark-12: #e1e8f3;
+
+  /* vermilion-dark (brand) */
+  --prim-vermilion-dark-1: #1f1410;
+  --prim-vermilion-dark-2: #291711;
+  --prim-vermilion-dark-3: #391c13;
+  --prim-vermilion-dark-4: #462116;
+  --prim-vermilion-dark-5: #532617;
+  --prim-vermilion-dark-6: #632d1c;
+  --prim-vermilion-dark-7: #7a3722;
+  --prim-vermilion-dark-8: #a34629;
+  --prim-vermilion-dark-9: #fe9e80;
+  --prim-vermilion-dark-10: #ffb7a0;
+  --prim-vermilion-dark-11: #f29578;
+  --prim-vermilion-dark-12: #ffcab9;
+
+  /* green-dark */
+  --prim-green-dark-1: #111912;
+  --prim-green-dark-2: #122014;
+  --prim-green-dark-3: #142a17;
+  --prim-green-dark-4: #15341b;
+  --prim-green-dark-5: #183d1f;
+  --prim-green-dark-6: #1e4926;
+  --prim-green-dark-7: #275a31;
+  --prim-green-dark-8: #347641;
+  --prim-green-dark-9: #4cc466;
+  --prim-green-dark-10: #66d37a;
+  --prim-green-dark-11: #5abf6e;
+  --prim-green-dark-12: #b3e5b8;
+
+  /* amber-dark */
+  --prim-amber-dark-1: #1b160f;
+  --prim-amber-dark-2: #231a0c;
+  --prim-amber-dark-3: #302208;
+  --prim-amber-dark-4: #3b2805;
+  --prim-amber-dark-5: #462f01;
+  --prim-amber-dark-6: #533902;
+  --prim-amber-dark-7: #654706;
+  --prim-amber-dark-8: #865e06;
+  --prim-amber-dark-9: #f7b73d;
+  --prim-amber-dark-10: #ffc768;
+  --prim-amber-dark-11: #e8b14f;
+  --prim-amber-dark-12: #f7d8a9;
+
+  /* red-dark */
+  --prim-red-dark-1: #201412;
+  --prim-red-dark-2: #2b1614;
+  --prim-red-dark-3: #3c1a17;
+  --prim-red-dark-4: #4c1e1a;
+  --prim-red-dark-5: #59231e;
+  --prim-red-dark-6: #6b2a25;
+  --prim-red-dark-7: #83342e;
+  --prim-red-dark-8: #ad443c;
+  --prim-red-dark-9: #e94740;
+  --prim-red-dark-10: #f75d53;
+  --prim-red-dark-11: #ed766b;
+  --prim-red-dark-12: #fbb8af;
+
+  /* blue-dark */
+  --prim-blue-dark-1: #101821;
+  --prim-blue-dark-2: #101e2e;
+  --prim-blue-dark-3: #102741;
+  --prim-blue-dark-4: #0f2f53;
+  --prim-blue-dark-5: #0e3763;
+  --prim-blue-dark-6: #144275;
+  --prim-blue-dark-7: #1c518d;
+  --prim-blue-dark-8: #266bb9;
+  --prim-blue-dark-9: #1c8af9;
+  --prim-blue-dark-10: #449bff;
+  --prim-blue-dark-11: #5ea2f5;
+  --prim-blue-dark-12: #b1d4fe;
+
+  /* Standalone data hues. Chart series 4 and 6 need two more distinguishable
+     hues but no ramp — they are only ever a stroke or a fill. */
+  --prim-violet-9: #7a4fd0;
+  --prim-violet-9-dark: #a98ce6;
+  --prim-clay-9: #b4542f;
+  --prim-clay-9-dark: #e0906f;
+
+  /* Scrims. The dark scrim is nearly opaque because a 45% veil over a near
+     black page does not read as a veil at all. */
+  --prim-scrim-light: rgb(11 20 36 / 0.45);
+  --prim-scrim-dark: rgb(3 8 16 / 0.72);
+
+  /* Translucent washes for hover/press states that must not hide what is under
+     them. Light darkens with ink; dark lightens, because darkening near black
+     does nothing. */
+  --prim-ink-wash-1: rgb(15 30 50 / 0.05);
+  --prim-ink-wash-2: rgb(15 30 50 / 0.08);
+  --prim-ink-wash-3: rgb(15 30 50 / 0.12);
+  --prim-lift-wash-1: rgb(255 255 255 / 0.04);
+  --prim-lift-wash-2: rgb(255 255 255 / 0.07);
+  --prim-lift-wash-3: rgb(255 255 255 / 0.1);
+  --prim-lift-wash-4: rgb(255 255 255 / 0.45);
+
+  /* Light-theme shadow inks: low alpha, and tinted with the navy rather than
+     pure black, so an edge reads as depth instead of as grime. Only colours
+     live here; the geometry is in layer 2a. */
+  --prim-shadow-1: rgb(15 30 50 / 0.04);
+  --prim-shadow-2: rgb(15 30 50 / 0.06);
+  --prim-shadow-3: rgb(15 30 50 / 0.08);
+  --prim-shadow-4: rgb(15 30 50 / 0.1);
+  --prim-shadow-5: rgb(15 30 50 / 0.14);
+  --prim-shadow-6: rgb(15 30 50 / 0.2);
+
+  /* Dark-theme shadow inks: near-black at four to six times the alpha. On a
+     near-black page a shadow alone barely reads; it deepens the edge of a
+     lighter raised surface and darkens whatever it falls across. */
+  --prim-shadow-dark-1: rgb(2 6 14 / 0.2);
+  --prim-shadow-dark-2: rgb(2 6 14 / 0.28);
+  --prim-shadow-dark-3: rgb(2 6 14 / 0.34);
+  --prim-shadow-dark-4: rgb(2 6 14 / 0.42);
+  --prim-shadow-dark-5: rgb(2 6 14 / 0.5);
+  --prim-shadow-dark-6: rgb(2 6 14 / 0.6);
+
+  /* The 1px top highlight that gives a raised surface its lit edge in dark. */
+  --prim-highlight: rgb(255 255 255 / 0.06);
+}
+
+@supports (color: oklch(0% 0 0)) {
+  :root {
+    --prim-navy-1: oklch(100% 0 258);
+    --prim-navy-2: oklch(98.4% 0.003 258);
+    --prim-navy-3: oklch(96.9% 0.005 258);
+    --prim-navy-4: oklch(95.1% 0.007 258);
+    --prim-navy-5: oklch(93% 0.009 258);
+    --prim-navy-6: oklch(90.6% 0.011 258);
+    --prim-navy-7: oklch(86.2% 0.014 258);
+    --prim-navy-8: oklch(79.3% 0.019 258);
+    --prim-navy-9: oklch(61.5% 0.024 258);
+    --prim-navy-10: oklch(51.3% 0.027 258);
+    --prim-navy-11: oklch(47.2% 0.029 258);
+    --prim-navy-12: oklch(28.4% 0.0473 258.7);
+
+    --prim-vermilion-1: oklch(98.8% 0.006 38);
+    --prim-vermilion-2: oklch(97.4% 0.012 38);
+    --prim-vermilion-3: oklch(95.2% 0.024 38);
+    --prim-vermilion-4: oklch(92.8% 0.036 38);
+    --prim-vermilion-5: oklch(90.1% 0.052 38);
+    --prim-vermilion-6: oklch(86.6% 0.074 38);
+    --prim-vermilion-7: oklch(81.4% 0.096 38);
+    --prim-vermilion-8: oklch(73.1% 0.13 38);
+    --prim-vermilion-9: oklch(52.5% 0.171 38);
+    --prim-vermilion-10: oklch(48.0% 0.156 38);
+    --prim-vermilion-11: oklch(44.5% 0.145 38);
+    --prim-vermilion-12: oklch(34.5% 0.11 38);
+
+    --prim-green-1: oklch(98.6% 0.009 148);
+    --prim-green-2: oklch(97.1% 0.019 148);
+    --prim-green-3: oklch(94.5% 0.038 148);
+    --prim-green-4: oklch(91.8% 0.054 148);
+    --prim-green-5: oklch(88.8% 0.068 148);
+    --prim-green-6: oklch(85.1% 0.08 148);
+    --prim-green-7: oklch(79.9% 0.094 148);
+    --prim-green-8: oklch(72.2% 0.116 148);
+    --prim-green-9: oklch(63.5% 0.172 148);
+    --prim-green-10: oklch(58.3% 0.164 148);
+    --prim-green-11: oklch(49.6% 0.1485 148);
+    --prim-green-12: oklch(36% 0.09 148);
+
+    --prim-amber-1: oklch(99% 0.0088 79);
+    --prim-amber-2: oklch(97.8% 0.0194 79);
+    --prim-amber-3: oklch(95.6% 0.0391 79);
+    --prim-amber-4: oklch(93.2% 0.0612 79);
+    --prim-amber-5: oklch(90.6% 0.0858 79);
+    --prim-amber-6: oklch(87.3% 0.108 79);
+    --prim-amber-7: oklch(83.8% 0.115 79);
+    --prim-amber-8: oklch(79.2% 0.132 79);
+    --prim-amber-9: oklch(81.8% 0.158 79);
+    --prim-amber-10: oklch(76.8% 0.152 79);
+    --prim-amber-11: oklch(52.3% 0.1102 79);
+    --prim-amber-12: oklch(37.1% 0.0772 79);
+
+    --prim-red-1: oklch(99% 0.0048 27);
+    --prim-red-2: oklch(97.9% 0.0102 27);
+    --prim-red-3: oklch(95.6% 0.0218 27);
+    --prim-red-4: oklch(93.1% 0.0349 27);
+    --prim-red-5: oklch(90.2% 0.0509 27);
+    --prim-red-6: oklch(86.6% 0.0719 27);
+    --prim-red-7: oklch(81.8% 0.09 27);
+    --prim-red-8: oklch(74.7% 0.116 27);
+    --prim-red-9: oklch(58.6% 0.195 27);
+    --prim-red-10: oklch(53.8% 0.188 27);
+    --prim-red-11: oklch(51.4% 0.175 27);
+    --prim-red-12: oklch(35.9% 0.1 27);
+
+    --prim-blue-1: oklch(99% 0.0048 254);
+    --prim-blue-2: oklch(97.8% 0.0106 254);
+    --prim-blue-3: oklch(95.5% 0.0218 254);
+    --prim-blue-4: oklch(93% 0.0343 254);
+    --prim-blue-5: oklch(90.1% 0.049 254);
+    --prim-blue-6: oklch(86.5% 0.0677 254);
+    --prim-blue-7: oklch(81.5% 0.09 254);
+    --prim-blue-8: oklch(74.2% 0.116 254);
+    --prim-blue-9: oklch(56.5% 0.168 254);
+    --prim-blue-10: oklch(51.5% 0.16 254);
+    --prim-blue-11: oklch(48.6% 0.15 254);
+    --prim-blue-12: oklch(33.5% 0.09 254);
+
+    --prim-navy-dark-1: oklch(19.2% 0.0354 261.3);
+    --prim-navy-dark-2: oklch(22.7% 0.042 258);
+    --prim-navy-dark-3: oklch(25.7% 0.047 258);
+    --prim-navy-dark-4: oklch(29% 0.052 258);
+    --prim-navy-dark-5: oklch(31.9% 0.05 258);
+    --prim-navy-dark-6: oklch(35.7% 0.046 258);
+    --prim-navy-dark-7: oklch(40.7% 0.043 258);
+    --prim-navy-dark-8: oklch(48.7% 0.04 258);
+    --prim-navy-dark-9: oklch(60.1% 0.036 258);
+    --prim-navy-dark-10: oklch(68.4% 0.034 258);
+    --prim-navy-dark-11: oklch(73.2% 0.032 258);
+    --prim-navy-dark-12: oklch(93% 0.016 258);
+
+    --prim-vermilion-dark-1: oklch(20.4% 0.02 38);
+    --prim-vermilion-dark-2: oklch(22.7% 0.032 38);
+    --prim-vermilion-dark-3: oklch(26.4% 0.048 38);
+    --prim-vermilion-dark-4: oklch(29.7% 0.06 38);
+    --prim-vermilion-dark-5: oklch(32.7% 0.072 38);
+    --prim-vermilion-dark-6: oklch(36.7% 0.084 38);
+    --prim-vermilion-dark-7: oklch(42.2% 0.1 38);
+    --prim-vermilion-dark-8: oklch(51.2% 0.13 38);
+    --prim-vermilion-dark-9: oklch(79.0% 0.123 38);
+    --prim-vermilion-dark-10: oklch(84.0% 0.09 38);
+    --prim-vermilion-dark-11: oklch(76.0% 0.12 38);
+    --prim-vermilion-dark-12: oklch(88.0% 0.065 38);
+
+    --prim-green-dark-1: oklch(20.4% 0.018 148);
+    --prim-green-dark-2: oklch(22.6% 0.03 148);
+    --prim-green-dark-3: oklch(26.2% 0.046 148);
+    --prim-green-dark-4: oklch(29.4% 0.058 148);
+    --prim-green-dark-5: oklch(32.4% 0.068 148);
+    --prim-green-dark-6: oklch(36.4% 0.076 148);
+    --prim-green-dark-7: oklch(42% 0.086 148);
+    --prim-green-dark-8: oklch(51% 0.108 148);
+    --prim-green-dark-9: oklch(73% 0.17 148);
+    --prim-green-dark-10: oklch(78% 0.16 148);
+    --prim-green-dark-11: oklch(72.5% 0.15 148);
+    --prim-green-dark-12: oklch(87.5% 0.08 148);
+
+    --prim-amber-dark-1: oklch(20.4% 0.016 79);
+    --prim-amber-dark-2: oklch(22.6% 0.028 79);
+    --prim-amber-dark-3: oklch(26.2% 0.044 79);
+    --prim-amber-dark-4: oklch(29.4% 0.056 79);
+    --prim-amber-dark-5: oklch(32.4% 0.066 79);
+    --prim-amber-dark-6: oklch(36.4% 0.074 79);
+    --prim-amber-dark-7: oklch(42% 0.084 79);
+    --prim-amber-dark-8: oklch(51% 0.104 79);
+    --prim-amber-dark-9: oklch(81.8% 0.15 79);
+    --prim-amber-dark-10: oklch(86.2% 0.129 79);
+    --prim-amber-dark-11: oklch(79.2% 0.13 79);
+    --prim-amber-dark-12: oklch(89.7% 0.07 79);
+
+    --prim-red-dark-1: oklch(20.6% 0.02 27);
+    --prim-red-dark-2: oklch(23% 0.034 27);
+    --prim-red-dark-3: oklch(26.8% 0.054 27);
+    --prim-red-dark-4: oklch(30.2% 0.07 27);
+    --prim-red-dark-5: oklch(33.4% 0.082 27);
+    --prim-red-dark-6: oklch(37.7% 0.094 27);
+    --prim-red-dark-7: oklch(43.4% 0.11 27);
+    --prim-red-dark-8: oklch(52.7% 0.14 27);
+    --prim-red-dark-9: oklch(63% 0.2 27);
+    --prim-red-dark-10: oklch(67.8% 0.19 27);
+    --prim-red-dark-11: oklch(70.1% 0.15 27);
+    --prim-red-dark-12: oklch(84.1% 0.08 27);
+
+    --prim-blue-dark-1: oklch(20.6% 0.022 254);
+    --prim-blue-dark-2: oklch(23% 0.038 254);
+    --prim-blue-dark-3: oklch(26.8% 0.058 254);
+    --prim-blue-dark-4: oklch(30.2% 0.076 254);
+    --prim-blue-dark-5: oklch(33.4% 0.09 254);
+    --prim-blue-dark-6: oklch(37.7% 0.1 254);
+    --prim-blue-dark-7: oklch(43.4% 0.114 254);
+    --prim-blue-dark-8: oklch(52.7% 0.14 254);
+    --prim-blue-dark-9: oklch(63.5% 0.19 254);
+    --prim-blue-dark-10: oklch(68.5% 0.1694 254);
+    --prim-blue-dark-11: oklch(70.5% 0.14 254);
+    --prim-blue-dark-12: oklch(85.8% 0.07 254);
+
+    --prim-violet-9: oklch(54.3% 0.1899 294.6);
+    --prim-violet-9-dark: oklch(70.2% 0.1315 297.8);
+    --prim-clay-9: oklch(55.9% 0.135 40.7);
+    --prim-clay-9-dark: oklch(72.8% 0.1079 43.1);
+  }
+}
+
+/* =============================================================================
+   LAYER 2a — THE THEME
+   -----------------------------------------------------------------------------
+   The whole theme mechanism is one property:
+
+     :root                  color-scheme: light dark   follow the OS
+     [data-theme="light"]   color-scheme: light        the reader's choice
+     [data-theme="dark"]    color-scheme: dark         the reader's choice
+
+   and every colour that differs between the themes reads it through
+   light-dark(), declared exactly once below. That is what makes parity a
+   property of the construction rather than of anyone's vigilance: the explicit
+   dark theme and the prefers-color-scheme fallback are two ways of setting one
+   property, not two palettes that have to be kept in step, and a token cannot
+   exist in one theme without the other.
+
+   light-dark() resolves where a colour is *used*, not where the token is
+   declared, so data-theme works on any element — a Storybook pane, a band that
+   must stay dark — and re-themes its whole subtree, named roles included.
+   (base.css restates the inherited ink and background on such an element,
+   because `color` inherits as an already-resolved value.)
+
+   The ramps are the twelve Radix roles resolved for the active theme. Use a
+   step directly when a component needs exactly that step (a hover border, a
+   selected row); prefer the named roles in 2b otherwise.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root {
+  --ts-neutral-1: light-dark(var(--prim-navy-1), var(--prim-navy-dark-1));
+  --ts-neutral-2: light-dark(var(--prim-navy-2), var(--prim-navy-dark-2));
+  --ts-neutral-3: light-dark(var(--prim-navy-3), var(--prim-navy-dark-3));
+  --ts-neutral-4: light-dark(var(--prim-navy-4), var(--prim-navy-dark-4));
+  --ts-neutral-5: light-dark(var(--prim-navy-5), var(--prim-navy-dark-5));
+  --ts-neutral-6: light-dark(var(--prim-navy-6), var(--prim-navy-dark-6));
+  --ts-neutral-7: light-dark(var(--prim-navy-7), var(--prim-navy-dark-7));
+  --ts-neutral-8: light-dark(var(--prim-navy-8), var(--prim-navy-dark-8));
+  --ts-neutral-9: light-dark(var(--prim-navy-9), var(--prim-navy-dark-9));
+  --ts-neutral-10: light-dark(var(--prim-navy-10), var(--prim-navy-dark-10));
+  --ts-neutral-11: light-dark(var(--prim-navy-11), var(--prim-navy-dark-11));
+  --ts-neutral-12: light-dark(var(--prim-navy-12), var(--prim-navy-dark-12));
+
+  --ts-accent-1: light-dark(var(--prim-vermilion-1), var(--prim-vermilion-dark-1));
+  --ts-accent-2: light-dark(var(--prim-vermilion-2), var(--prim-vermilion-dark-2));
+  --ts-accent-3: light-dark(var(--prim-vermilion-3), var(--prim-vermilion-dark-3));
+  --ts-accent-4: light-dark(var(--prim-vermilion-4), var(--prim-vermilion-dark-4));
+  --ts-accent-5: light-dark(var(--prim-vermilion-5), var(--prim-vermilion-dark-5));
+  --ts-accent-6: light-dark(var(--prim-vermilion-6), var(--prim-vermilion-dark-6));
+  --ts-accent-7: light-dark(var(--prim-vermilion-7), var(--prim-vermilion-dark-7));
+  --ts-accent-8: light-dark(var(--prim-vermilion-8), var(--prim-vermilion-dark-8));
+  --ts-accent-9: light-dark(var(--prim-vermilion-9), var(--prim-vermilion-dark-9));
+  --ts-accent-10: light-dark(var(--prim-vermilion-10), var(--prim-vermilion-dark-10));
+  --ts-accent-11: light-dark(var(--prim-vermilion-11), var(--prim-vermilion-dark-11));
+  --ts-accent-12: light-dark(var(--prim-vermilion-12), var(--prim-vermilion-dark-12));
+
+  --ts-success-1: light-dark(var(--prim-green-1), var(--prim-green-dark-1));
+  --ts-success-2: light-dark(var(--prim-green-2), var(--prim-green-dark-2));
+  --ts-success-3: light-dark(var(--prim-green-3), var(--prim-green-dark-3));
+  --ts-success-4: light-dark(var(--prim-green-4), var(--prim-green-dark-4));
+  --ts-success-5: light-dark(var(--prim-green-5), var(--prim-green-dark-5));
+  --ts-success-6: light-dark(var(--prim-green-6), var(--prim-green-dark-6));
+  --ts-success-7: light-dark(var(--prim-green-7), var(--prim-green-dark-7));
+  --ts-success-8: light-dark(var(--prim-green-8), var(--prim-green-dark-8));
+  --ts-success-9: light-dark(var(--prim-green-9), var(--prim-green-dark-9));
+  --ts-success-10: light-dark(var(--prim-green-10), var(--prim-green-dark-10));
+  --ts-success-11: light-dark(var(--prim-green-11), var(--prim-green-dark-11));
+  --ts-success-12: light-dark(var(--prim-green-12), var(--prim-green-dark-12));
+
+  --ts-warning-1: light-dark(var(--prim-amber-1), var(--prim-amber-dark-1));
+  --ts-warning-2: light-dark(var(--prim-amber-2), var(--prim-amber-dark-2));
+  --ts-warning-3: light-dark(var(--prim-amber-3), var(--prim-amber-dark-3));
+  --ts-warning-4: light-dark(var(--prim-amber-4), var(--prim-amber-dark-4));
+  --ts-warning-5: light-dark(var(--prim-amber-5), var(--prim-amber-dark-5));
+  --ts-warning-6: light-dark(var(--prim-amber-6), var(--prim-amber-dark-6));
+  --ts-warning-7: light-dark(var(--prim-amber-7), var(--prim-amber-dark-7));
+  --ts-warning-8: light-dark(var(--prim-amber-8), var(--prim-amber-dark-8));
+  --ts-warning-9: light-dark(var(--prim-amber-9), var(--prim-amber-dark-9));
+  --ts-warning-10: light-dark(var(--prim-amber-10), var(--prim-amber-dark-10));
+  --ts-warning-11: light-dark(var(--prim-amber-11), var(--prim-amber-dark-11));
+  --ts-warning-12: light-dark(var(--prim-amber-12), var(--prim-amber-dark-12));
+
+  --ts-danger-1: light-dark(var(--prim-red-1), var(--prim-red-dark-1));
+  --ts-danger-2: light-dark(var(--prim-red-2), var(--prim-red-dark-2));
+  --ts-danger-3: light-dark(var(--prim-red-3), var(--prim-red-dark-3));
+  --ts-danger-4: light-dark(var(--prim-red-4), var(--prim-red-dark-4));
+  --ts-danger-5: light-dark(var(--prim-red-5), var(--prim-red-dark-5));
+  --ts-danger-6: light-dark(var(--prim-red-6), var(--prim-red-dark-6));
+  --ts-danger-7: light-dark(var(--prim-red-7), var(--prim-red-dark-7));
+  --ts-danger-8: light-dark(var(--prim-red-8), var(--prim-red-dark-8));
+  --ts-danger-9: light-dark(var(--prim-red-9), var(--prim-red-dark-9));
+  --ts-danger-10: light-dark(var(--prim-red-10), var(--prim-red-dark-10));
+  --ts-danger-11: light-dark(var(--prim-red-11), var(--prim-red-dark-11));
+  --ts-danger-12: light-dark(var(--prim-red-12), var(--prim-red-dark-12));
+
+  --ts-info-1: light-dark(var(--prim-blue-1), var(--prim-blue-dark-1));
+  --ts-info-2: light-dark(var(--prim-blue-2), var(--prim-blue-dark-2));
+  --ts-info-3: light-dark(var(--prim-blue-3), var(--prim-blue-dark-3));
+  --ts-info-4: light-dark(var(--prim-blue-4), var(--prim-blue-dark-4));
+  --ts-info-5: light-dark(var(--prim-blue-5), var(--prim-blue-dark-5));
+  --ts-info-6: light-dark(var(--prim-blue-6), var(--prim-blue-dark-6));
+  --ts-info-7: light-dark(var(--prim-blue-7), var(--prim-blue-dark-7));
+  --ts-info-8: light-dark(var(--prim-blue-8), var(--prim-blue-dark-8));
+  --ts-info-9: light-dark(var(--prim-blue-9), var(--prim-blue-dark-9));
+  --ts-info-10: light-dark(var(--prim-blue-10), var(--prim-blue-dark-10));
+  --ts-info-11: light-dark(var(--prim-blue-11), var(--prim-blue-dark-11));
+  --ts-info-12: light-dark(var(--prim-blue-12), var(--prim-blue-dark-12));
+
+  /* Standalone chart hues: a stroke or a fill, never a ramp. */
+  --ts-data-4: light-dark(var(--prim-violet-9), var(--prim-violet-9-dark));
+  --ts-data-6: light-dark(var(--prim-clay-9), var(--prim-clay-9-dark));
+
+  /* --- Roles whose step differs by theme ---------------------------------
+     The only theme-specific *choices* in the system; every other role picks
+     the same step in both themes and is authored once, in 2b.
+       surface-raised/-overlay  white in light, a *lighter* step than the
+                                page in dark: lightness is what reads as
+                                height on near-black
+       surface-inset            steps up in light, down to the page in dark
+       text-on-warning          amber's dark ink, from opposite scale ends
+       success-/danger-solid    light needs step 11/10 to carry white ink;
+                                dark can use the vivid 9
+       series-3                 a 1.8:1 amber line on white is not a line */
+  --ts-surface-raised: light-dark(var(--prim-navy-1), var(--prim-navy-dark-4));
+  --ts-surface-overlay: light-dark(var(--prim-navy-1), var(--prim-navy-dark-4));
+  --ts-surface-inset: light-dark(var(--prim-navy-3), var(--prim-navy-dark-1));
+  --ts-text-on-warning: light-dark(var(--prim-amber-12), var(--prim-amber-dark-1));
+  --ts-success-solid: light-dark(var(--prim-green-11), var(--prim-green-dark-9));
+  --ts-danger-solid: light-dark(var(--prim-red-10), var(--prim-red-dark-9));
+  --ts-series-3: light-dark(var(--prim-amber-11), var(--prim-amber-dark-9));
+
+  /* Translucent states darken with ink in light and lighten in dark, because
+     darkening near-black does nothing; the dark scrim is near-opaque for the
+     same reason. */
+  --ts-scrim: light-dark(var(--prim-scrim-light), var(--prim-scrim-dark));
+  --ts-wash-subtle: light-dark(var(--prim-ink-wash-1), var(--prim-lift-wash-1));
+  --ts-wash: light-dark(var(--prim-ink-wash-2), var(--prim-lift-wash-2));
+  --ts-wash-strong: light-dark(var(--prim-ink-wash-3), var(--prim-lift-wash-3));
+
+  /* Elevation colours (the rule is in 2b). Light: a soft navy shadow under a
+     hairline border. Dark: a deeper near-black shadow, which on its own
+     barely reads against the night — so in dark the raised surface also
+     steps lighter (--ts-surface-raised) and the 1px inset highlight, a no-op
+     in light, turns on. */
+  --ts-shadow-xs: 0 1px 2px light-dark(var(--prim-shadow-2), var(--prim-shadow-dark-2));
+  --ts-shadow-sm:
+    0 1px 3px light-dark(var(--prim-shadow-3), var(--prim-shadow-dark-3)),
+    0 1px 2px light-dark(var(--prim-shadow-1), var(--prim-shadow-dark-1));
+  --ts-shadow-md: 0 4px 12px light-dark(var(--prim-shadow-4), var(--prim-shadow-dark-4));
+  --ts-shadow-lg: 0 12px 28px light-dark(var(--prim-shadow-5), var(--prim-shadow-dark-5));
+  --ts-shadow-xl: 0 30px 80px light-dark(var(--prim-shadow-6), var(--prim-shadow-dark-6));
+  --ts-highlight: inset 0 1px 0 light-dark(transparent, var(--prim-highlight));
+}
+
+/* Browsers without light-dark() — Safari before 17.5, Chrome and Edge before
+   123, Firefox before 120: about 5% of global usage — would otherwise lose
+   every colour token where it is used and fall back to unstyled defaults. They
+   get the light theme instead: complete and AA-compliant, never broken. Each
+   value is the light argument of its declaration above, restated; the parity
+   check in docs/design-tokens.md fails if the two ever disagree. */
+@supports not (color: light-dark(white, black)) {
+  :root,
+  [data-theme] {
+    color-scheme: light;
+  }
+
+  :root {
+    --ts-neutral-1: var(--prim-navy-1);
+    --ts-neutral-2: var(--prim-navy-2);
+    --ts-neutral-3: var(--prim-navy-3);
+    --ts-neutral-4: var(--prim-navy-4);
+    --ts-neutral-5: var(--prim-navy-5);
+    --ts-neutral-6: var(--prim-navy-6);
+    --ts-neutral-7: var(--prim-navy-7);
+    --ts-neutral-8: var(--prim-navy-8);
+    --ts-neutral-9: var(--prim-navy-9);
+    --ts-neutral-10: var(--prim-navy-10);
+    --ts-neutral-11: var(--prim-navy-11);
+    --ts-neutral-12: var(--prim-navy-12);
+
+    --ts-accent-1: var(--prim-vermilion-1);
+    --ts-accent-2: var(--prim-vermilion-2);
+    --ts-accent-3: var(--prim-vermilion-3);
+    --ts-accent-4: var(--prim-vermilion-4);
+    --ts-accent-5: var(--prim-vermilion-5);
+    --ts-accent-6: var(--prim-vermilion-6);
+    --ts-accent-7: var(--prim-vermilion-7);
+    --ts-accent-8: var(--prim-vermilion-8);
+    --ts-accent-9: var(--prim-vermilion-9);
+    --ts-accent-10: var(--prim-vermilion-10);
+    --ts-accent-11: var(--prim-vermilion-11);
+    --ts-accent-12: var(--prim-vermilion-12);
+
+    --ts-success-1: var(--prim-green-1);
+    --ts-success-2: var(--prim-green-2);
+    --ts-success-3: var(--prim-green-3);
+    --ts-success-4: var(--prim-green-4);
+    --ts-success-5: var(--prim-green-5);
+    --ts-success-6: var(--prim-green-6);
+    --ts-success-7: var(--prim-green-7);
+    --ts-success-8: var(--prim-green-8);
+    --ts-success-9: var(--prim-green-9);
+    --ts-success-10: var(--prim-green-10);
+    --ts-success-11: var(--prim-green-11);
+    --ts-success-12: var(--prim-green-12);
+
+    --ts-warning-1: var(--prim-amber-1);
+    --ts-warning-2: var(--prim-amber-2);
+    --ts-warning-3: var(--prim-amber-3);
+    --ts-warning-4: var(--prim-amber-4);
+    --ts-warning-5: var(--prim-amber-5);
+    --ts-warning-6: var(--prim-amber-6);
+    --ts-warning-7: var(--prim-amber-7);
+    --ts-warning-8: var(--prim-amber-8);
+    --ts-warning-9: var(--prim-amber-9);
+    --ts-warning-10: var(--prim-amber-10);
+    --ts-warning-11: var(--prim-amber-11);
+    --ts-warning-12: var(--prim-amber-12);
+
+    --ts-danger-1: var(--prim-red-1);
+    --ts-danger-2: var(--prim-red-2);
+    --ts-danger-3: var(--prim-red-3);
+    --ts-danger-4: var(--prim-red-4);
+    --ts-danger-5: var(--prim-red-5);
+    --ts-danger-6: var(--prim-red-6);
+    --ts-danger-7: var(--prim-red-7);
+    --ts-danger-8: var(--prim-red-8);
+    --ts-danger-9: var(--prim-red-9);
+    --ts-danger-10: var(--prim-red-10);
+    --ts-danger-11: var(--prim-red-11);
+    --ts-danger-12: var(--prim-red-12);
+
+    --ts-info-1: var(--prim-blue-1);
+    --ts-info-2: var(--prim-blue-2);
+    --ts-info-3: var(--prim-blue-3);
+    --ts-info-4: var(--prim-blue-4);
+    --ts-info-5: var(--prim-blue-5);
+    --ts-info-6: var(--prim-blue-6);
+    --ts-info-7: var(--prim-blue-7);
+    --ts-info-8: var(--prim-blue-8);
+    --ts-info-9: var(--prim-blue-9);
+    --ts-info-10: var(--prim-blue-10);
+    --ts-info-11: var(--prim-blue-11);
+    --ts-info-12: var(--prim-blue-12);
+
+    --ts-data-4: var(--prim-violet-9);
+    --ts-data-6: var(--prim-clay-9);
+
+    --ts-surface-raised: var(--prim-navy-1);
+    --ts-surface-overlay: var(--prim-navy-1);
+    --ts-surface-inset: var(--prim-navy-3);
+    --ts-text-on-warning: var(--prim-amber-12);
+    --ts-success-solid: var(--prim-green-11);
+    --ts-danger-solid: var(--prim-red-10);
+    --ts-series-3: var(--prim-amber-11);
+
+    --ts-scrim: var(--prim-scrim-light);
+    --ts-wash-subtle: var(--prim-ink-wash-1);
+    --ts-wash: var(--prim-ink-wash-2);
+    --ts-wash-strong: var(--prim-ink-wash-3);
+
+    --ts-shadow-xs: 0 1px 2px var(--prim-shadow-2);
+    --ts-shadow-sm: 0 1px 3px var(--prim-shadow-3), 0 1px 2px var(--prim-shadow-1);
+    --ts-shadow-md: 0 4px 12px var(--prim-shadow-4);
+    --ts-shadow-lg: 0 12px 28px var(--prim-shadow-5);
+    --ts-shadow-xl: 0 30px 80px var(--prim-shadow-6);
+    --ts-highlight: inset 0 1px 0 transparent;
+  }
+}
+
+/* =============================================================================
+   LAYER 2b — SEMANTIC ROLES
+   -----------------------------------------------------------------------------
+   Authored exactly once. Each role picks a ramp step, and the step is the
+   same number in both themes; the ramp underneath has already resolved the
+   theme. The few roles whose step genuinely differs between themes (a raised
+   surface goes *lighter* in dark but stays white in light) are declared with
+   light-dark() in 2a — the only place a theme-specific choice is allowed.
+
+   Ratios in comments are measured, not estimated, and are stated against the
+   worst surface the role is allowed to sit on. See docs/design-tokens.md.
+   ========================================================================== */
+
+:root {
+  /* --- The role model --------------------------------------------------------
+     Every semantic colour is a ramp step chosen by its role, and it is the
+     same step in both themes:
+
+        1-2  app background        --ts-background, --ts-surface-1
+          3  element background    --ts-surface-2, every -soft tint, tracks
+          4  hover                 --ts-surface-hover, every -soft-hover tint
+          5  active, selected      --ts-surface-active
+          6  subtle border         --ts-border-subtle, --ts-chart-grid
+          7  border                --ts-border, every tinted -border
+          8  hover border          --ts-border-hover (and -strong)
+          9  solid                 --ts-primary, the status fills
+         10  solid hover           --ts-primary-hover, --ts-input-hover
+         11  low-contrast text     --ts-text-2, every -ink
+         12  high-contrast text    --ts-text-1, --ts-text-heading
+
+     Where WCAG needs more than a role gives, the role yields, and the token
+     says why: a focus ring and a control boundary owe 3:1 (step 9, not 7);
+     tertiary text owes 4.5:1 on a selected row (step 10); disabled text is
+     held to 3:1 (step 9); a filled badge in light carries white ink (step
+     10 or 11). docs/design-tokens.md#the-role-model is the full map. */
+
+  /* --- Surfaces ----------------------------------------------------------
+     1-2 are page, 3-5 are things on the page. A panel never sits on a surface
+     more than one step from its own. */
+  --ts-background: var(--ts-neutral-1);
+  --ts-surface-1: var(--ts-neutral-2);
+  --ts-surface-2: var(--ts-neutral-3);
+  --ts-surface-3: var(--ts-neutral-4);
+  --ts-surface-hover: var(--ts-neutral-4);
+  --ts-surface-active: var(--ts-neutral-5);
+  /* An inverted surface (a tooltip): the body ink as a fill, carrying
+     --ts-text-inverse. Dark on a light page, light on a dark one. */
+  --ts-surface-inverse: var(--ts-neutral-12);
+  --ts-overlay: var(--ts-scrim);
+
+  /* --- Text ---------------------------------------------------------------
+     Four tones only. Headings and body share step 12: a 2-point contrast
+     difference nobody can see is not hierarchy — weight and size are.
+     Tertiary text is the one tone the role model has no step for; it takes
+     step 10, which the neutral ramp tunes for text rather than for a solid
+     hover, so it still clears 4.5:1 on a selected row. */
+  --ts-text-1: var(--ts-neutral-12); /* body      11.5:1 light / 10.4:1 dark */
+  --ts-text-heading: var(--ts-neutral-12); /* ditto, by design */
+  --ts-text-2: var(--ts-neutral-11); /* secondary  5.4:1 / 5.4:1 */
+  --ts-text-3: var(--ts-neutral-10); /* tertiary   4.5:1 / 4.5:1 */
+  --ts-text-disabled: var(--ts-neutral-9); /* 3.0:1 / 3.2:1 — exempt from AA,
+                                              still held to 3:1 */
+  /* Inverse resolves to white in light and to the night in dark, because the
+     neutral ramp has already flipped. One token, no theme branch. */
+  --ts-text-inverse: var(--ts-neutral-1);
+  --ts-text-on-solid: var(--ts-neutral-1);
+  --ts-text-on-primary: var(--ts-primary-foreground);
+
+  /* --- Lines --------------------------------------------------------------
+     Three decorative weights, one per role: a divider or table rule (6), the
+     edge of a panel, card or field (7), and an edge under the pointer or one
+     that has to stand out (8). A divider never shares a step with the
+     selected row it crosses (5). A control boundary is not decoration: it
+     owes 3:1 against the page, so inputs, checkboxes and switches take step 9
+     rather than 7, and step 10 under the pointer. */
+  --ts-border-subtle: var(--ts-neutral-6);
+  --ts-border: var(--ts-neutral-7);
+  --ts-border-hover: var(--ts-neutral-8);
+  --ts-border-strong: var(--ts-border-hover);
+  --ts-input: var(--ts-neutral-9); /* 3.0:1 / 3.2:1 */
+  --ts-input-hover: var(--ts-neutral-10); /* 4.6:1 / 4.5:1 */
+  /* The ring yields its role step (7) to step 9: a focus indicator owes 3:1. */
+  --ts-ring: var(--ts-accent-9); /* 4.5:1 / 6.9:1 */
+
+  /* Line widths. Every border is a hairline unless it marks something; the
+     strong width is for emphasis only (the active tab or contents marker, a
+     rule beside a focus ring), never for a card or field edge. */
+  --ts-border-width: 1px;
+  --ts-border-width-strong: 2px;
+
+  /* The focus ring every control draws: a 2px outline 2px outside its box.
+     A ring that would be clipped (a cell or tab inside a scroller) sits
+     inside instead, with calc(var(--ts-focus-ring-offset) * -1). */
+  --ts-focus-ring-width: 2px;
+  --ts-focus-ring-offset: 2px;
+
+  /* Scrollbars. The thumb is a control and owes 3:1 against whatever it
+     scrolls over, because the track is transparent: step 9, like --ts-input.
+     prefers-contrast: more swaps in body ink on an opaque page track (below
+     this block). */
+  --ts-scrollbar-thumb: var(--ts-neutral-9); /* 3.0:1 / 3.2:1 */
+  --ts-scrollbar-track: transparent;
+
+  /* --- Primary (the rationed vermilion) ---------------------------------------- */
+  --ts-primary: var(--ts-accent-9);
+  --ts-primary-hover: var(--ts-accent-10);
+  /* Pressed is one step past hover, and the ramp's next step is 11. */
+  --ts-primary-active: var(--ts-accent-11);
+  /* One token, no theme branch: the neutral ramp has already flipped, so this
+     is white on the light vermilion fill and the night ink on the dark one. */
+  --ts-primary-foreground: var(--ts-text-on-solid); /* 5.6:1 / 9.0:1 on the fill */
+  --ts-primary-soft: var(--ts-accent-3);
+  --ts-primary-soft-hover: var(--ts-accent-4);
+  --ts-primary-soft-foreground: var(--ts-accent-11); /* 6.3:1 / 6.6:1 */
+  --ts-primary-border: var(--ts-accent-7);
+
+  /* --- BYOC ---------------------------------------------------------------
+     Navy marks "runs inside your cloud"; teal marks "runs in Timlee's". The
+     pair separates by hue *and* by lightness, so the distinction survives
+     greyscale and colour-vision deficiency. BYOC draws from the neutral ramp
+     rather than a seventh hue — it is deliberately the quieter of the two. */
+  --ts-byoc: var(--ts-neutral-11);
+  --ts-byoc-strong: var(--ts-neutral-12);
+  --ts-byoc-foreground: var(--ts-neutral-1); /* 6.8:1 / 7.7:1 */
+  --ts-byoc-soft: var(--ts-neutral-3);
+  --ts-byoc-soft-foreground: var(--ts-neutral-11); /* 6.2:1 / 5.9:1 */
+
+  /* --- Status -------------------------------------------------------------
+     `--ts-<role>` is the vivid signal colour: correct for a 8px status dot,
+     too light in places to carry text. `--ts-<role>-solid` is the filled-badge
+     variant, which is tuned so that --ts-text-on-solid clears 4.5:1 on it. */
+  --ts-success: var(--ts-success-9);
+  --ts-success-foreground: var(--ts-text-on-solid); /* 5.7:1 / 8.2:1 */
+  --ts-success-soft: var(--ts-success-3);
+  --ts-success-soft-hover: var(--ts-success-4);
+  --ts-success-ink: var(--ts-success-11); /* 4.6:1 / 5.9:1 on -soft */
+  --ts-success-border: var(--ts-success-7);
+
+  --ts-warning: var(--ts-warning-9);
+  --ts-warning-solid: var(--ts-warning-9);
+  /* Amber is the one fill that never takes white ink: white on amber 9 is
+     1.8:1. It takes the ramp's own dark end instead. */
+  --ts-warning-foreground: var(--ts-text-on-warning); /* 5.9:1 / 10.1:1 */
+  --ts-warning-soft: var(--ts-warning-3);
+  --ts-warning-soft-hover: var(--ts-warning-4);
+  --ts-warning-ink: var(--ts-warning-11); /* 4.5:1 / 7.3:1 on -soft */
+  --ts-warning-border: var(--ts-warning-7);
+
+  --ts-danger: var(--ts-danger-9);
+  --ts-danger-foreground: var(--ts-text-on-solid); /* 4.6:1 / 4.8:1 */
+  --ts-danger-soft: var(--ts-danger-3);
+  --ts-danger-soft-hover: var(--ts-danger-4);
+  --ts-danger-ink: var(--ts-danger-11); /* 5.0:1 / 4.9:1 on -soft */
+  --ts-danger-border: var(--ts-danger-7);
+
+  --ts-info: var(--ts-info-9);
+  --ts-info-solid: var(--ts-info-9);
+  --ts-info-foreground: var(--ts-text-on-solid); /* 4.6:1 / 5.3:1 */
+  --ts-info-soft: var(--ts-info-3);
+  --ts-info-soft-hover: var(--ts-info-4);
+  --ts-info-ink: var(--ts-info-11); /* 5.3:1 / 5.1:1 on -soft */
+  --ts-info-border: var(--ts-info-7);
+
+  /* Info is blue, not a second brand colour. A brand-coloured "info" badge reads as brand and
+     spends the accent budget on something that is not a call to action. */
+
+  --ts-idle: var(--ts-neutral-9);
+
+  /* --- Status indicators ---------------------------------------------------
+     A standalone dot is a non-text UI component and owes 3:1 against the page.
+     The vivid fills cannot all pay it: `--ts-warning` is 1.78:1 on white, and
+     any amber that does reach 3:1 has stopped being amber and become brown.
+     So the two jobs get two tokens. `--ts-<role>` fills a shape whose contrast
+     is measured against the ink sitting on it; `--ts-<role>-dot` stands alone
+     on a surface and is measured against that surface. */
+  --ts-success-dot: var(--ts-success-solid); /* 5.2:1 / 6.3:1 */
+  --ts-warning-dot: var(--ts-warning-ink); /* 5.0:1 / 7.3:1 */
+  --ts-danger-dot: var(--ts-danger-solid); /* 5.1:1 / 3.7:1 */
+  --ts-info-dot: var(--ts-info-9); /* 4.2:1 / 4.1:1 */
+  --ts-idle-dot: var(--ts-idle); /* 3.4:1 / 3.6:1 */
+
+  /* --- Data visualisation --------------------------------------------------
+     Series 1 is the brand vermilion because the primary metric *is* the live state
+     the accent is for. Series 3 and 5 use step 11 in light rather than the
+     vivid step 9: a 1.8:1 amber line on white is not a line. */
+  --ts-series-1: var(--ts-accent-9);
+  --ts-series-2: var(--ts-neutral-11);
+  --ts-series-4: var(--ts-data-4);
+  --ts-series-5: var(--ts-success-solid);
+  --ts-series-6: var(--ts-data-6);
+  --ts-series-hover: var(--ts-accent-10); /* 6.4:1 / 9.0:1, like --ts-primary-hover */
+  --ts-series-track: var(--ts-accent-3);
+
+  /* Inference-domain roles. These name product meaning rather than visual
+     appearance, so diagrams, telemetry and optional WebGL use one language. */
+  --ts-route-live: var(--ts-primary);
+  --ts-token-input: var(--ts-info-11);
+  --ts-token-output: var(--ts-data-4);
+  --ts-cache-hit: var(--ts-success-11);
+  --ts-vram-pressure: var(--ts-warning-11);
+  --ts-route-fault: var(--ts-danger-11);
+  --ts-topology-line: var(--ts-border-strong);
+  --ts-chart-grid: var(--ts-neutral-6);
+  --ts-chart-axis: var(--ts-neutral-10); /* 5.2:1 / 5.0:1 */
+
+  /* --- Elevation ------------------------------------------------------------
+     A rule every component follows, and a test enforces (styles.test.ts and
+     the Elevation story). A surface is one of two things:
+
+       flat    sits on the page: a table, a flat card, a code block, an empty
+               state. A border carries its edge — in dark it is the only thing
+               that can, because a shadow does not read on near-black — and it
+               has no shadow and is never lighter than what it sits on.
+       raised  lifted off the page: a card, a toast, a dialog, a resting
+               control. It takes --ts-surface-raised (white in light, a
+               *lighter* step in dark), a border, and --ts-elevation-*, which
+               is a shadow and, in dark, the 1px inset top highlight.
+
+     --ts-elevation-* bake the highlight in so a component cannot forget it.
+     Components use these, never --ts-shadow-* alone:
+       1  resting controls and cards      3  dialogs and menus
+       2  toasts, tooltips, a lifted card 4  full-screen sheets */
+  --ts-elevation-1: var(--ts-shadow-sm), var(--ts-highlight);
+  --ts-elevation-2: var(--ts-shadow-md), var(--ts-highlight);
+  --ts-elevation-3: var(--ts-shadow-lg), var(--ts-highlight);
+  --ts-elevation-4: var(--ts-shadow-xl), var(--ts-highlight);
+
+  /* --- Type ---------------------------------------------------------------
+     One family, Helvetica, for everything but code: the UI, the prose and the
+     display headlines, matching the generated apps' default (workspace/
+     packages/design). It is a system font, so nothing is downloaded; Arial
+     shares its metrics where Helvetica is absent. Code keeps the platform's
+     monospace. */
+  --ts-font-sans: Helvetica, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --ts-font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --ts-font-display: var(--ts-font-sans);
+
+  /* The scale. UI steps stay fixed: a 13px label that grows with the
+     viewport is a bug, not a feature, and dense console tables depend on the
+     step being predictable. Each step carries its own leading and tracking:
+     small text opens up a hair, large text closes up, and leading tightens
+     as size grows because a headline's lines read as one shape. */
+  --ts-text-xs: 0.75rem; /* 12px */
+  --ts-text-sm: 0.8125rem; /* 13px */
+  --ts-text-base: 0.875rem; /* 14px */
+  --ts-text-md: 0.9375rem; /* 15px */
+  --ts-text-lg: 1rem; /* 16px */
+  --ts-text-xl: 1.125rem; /* 18px */
+  --ts-text-2xl: 1.375rem; /* 22px */
+  --ts-text-3xl: 1.75rem; /* 28px */
+
+  /* Display steps are a fluid modular scale: each is the one below times a
+     ratio that grows with the viewport, 1.2 (a minor third) at 360px to
+     1.333 (a perfect fourth) at 1280px, so headlines keep their hierarchy on
+     a phone without shouting, and gain contrast on a desktop. Linear between
+     the two widths, fixed outside them. */
+  --ts-text-4xl: clamp(1.75rem, 1.505rem + 1.087vw, 2.375rem); /* 28 -> 38px */
+  --ts-text-5xl: clamp(2.125rem, 1.734rem + 1.739vw, 3.125rem); /* 34 -> 50px */
+  --ts-text-6xl: clamp(2.5rem, 1.864rem + 2.826vw, 4.125rem); /* 40 -> 66px */
+
+  /* Inline <code> inside running text. em, not rem, on purpose: monospace
+     sets visibly larger than the text around it at the same size, and code
+     in a caption should shrink with the caption. Code blocks use the fixed
+     steps above instead. */
+  --ts-text-code: 0.875em;
+
+  --ts-leading-xs: 1.5;
+  --ts-leading-sm: 1.5;
+  --ts-leading-base: 1.5;
+  --ts-leading-md: 1.5;
+  --ts-leading-lg: 1.6;
+  --ts-leading-xl: 1.45;
+  --ts-leading-2xl: 1.3;
+  --ts-leading-3xl: 1.2;
+  --ts-leading-4xl: 1.15;
+  --ts-leading-5xl: 1.1;
+  --ts-leading-6xl: 1.05;
+
+  --ts-tracking-xs: 0.01em;
+  --ts-tracking-sm: 0.005em;
+  --ts-tracking-base: 0;
+  --ts-tracking-md: 0;
+  --ts-tracking-lg: 0;
+  --ts-tracking-xl: -0.005em;
+  --ts-tracking-2xl: -0.01em;
+  --ts-tracking-3xl: -0.015em;
+  --ts-tracking-4xl: -0.02em;
+  --ts-tracking-5xl: -0.02em;
+  --ts-tracking-6xl: -0.025em;
+
+  /* The roles most rules reach for, each one step of the scale above. */
+  --ts-leading-none: 1; /* single-line controls, badges, icons */
+  --ts-leading-display: var(--ts-leading-6xl); /* display; 1.2 leaves a hole mid-headline */
+  --ts-leading-tight: var(--ts-leading-3xl); /* headings */
+  --ts-leading-snug: 1.4; /* UI text that may wrap */
+  --ts-leading-normal: var(--ts-leading-lg); /* prose */
+
+  /* Large type needs negative tracking to stop looking loose; body needs none;
+     small uppercase needs positive tracking or it sets as a blur. */
+  --ts-tracking-display: var(--ts-tracking-6xl);
+  --ts-tracking-tight: var(--ts-tracking-4xl);
+  --ts-tracking-normal: 0;
+  --ts-tracking-wide: 0.05em;
+
+  /* Line length. Prose wider than about 65 characters loses the reader
+     between lines (.measure); a caption or card stays narrower; a headline
+     set at a display step breaks best at about 22. */
+  --ts-measure: 65ch;
+  --ts-measure-narrow: 48ch;
+  --ts-measure-heading: 22ch;
+
+  /* --- Space (4px base) -----------------------------------------------------
+     The half steps exist because real components want 6px and 10px, and the
+     alternative is a hardcoded pixel value in a component file. */
+  --ts-space-0: 0;
+  --ts-space-0-5: 0.125rem; /* 2px */
+  --ts-space-1: 0.25rem; /* 4px */
+  --ts-space-1-5: 0.375rem; /* 6px */
+  --ts-space-2: 0.5rem; /* 8px */
+  --ts-space-2-5: 0.625rem; /* 10px */
+  --ts-space-3: 0.75rem; /* 12px */
+  --ts-space-3-5: 0.875rem; /* 14px */
+  --ts-space-4: 1rem; /* 16px */
+  --ts-space-4-5: 1.125rem; /* 18px */
+  --ts-space-5: 1.25rem; /* 20px */
+  --ts-space-5-5: 1.375rem; /* 22px */
+  --ts-space-6: 1.5rem; /* 24px */
+  --ts-space-6-5: 1.625rem; /* 26px */
+  --ts-space-7: 1.75rem; /* 28px */
+  --ts-space-8: 2rem; /* 32px */
+  --ts-space-10: 2.5rem; /* 40px */
+  --ts-space-12: 3rem; /* 48px */
+  --ts-space-16: 4rem; /* 64px */
+  --ts-space-20: 5rem; /* 80px */
+  --ts-space-24: 6rem; /* 96px */
+
+  /* Page rhythm is a different scale from component spacing and must not be
+     expressed in --ts-space-*: the gap between marketing sections should grow
+     with the viewport, the padding inside a card should not. */
+  --ts-section-sm: clamp(4.5rem, 3.56rem + 4.17vw, 6rem); /*  72 ->  96px */
+  --ts-section: clamp(5rem, 3.43rem + 6.96vw, 7.5rem); /*  80 -> 120px */
+  --ts-section-lg: clamp(5.5rem, 3.22rem + 10.14vw, 8.75rem); /*  88 -> 140px */
+
+  /* --- Radius ---------------------------------------------------------------
+     6px is the workhorse: buttons, inputs, badges, menu items. The larger steps
+     are for panels and sheets only. Nothing here is bubbly, because rounded
+     corners read as consumer and this is an infrastructure console. */
+  --ts-radius-sm: 4px;
+  --ts-radius: 6px;
+  --ts-radius-md: 8px;
+  --ts-radius-lg: 10px;
+  --ts-radius-xl: 14px;
+  --ts-radius-2xl: 16px;
+  --ts-radius-full: 999px;
+
+  /* --- Motion ---------------------------------------------------------------
+     Prefer the semantic easing roles over the literal curves: "this element is
+     entering" survives a change of curve, `cubic-bezier(0.16, 1, 0.3, 1)` does
+     not. Reduced motion is stated next to each rule that moves (base.css
+     shows the pattern), never with a global switch. */
+  --ts-duration-instant: 70ms; /* state flips that should feel immediate */
+  --ts-duration-fast: 120ms; /* hover, press */
+  --ts-duration: 180ms; /* the default */
+  --ts-duration-slow: 320ms; /* panels, sheets */
+  --ts-duration-slower: 600ms; /* page-level reveals */
+  /* Half a cycle of a looping indicator under reduced motion: a spinner or a
+     skeleton that has stopped moving breathes its opacity instead, once every
+     two seconds — calm, and nowhere near three flashes a second. */
+  --ts-duration-pulse: 1000ms;
+
+  /* Entrances decelerate into place; exits accelerate away and may be quicker,
+     because nobody waits to watch something leave. */
+  --ts-ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ts-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ts-ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ts-ease-emphasis: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --ts-ease: var(--ts-ease-standard);
+  --ts-ease-out: var(--ts-ease-entrance);
+  --ts-ease-in-out: var(--ts-ease-emphasis);
+
+  /* --- Layering ------------------------------------------------------------- */
+  --ts-z-base: 0;
+  --ts-z-sticky: 40;
+  --ts-z-dropdown: 60;
+  --ts-z-overlay: 80;
+  --ts-z-modal: 100;
+  --ts-z-toast: 120;
+
+  /* --- Theme-invariant brand colours ---------------------------------------
+     The only --ts-* tokens that deliberately do NOT follow the theme: the
+     night band on the marketing page is night in both. */
+  --ts-brand-vermilion: var(--prim-vermilion-9);
+  --ts-brand-vermilion-dark: var(--prim-vermilion-10);
+  --ts-brand-vermilion-glow: var(--prim-vermilion-dark-9);
+  --ts-brand-navy: var(--prim-navy-12);
+  --ts-brand-night: var(--prim-navy-dark-1);
+  --ts-brand-slate: var(--prim-navy-11);
+
+  /* Ink and lines for content that sits on a permanently dark band, whatever
+     the page theme is. */
+  --ts-on-dark-text: var(--prim-navy-1);
+  --ts-on-dark-border: var(--prim-lift-wash-3);
+  --ts-on-dark-border-hover: var(--prim-lift-wash-4);
+  --ts-on-dark-wash: var(--prim-lift-wash-3);
+
+  /* Deprecated: the pre-12-step ramp names. Kept so existing CSS keeps
+     rendering; use --ts-neutral-N / --ts-accent-N in new work. */
+  --ts-teal-50: var(--ts-accent-1);
+  --ts-teal-100: var(--ts-accent-2);
+  --ts-teal-200: var(--ts-accent-4);
+  --ts-teal-300: var(--ts-accent-6);
+  --ts-teal-400: var(--ts-accent-7);
+  --ts-teal-500: var(--ts-accent-8);
+  --ts-teal-600: var(--ts-accent-9);
+  --ts-teal-700: var(--ts-accent-10);
+  --ts-teal-800: var(--ts-accent-11);
+  --ts-teal-900: var(--ts-accent-12);
+  --ts-teal-950: var(--ts-accent-12);
+  --ts-neutral-0: var(--ts-neutral-1);
+  --ts-neutral-50: var(--ts-neutral-2);
+  --ts-neutral-100: var(--ts-neutral-2);
+  --ts-neutral-150: var(--ts-neutral-3);
+  --ts-neutral-200: var(--ts-neutral-4);
+  --ts-neutral-300: var(--ts-neutral-5);
+  --ts-neutral-400: var(--ts-neutral-8);
+  --ts-neutral-500: var(--ts-neutral-9);
+  --ts-neutral-600: var(--ts-neutral-10);
+  --ts-neutral-700: var(--ts-neutral-11);
+  --ts-neutral-800: var(--ts-neutral-12);
+  --ts-neutral-900: var(--ts-neutral-12);
+  --ts-neutral-950: var(--ts-neutral-12);
+  --ts-surface-inset-soft: var(--ts-surface-inset);
+}
+
+/* A reader who asks for more contrast gets the starkest pair in the system
+   rather than the quiet default: 14.4:1 / 14.9:1 thumb on track. */
+@media (prefers-contrast: more) {
+  :root {
+    --ts-scrollbar-thumb: var(--ts-text-1);
+    --ts-scrollbar-track: var(--ts-background);
+  }
+}
+
+/* =============================================================================
+   LAYER 3 — COMPONENT TOKENS
+   -----------------------------------------------------------------------------
+   Assigned only from layer 2. No component may reach past this into --prim-*.
+   ========================================================================== */
+
+:root {
+  /* Short brand-named aliases used throughout the marketing CSS. */
+  --teal: var(--ts-primary);
+  --teal-dark: var(--ts-primary-hover);
+  --teal-glow: var(--ts-brand-vermilion-glow);
+  --navy: var(--ts-text-heading);
+  --night: var(--ts-brand-night);
+  --slate: var(--ts-byoc);
+  --text: var(--ts-text-1);
+  --muted: var(--ts-text-2);
+  --border: var(--ts-border);
+  --tint: var(--ts-surface-2);
+  --stripe: var(--ts-surface-1);
+  --error: var(--ts-danger);
+  --error-bg: var(--ts-danger-soft);
+  --series: var(--ts-series-1);
+  --series-hover: var(--ts-series-hover);
+  --series-track: var(--ts-series-track);
+  --good: var(--ts-success);
+  --warning: var(--ts-warning);
+  --warning-ink: var(--ts-warning-ink);
+  --warning-track: var(--ts-warning-soft);
+  --mono: var(--ts-font-mono);
+}

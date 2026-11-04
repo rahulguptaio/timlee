@@ -1,0 +1,182 @@
+{{- /*
+  An app's workspace. Left: the selected view (Prompt, Code, or Theme), each a
+  plain form that works without scripts. Right: the sandboxed live preview,
+  served from the separate preview origin.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+{{- $base := printf "/apps/%s" $d.App.Slug -}}
+<div class="workspace" data-workspace
+  {{- range $k, $v := $d.Messages }} data-msg-{{ $k }}="{{ $v }}"{{ end }}>
+  <header class="workspace-head">
+    <div>
+      <a class="workspace-back" href="/apps">{{ t .L "apps.workspace.back" }}</a>
+      <h1>{{ $d.App.Name }}</h1>
+      <p class="workspace-desc">{{ $d.App.Description }}</p>
+    </div>
+    <nav aria-label="{{ t .L "apps.workspace.views" }}" class="workspace-views">
+      <a href="{{ $base }}"{{ if eq $d.View "prompt" }} aria-current="page"{{ end }}>{{ t .L "apps.workspace.prompt" }}</a>
+      <a href="{{ $base }}?view=code"{{ if eq $d.View "code" }} aria-current="page"{{ end }}>{{ t .L "apps.workspace.code" }}</a>
+      <a href="{{ $base }}?view=theme"{{ if eq $d.View "theme" }} aria-current="page"{{ end }}>{{ t .L "apps.workspace.theme" }}</a>
+    </nav>
+  </header>
+
+  {{- with $d.Flash }}
+  <timlee-alert tone="{{ .Tone }}" role="alert">{{ .Message }}</timlee-alert>
+  {{- end }}
+
+  <div class="workspace-split">
+    <div class="workspace-panel">
+      {{ if eq $d.View "prompt" }}{{ template "workspace-prompt" . }}
+      {{ else if eq $d.View "code" }}{{ template "workspace-code" . }}
+      {{ else }}{{ template "workspace-theme" . }}{{ end }}
+    </div>
+
+    <aside class="workspace-preview" aria-label="{{ t .L "apps.preview.region" }}">
+      {{ with $d.PreviewURL }}
+      <p class="workspace-preview-bar"><a href="{{ . }}" target="_blank" rel="noopener">{{ t $.L "apps.preview.open" }}</a></p>
+      {{- /* The preview origin is a different site from this one, so
+             allow-same-origin grants the app its own origin (for storage),
+             never this site's; the sandbox still blocks top navigation. */}}
+      <iframe data-preview src="{{ . }}" title="{{ t $.L "apps.preview.title" "name" $d.App.Name }}"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+        referrerpolicy="no-referrer"></iframe>
+      {{ else }}
+      <p class="workspace-empty">{{ t .L "apps.preview.none" }}</p>
+      {{ end }}
+    </aside>
+  </div>
+</div>
+{{ end }}
+
+{{ define "workspace-prompt" }}
+{{- $d := .Data -}}
+<h2 id="workspace-panel-title" class="visually-hidden">{{ t .L "apps.workspace.prompt" }}</h2>
+<form method="post" action="/apps/{{ $d.App.Slug }}/prompts" data-prompt-form class="workspace-form">
+  {{ $d.CSRF }}
+  <timlee-textarea>
+    <label for="prompt">{{ t .L "apps.prompt.label" }}</label>
+    <textarea id="prompt" name="prompt" rows="5" maxlength="8000" required dir="auto" aria-describedby="prompt-hint"></textarea>
+    <p data-hint id="prompt-hint">{{ t .L "apps.prompt.hint" }}</p>
+  </timlee-textarea>
+  <timlee-button variant="primary"><button type="submit"{{ if $d.Busy }} aria-disabled="true"{{ end }}>{{ t .L "apps.prompt.submit" }}</button></timlee-button>
+</form>
+
+<h3 id="job-log-title" class="workspace-subhead">{{ t .L "apps.prompt.log" }}</h3>
+{{ if and $d.Job (not $d.JobDone) }}<p class="st-quiet">{{ t .L "apps.prompt.running" }}</p>{{ end }}
+{{- /* role=log keeps list semantics in Safari and is not announced line by
+       line; the single status below announces the outcome. */}}
+<p class="visually-hidden" role="status" data-job-status></p>
+<ol class="job-log" role="log" aria-live="off" aria-labelledby="job-log-title" tabindex="0" data-job-log
+  {{- with $d.JobURL }} data-job-url="{{ . }}"{{ end }} data-done="{{ if $d.JobDone }}true{{ else }}false{{ end }}">
+  {{- with $d.Job }}<li data-kind="prompt">{{ .Prompt }}</li>{{ end }}
+  {{- range $d.Events }}
+  <li data-kind="{{ .Kind }}"{{ with .OK }} data-ok="{{ . }}"{{ end }}>{{ .Text }}</li>
+  {{- end }}
+</ol>
+
+{{ with $d.History }}
+<h3 class="workspace-subhead">{{ t $.L "apps.workspace.history" }}</h3>
+<ul class="history" role="list">
+  {{- range . }}<li><code>{{ . }}</code></li>{{ end }}
+</ul>
+{{ end }}
+{{ end }}
+
+{{ define "workspace-code" }}
+{{- $d := .Data -}}
+{{- $base := printf "/apps/%s" $d.App.Slug -}}
+<h2 id="workspace-panel-title" class="visually-hidden">{{ t .L "apps.workspace.code" }}</h2>
+<div class="code-layout">
+  <nav class="file-tree" aria-labelledby="files-title">
+    <h3 id="files-title" class="workspace-subhead">{{ t .L "apps.code.files" }}</h3>
+    <ul role="list">
+      {{- range $d.Files }}
+      <li><a href="{{ $base }}?view=code&amp;file={{ .Path }}"{{ if eq .Path $d.File }} aria-current="page"{{ end }}>{{ .Path }}</a>
+        {{- if .Generated }} <span class="file-tag">{{ t $.L "apps.code.generated" }}</span>{{ end }}</li>
+      {{- end }}
+    </ul>
+  </nav>
+  <form method="get" action="{{ $base }}" class="file-new">
+    <input type="hidden" name="view" value="code" />
+    <timlee-input>
+      <label for="new-file">{{ t .L "apps.code.newFile" }}</label>
+      <input id="new-file" name="file" type="text" placeholder="src/lib/Card.svelte" pattern="[A-Za-z0-9_\-][A-Za-z0-9_\-./]*" title="{{ t .L "apps.code.newFileRule" }}" autocomplete="off" aria-describedby="new-file-hint" />
+      <p data-hint id="new-file-hint">{{ t .L "apps.code.newFileRule" }}</p>
+    </timlee-input>
+    <timlee-button><button type="submit">{{ t .L "apps.code.create" }}</button></timlee-button>
+  </form>
+
+  {{ if $d.File }}
+  <form method="post" action="{{ $base }}/files" data-code-form class="code-form">
+    {{ $d.CSRF }}
+    <input type="hidden" name="path" value="{{ $d.File }}" />
+    {{ if $d.Generated }}<p class="st-quiet">{{ t .L "apps.code.generatedHint" }}</p>{{ end }}
+    <p class="st-quiet" id="editor-keys">{{ t .L "apps.code.keys" }}</p>
+    <div class="code-editor">
+      <textarea name="content" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="editor-keys"
+        aria-label="{{ t .L "apps.code.editing" "path" $d.File }}"{{ if $d.Generated }} readonly{{ end }}>{{ $d.Content }}</textarea>
+    </div>
+    <div class="code-actions">
+      {{ if not $d.Generated }}<timlee-button variant="primary"><button type="submit">{{ t .L "apps.code.save" }}</button></timlee-button>{{ end }}
+      <p class="save-status" data-save-status role="status"></p>
+    </div>
+    <pre class="build-log" data-build-log tabindex="0" hidden></pre>
+  </form>
+  {{ else }}
+  <p class="workspace-empty">{{ t .L "apps.code.choose" }}</p>
+  {{ end }}
+</div>
+{{ end }}
+
+{{ define "workspace-theme" }}
+{{- $d := .Data -}}
+<h2 id="workspace-panel-title" class="visually-hidden">{{ t .L "apps.workspace.theme" }}</h2>
+<form method="post" action="/apps/{{ $d.App.Slug }}/theme" data-theme-form class="workspace-form theme-form">
+  {{ $d.CSRF }}
+  <p class="st-quiet">{{ t .L "apps.theme.hint" }}</p>
+  <timlee-select>
+    <label for="font">{{ t .L "apps.theme.font" }}</label>
+    <select id="font" name="font">
+      {{- range $d.Fonts }}
+      <option value="{{ .Family }}"{{ if eq .Family $d.App.Font }} selected{{ end }}>{{ .Family }}</option>
+      {{- end }}
+    </select>
+  </timlee-select>
+
+  <div class="theme-schemes">
+    {{- range $scheme := $d.Schemes }}
+    <fieldset>
+      <legend>{{ if eq $scheme "light" }}{{ t $.L "apps.theme.light" }}{{ else }}{{ t $.L "apps.theme.dark" }}{{ end }}</legend>
+      {{- range $d.ThemeRows }}
+      {{- $id := printf "%s%s" $scheme .Token.Name }}
+      {{- $value := .Light }}{{ if eq $scheme "dark" }}{{ $value = .Dark }}{{ end }}
+      <div class="swatch">
+        <input type="color" id="{{ $id }}" name="{{ $scheme }}:{{ .Token.Name }}" value="{{ $value }}" />
+        <label for="{{ $id }}">{{ .Token.Label }}</label>
+        <output for="{{ $id }}" aria-live="off">{{ $value }}</output>
+      </div>
+      {{- end }}
+    </fieldset>
+    {{- end }}
+  </div>
+
+  <fieldset>
+    <legend>{{ t .L "apps.theme.shape" }}</legend>
+    {{- range $d.ShapeRows }}
+    <div class="range">
+      <label for="shape{{ .Token.Name }}">{{ .Token.Label }}</label>
+      <input type="range" id="shape{{ .Token.Name }}" name="light:{{ .Token.Name }}" value="{{ .Light }}"
+        {{- with .Token.Min }} min="{{ . }}"{{ end }}{{ with .Token.Max }} max="{{ . }}"{{ end }}{{ with .Token.Step }} step="{{ . }}"{{ end }} />
+      <output for="shape{{ .Token.Name }}" aria-live="off">{{ .Light }}</output>
+    </div>
+    {{- end }}
+  </fieldset>
+
+  <div class="code-actions">
+    <timlee-button variant="primary"><button type="submit">{{ t .L "apps.theme.save" }}</button></timlee-button>
+    <p class="save-status" data-save-status role="status"></p>
+  </div>
+  <pre class="build-log" data-build-log tabindex="0" hidden></pre>
+</form>
+{{ end }}

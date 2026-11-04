@@ -1,0 +1,486 @@
+/* =============================================================================
+   Base: reset, document defaults and shared primitives.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  /* Reserve the scrollbar's width even when the page does not scroll, so the
+     layout does not jump sideways when content grows past the viewport or an
+     overlay locks scrolling. A no-op with overlay scrollbars. */
+  scrollbar-gutter: stable;
+  /* The page's own scrollbar is thin. scrollbar-width does not inherit, so
+     every other scroller keeps the platform width unless it opts in. */
+  scrollbar-width: thin;
+  /* Anchor jumps and keyboard focus stop below the sticky 64px nav. */
+  scroll-padding-top: 80px;
+}
+
+/* Smooth scrolling is movement the reader did not ask for, so it is opt-in. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Wherever the theme is set (tokens.css, layer 2a), restate the ink, the
+   page colour and the scrollbar. light-dark() resolves where a colour is used,
+   but `color` and `scrollbar-color` inherit as already-resolved values, so a
+   subtree re-themed with data-theme would otherwise keep its parent's colours
+   on its own background. On the root this also paints the canvas, so
+   overscroll matches the page, and colours every scroller in the document:
+   no rule on `*` is needed. :where() keeps the nested case at zero
+   specificity: any component that styles its own background still wins. */
+:root,
+:where([data-theme]) {
+  color: var(--ts-text-1);
+  background-color: var(--ts-background);
+  scrollbar-color: var(--ts-scrollbar-thumb) var(--ts-scrollbar-track);
+}
+
+/* Applied for a frame while the theme changes (ts/theme.ts): without it,
+   elements that transition colour fade at their own pace while everything
+   else snaps. */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+/* The theme toggle (partials/theme-toggle.gohtml). Of its two buttons, the
+   one for the reader's system scheme is shown, and in it the icon and name
+   for the theme on screen: a light page offers dark, a dark page light. The
+   theme on screen is the reader's choice, data-theme, or else the system's.
+   Non-colour switches, so keying on the scheme here is not a colour branch. */
+.theme-form {
+  display: flex;
+}
+
+@media (prefers-color-scheme: light) {
+  .theme-form > [data-system="dark"],
+  :root:not([data-theme]) .theme-form .to-light {
+    display: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .theme-form > [data-system="light"],
+  :root:not([data-theme]) .theme-form .to-dark {
+    display: none;
+  }
+}
+
+:root[data-theme="light"] .theme-form .to-light,
+:root[data-theme="dark"] .theme-form .to-dark {
+  display: none;
+}
+
+/* =============================================================================
+   Reduced motion lives next to the motion, never in a global switch.
+
+   A universal `animation-duration: 0.01ms !important` freezes a spinner or a
+   progress shimmer mid-frame, which is a broken cue rather than a calm one,
+   and it makes some animations more jarring, not less. So every rule that
+   moves something states its reduced form beside it: keep the opacity and
+   colour change that says what happened, drop the movement (.btn:active
+   below is the pattern). docs/design-tokens.md#reduced-motion lists the rest.
+   ========================================================================== */
+
+body {
+  margin: 0;
+  font-family: var(--ts-font-sans);
+  font-size: 1rem;
+  line-height: var(--ts-leading-normal);
+  color: var(--ts-text-1);
+  background: var(--ts-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--ts-text-heading);
+  font-weight: 650;
+  line-height: var(--ts-leading-tight);
+  letter-spacing: var(--ts-tracking-tight);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+/* The UA stylesheet's `[hidden] { display: none }` loses to any class that
+   sets `display`, so hiding via the attribute silently stops working on
+   styled elements. Make the attribute authoritative. */
+[hidden] {
+  display: none !important;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--ts-font-mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ts-ring);
+  outline-offset: 2px;
+  border-radius: var(--ts-radius-sm);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background: var(--ts-primary);
+  color: var(--ts-primary-foreground);
+}
+
+/* --- Direction -------------------------------------------------------------
+   Layout names sides by reading direction (inline-start, inline-end), so a
+   right-to-left page mirrors with no rules of its own; docs/I18N.md §7 has
+   the mapping. These are the two things logical properties cannot say.
+
+   --ts-dir is the inline direction as a sign, for movement along the inline
+   axis: translate: calc(var(--ts-dir) * -100%) 0 slides towards the inline
+   start. Every dir attribute sets it, so a dir="ltr" island in a
+   right-to-left page keeps its own sign. */
+:root,
+[dir] {
+  --ts-dir: 1;
+}
+
+[dir]:dir(rtl) {
+  --ts-dir: -1;
+}
+
+/* An icon that points along the reading direction (sign out, back, next)
+   carries data-mirror on its <svg> and turns round in right-to-left text. */
+[data-mirror]:dir(rtl) {
+  scale: -1 1;
+}
+
+/* --- Utilities ------------------------------------------------------------- */
+
+.mono {
+  font-family: var(--ts-font-mono);
+  font-size: 0.9em;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Prose wider than about 65 characters loses the reader between lines. */
+.measure {
+  max-width: var(--ts-measure);
+}
+
+.measure-narrow {
+  max-width: var(--ts-measure-narrow);
+}
+
+/* Display type: the fluid tier needs tighter leading and tracking than UI type,
+   because at 48px the default 1.2 leading opens a hole through the headline.
+   It is also the only place the display face is used. */
+.display {
+  font-family: var(--ts-font-display);
+  line-height: var(--ts-leading-display);
+  letter-spacing: var(--ts-tracking-display);
+}
+
+/* Small uppercase labels (eyebrows, table headers) set as a blur without extra
+   tracking, since uppercase removes the ascender/descender cues. */
+.eyebrow {
+  font-size: var(--ts-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ts-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ts-text-2);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keyboard users must still be able to reach the content. */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  inset-inline-start: var(--ts-space-4);
+  z-index: var(--ts-z-toast);
+  padding: var(--ts-space-3) var(--ts-space-4);
+  background: var(--ts-primary);
+  color: var(--ts-primary-foreground);
+  border-radius: var(--ts-radius-md);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: var(--ts-space-4);
+}
+
+/* --- Buttons --------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ts-space-2);
+  padding: var(--ts-space-2-5) var(--ts-space-4);
+  border: 1px solid transparent;
+  /* The 6px workhorse. A button is a precision control, not a pill. */
+  border-radius: var(--ts-radius);
+  font-size: var(--ts-text-md);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  background: none;
+  transition:
+    background-color var(--ts-duration) var(--ts-ease-standard),
+    border-color var(--ts-duration) var(--ts-ease-standard),
+    color var(--ts-duration) var(--ts-ease-standard),
+    transform var(--ts-duration-instant) var(--ts-ease-standard);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Reduced motion: the button does not nudge when pressed. */
+@media (prefers-reduced-motion: reduce) {
+  .btn:active {
+    transform: none;
+  }
+}
+
+.btn.lg {
+  padding: var(--ts-space-3-5) var(--ts-space-5-5);
+  font-size: var(--ts-text-lg);
+  border-radius: var(--ts-radius-md);
+}
+
+.btn.sm {
+  padding: var(--ts-space-1-5) var(--ts-space-3);
+  font-size: var(--ts-text-sm);
+  border-radius: var(--ts-radius-sm);
+}
+
+.btn.primary {
+  background: var(--ts-primary);
+  color: var(--ts-primary-foreground);
+}
+
+.btn.primary:hover {
+  background: var(--ts-primary-hover);
+}
+
+.btn.ghost {
+  background: var(--ts-background);
+  color: var(--ts-text-1);
+  border-color: var(--ts-border-strong);
+}
+
+.btn.ghost:hover {
+  background: var(--ts-surface-1);
+  border-color: var(--ts-border-hover);
+}
+
+/* For use on the dark hero and dark bands, where the surface is night in both
+   themes, so these cannot come from the flipping neutral ramp. */
+.btn.ghost-light {
+  background: transparent;
+  color: var(--ts-on-dark-text);
+  border-color: var(--ts-on-dark-border);
+}
+
+.btn.ghost-light:hover {
+  background: var(--ts-on-dark-wash);
+  border-color: var(--ts-on-dark-border-hover);
+}
+
+.btn[disabled],
+.btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Layout ---------------------------------------------------------------- */
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--ts-space-6);
+}
+
+.wrap.wide {
+  max-width: 1240px;
+}
+
+/* Page rhythm, deliberately separate from component spacing: this grows with
+   the viewport, a card's padding does not. */
+.section {
+  padding-block: var(--ts-section);
+}
+
+.section.sm {
+  padding-block: var(--ts-section-sm);
+}
+
+.section.lg {
+  padding-block: var(--ts-section-lg);
+}
+
+/* Long translated words must shrink inside their layout instead of widening
+   the page. `anywhere` only changes wrapping when normal word boundaries are
+   not enough, while technical examples keep their own horizontal scroller. */
+main :where(h1, h2, h3, h4, p, li, dd, figcaption) {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+main timlee-code-block {
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* --- Elevation -------------------------------------------------------------
+   The documented rule, as two classes so components stop re-deriving it.
+
+   .panel   flat. The border carries the edge in both themes; in dark it is the
+            *only* thing that does, because a shadow on near-black is invisible.
+   .raised  lifted. Steps to a lighter surface, takes a shadow, and picks up the
+            1px inset top highlight — --ts-elevation-* bakes the highlight in,
+            so it cannot be left out by accident.
+   -------------------------------------------------------------------------- */
+
+.panel {
+  background: var(--ts-surface-1);
+  border: 1px solid var(--ts-border);
+  border-radius: var(--ts-radius-md);
+}
+
+.raised {
+  background: var(--ts-surface-raised);
+  border: 1px solid var(--ts-border);
+  border-radius: var(--ts-radius-lg);
+  box-shadow: var(--ts-elevation-2);
+}
+
+/* --- Print -------------------------------------------------------------------
+   Legal, security and docs pages get printed and filed. Paper is light, and
+   a browser drops backgrounds when it prints, so the page prints in the light
+   scheme whatever the reader chose; the code slabs that are dark by design
+   keep their colours. Everything that only works on a screen goes: the
+   headers, menus, rails and footers, and the toasts. */
+@media print {
+  :root,
+  [data-theme] {
+    color-scheme: light;
+  }
+
+  .skip-link,
+  .nav,
+  .footer,
+  .auth-top,
+  .docs-header,
+  .docs-sidebar,
+  .docs-footer,
+  .st-top,
+  .st-rail,
+  timlee-toaster {
+    display: none !important;
+  }
+
+  timlee-code-block {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* A link on paper cannot be followed, so a link out of the site says where
+     it goes. */
+  main :is(p, li, dd, td) > a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    overflow-wrap: anywhere;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  pre,
+  figure,
+  tr,
+  timlee-code-block,
+  timlee-alert {
+    break-inside: avoid;
+  }
+
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "@@locale": "en",
+  "@@context": "Strings the timlee-* web components write (Dismiss, Copy, pagination).",
+  "components.alert.dismiss": "Dismiss",
+  "@components.alert.dismiss": {"description": "Accessible name of an alert's injected dismiss button."},
+  "components.badge.remove": "Remove {label}",
+  "@components.badge.remove": {
+    "description": "Accessible name of a removable badge's injected button.",
+    "placeholders": {"label": {"type": "text"}}
+  },
+  "components.code.code": "Code",
+  "@components.code.code": {"description": "Fallback name of an unlabelled code block."},
+  "components.code.copy": "Copy",
+  "@components.code.copy": {"description": "Visible label of a code block's copy button."},
+  "components.code.copied": "Copied",
+  "@components.code.copied": {"description": "Visible confirmation on a code block's copy button."},
+  "components.code.copyCode": "Copy code",
+  "@components.code.copyCode": {"description": "Accessible name of Copy for an unlabelled code block."},
+  "components.code.copiedCode": "Copied code",
+  "@components.code.copiedCode": {"description": "Accessible name after copying an unlabelled code block."},
+  "components.code.copyLabel": "Copy {label}",
+  "@components.code.copyLabel": {
+    "description": "Accessible name of Copy for a named code block.",
+    "placeholders": {"label": {"type": "text"}}
+  },
+  "components.code.copiedLabel": "Copied {label}",
+  "@components.code.copiedLabel": {
+    "description": "Accessible name after copying a named code block.",
+    "placeholders": {"label": {"type": "text"}}
+  },
+  "components.code.scrollable": "{label}, scrollable",
+  "@components.code.scrollable": {
+    "description": "Accessible name of a code block while its preformatted content scrolls.",
+    "placeholders": {"label": {"type": "text"}}
+  },
+  "components.code.copyFailed": "Copy failed. Select the code and copy it manually.",
+  "@components.code.copyFailed": {"description": "Assertive announcement when clipboard access fails."},
+  "components.code.copiedToClipboard": "Copied to clipboard",
+  "@components.code.copiedToClipboard": {"description": "Polite announcement after code was copied."},
+  "components.dialog.close": "Close dialog",
+  "@components.dialog.close": {"description": "Accessible name of a dialog's injected close button."},
+  "components.navigation.breadcrumb": "Breadcrumb",
+  "@components.navigation.breadcrumb": {"description": "Fallback accessible name of breadcrumb navigation."},
+  "components.navigation.pagination": "Pagination",
+  "@components.navigation.pagination": {"description": "Fallback accessible name of pagination navigation."},
+  "components.navigation.page": "Page {page}",
+  "@components.navigation.page": {
+    "description": "Accessible name of a numeric pagination link.",
+    "placeholders": {"page": {"type": "int"}}
+  },
+  "components.navigation.currentPage": "Page {page}, current page",
+  "@components.navigation.currentPage": {
+    "description": "Accessible name of the current numeric pagination link.",
+    "placeholders": {"page": {"type": "int"}}
+  },
+  "components.spinner.loading": "Loading",
+  "@components.spinner.loading": {"description": "Fallback accessible name of an indeterminate spinner."},
+  "components.spinner.progress": "Progress",
+  "@components.spinner.progress": {"description": "Fallback accessible name of a progress element."},
+  "components.table.table": "Table",
+  "@components.table.table": {"description": "Fallback name of an unlabelled table."},
+  "components.table.scrollable": "{label}, scrollable",
+  "@components.table.scrollable": {
+    "description": "Accessible name of an unlabelled table while it scrolls.",
+    "placeholders": {"label": {"type": "text"}}
+  },
+  "components.toast.dismiss": "Dismiss notification",
+  "@components.toast.dismiss": {"description": "Accessible name of a toast's injected dismiss button."},
+  "components.toast.notifications": "Notifications",
+  "@components.toast.notifications": {"description": "Accessible name of the toaster region."}
+}

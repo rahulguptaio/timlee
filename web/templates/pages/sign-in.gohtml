@@ -1,0 +1,145 @@
+{{- /*
+  Sign-in.
+
+  Every route in is a link or a form that the server handles: the provider
+  buttons are plain links to the auth service, and the email and development
+  forms post here, where this process forwards them. Nothing on this page
+  needs script to work.
+
+  When the desktop app opened the page (desktop.go), every form carries the
+  app's handoff in "desktop-fields", and the provider links carry it in their
+  query, so whichever way the reader signs in ends in the app.
+*/ -}}
+{{ define "desktop-fields" }}{{ with . }}
+      <input type="hidden" name="desktop_port" value="{{ .Port }}" />
+      <input type="hidden" name="code_challenge" value="{{ .Challenge }}" />
+      <input type="hidden" name="desktop_flow" value="{{ .Flow }}" />
+{{- end }}{{ end }}
+{{ define "content" }}
+{{- $d := .Data -}}
+<section class="auth-card" aria-labelledby="auth-title" data-auth-card>
+  {{ if $d.Sent }}
+  <div class="auth-view" data-view="sent">
+    <span class="auth-sent-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="2.5" />
+        <path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
+      </svg>
+    </span>
+    <h1 id="auth-title" tabindex="-1">{{ t .L "auth.sent.heading" }}</h1>
+    <p class="auth-lede">
+      {{ with $d.SentEmail }}{{ th $.L "auth.sent.lede" "email" . }}{{ else }}{{ t $.L "auth.sent.ledeNoAddress" }}{{ end }}
+    </p>
+    {{ if $d.Desktop }}
+    <p class="auth-lede">{{ t .L "auth.sent.desktop" }}</p>
+    {{ end }}
+    <p class="auth-note">{{ t .L "auth.sent.arrival" }}</p>
+
+    {{ with $d.SentEmail }}
+    <form method="post" action="{{ href $.L "/sign-in" }}">
+      <input type="hidden" name="intent" value="magic-link" />
+      <input type="hidden" name="email" value="{{ . }}" />
+      <input type="hidden" name="returnTo" value="{{ $d.ReturnTo }}" />
+      {{- template "desktop-fields" $d.Desktop }}
+      <timlee-button variant="secondary" block><button type="submit">{{ t $.L "auth.sent.resend" }}</button></timlee-button>
+    </form>
+    {{ end }}
+    <timlee-button variant="link" class="auth-other"><a href="{{ $d.SelfHref }}">{{ t .L "auth.sent.otherEmail" }}</a></timlee-button>
+
+    {{ if $d.MailOutbox }}
+    <p class="auth-outbox">
+      {{ th .L "auth.sent.outbox" }}
+    </p>
+    {{ end }}
+  </div>
+
+  {{ else }}
+
+  <div class="auth-view" data-view="sign-in">
+    <h1 id="auth-title" tabindex="-1">{{ t .L "auth.signIn.heading" }}</h1>
+    <p class="auth-lede">{{ t .L "auth.signIn.lede" }}</p>
+
+    {{ with $d.Error }}
+    <timlee-alert tone="danger" class="auth-alert" tabindex="-1" autofocus><p>{{ . }}</p></timlee-alert>
+    {{ end }}
+
+    {{ if $d.Desktop }}
+    <timlee-alert tone="info" class="auth-alert">
+      <strong>{{ t .L "auth.desktop.heading" }}</strong>
+      <p>{{ t .L "auth.desktop.lede" }}</p>
+    </timlee-alert>
+    {{ end }}
+
+    {{ if $d.Providers }}
+    <div class="auth-providers">
+      {{ range $d.Providers }}
+      <timlee-button variant="secondary" block><a href="{{ .Href }}" rel="nofollow">{{ th $.L "auth.signIn.continueWith" "provider" .Label }}</a></timlee-button>
+      {{ end }}
+    </div>
+    {{ end }}
+
+    {{ if $d.MagicLink }}
+    {{ if $d.Providers }}<p class="auth-divider">{{ t .L "auth.signIn.emailDivider" }}</p>{{ end }}
+    <form class="auth-form" method="post" action="{{ href .L "/sign-in" }}">
+      <input type="hidden" name="intent" value="magic-link" />
+      <input type="hidden" name="returnTo" value="{{ $d.ReturnTo }}" />
+      {{- template "desktop-fields" $d.Desktop }}
+      <timlee-input{{ if $d.EmailError }} invalid{{ end }}>
+        <label for="auth-email">{{ t .L "auth.signIn.emailLabel" }}</label>
+        <input
+          id="auth-email"
+          name="email"
+          type="email" dir="ltr"
+          inputmode="email"
+          autocomplete="username"
+          autocapitalize="off"
+          spellcheck="false"
+          enterkeyhint="go"
+          placeholder="you@company.com"
+          value="{{ $d.Email }}"
+          required
+          {{ if $d.EmailError -}}
+          aria-describedby="auth-email-msg auth-email-error"
+          aria-invalid="true"
+          autofocus
+          {{- else -}}
+          aria-describedby="auth-email-msg"
+          {{- end }}
+        />
+        <p data-hint id="auth-email-msg">{{ t .L "auth.signIn.emailHintStart" }}'{{ t .L "auth.signIn.emailHintEnd" }}</p>
+        {{ with $d.EmailError }}<p data-error id="auth-email-error"><span class="visually-hidden">{{ t $.L "auth.email.errorPrefix" }} </span>{{ . }}</p>{{ end }}
+      </timlee-input>
+      <timlee-button variant="primary" block><button type="submit">{{ t .L "auth.signIn.emailSubmit" }}</button></timlee-button>
+    </form>
+    {{ end }}
+
+    {{ if $d.DevLogin }}
+    <div class="auth-dev">
+      <p class="auth-divider">{{ t .L "auth.signIn.localDevelopment" }}</p>
+      <form method="post" action="{{ href .L "/sign-in" }}">
+        <input type="hidden" name="intent" value="dev" />
+        <input type="hidden" name="returnTo" value="{{ $d.ReturnTo }}" />
+        {{- template "desktop-fields" $d.Desktop }}
+        <timlee-button variant="secondary" block>
+          <button type="submit" aria-describedby="auth-dev-note">{{ t .L "auth.signIn.devSubmit" }}</button>
+        </timlee-button>
+      </form>
+      <p class="auth-note" id="auth-dev-note">
+        {{ th .L "auth.signIn.devNote" }}
+      </p>
+    </div>
+    {{ end }}
+
+    {{ if and (not $d.Providers) (not $d.MagicLink) (not $d.DevLogin) }}
+    <p class="auth-note">
+      {{ t .L "auth.signIn.noneConfigured" }}
+    </p>
+    {{ end }}
+  </div>
+  {{ end }}
+</section>
+
+<p class="auth-legal">
+  {{ t .L "auth.signIn.legal" }}
+</p>
+{{ end }}

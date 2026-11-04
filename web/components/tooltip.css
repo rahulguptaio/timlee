@@ -1,0 +1,102 @@
+timlee-tooltip {
+  --tooltip-bg: var(--ts-surface-inverse);
+  --tooltip-fg: var(--ts-text-inverse);
+  /* Inverse, so no border: the fill itself is the edge, at 14:1. */
+  --tooltip-shadow: var(--ts-elevation-2);
+  --tooltip-radius: var(--ts-radius-md);
+  --tooltip-offset: var(--ts-space-2);
+  --tooltip-max: 18rem;
+
+  display: inline-flex;
+  position: relative;
+  vertical-align: middle;
+}
+
+timlee-tooltip [role="tooltip"] {
+  position: absolute;
+  z-index: var(--mc-z-dropdown);
+  inset-block-end: calc(100% + var(--tooltip-offset));
+  /* direction: physical — centred over the control: inset-inline-start: 50%
+     is right: 50% in right-to-left, while translate still moves left. */
+  left: 50%;
+  translate: -50% 0; /* direction: physical — centres the tip, with left: 50% */
+  inline-size: max-content;
+  max-inline-size: var(--tooltip-max);
+  margin: 0;
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border: 0;
+  border-radius: var(--tooltip-radius);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  font-family: var(--mc-font-sans);
+  font-size: var(--mc-text-xs);
+  font-weight: 500;
+  line-height: var(--mc-leading-snug);
+  text-align: start;
+  box-shadow: var(--tooltip-shadow);
+  /* Hidden, it never catches the pointer, so it cannot swallow a click
+     meant for the page around the control it describes. */
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  /* visibility is delayed on the way out and instant on the way in. A
+     plain duration on it would leave the tooltip computing to hidden for
+     the first frame after focus, which is both wrong and a flaky test.
+     Nothing moves, so the fade stays under reduced motion. */
+  transition:
+    opacity var(--mc-duration-fast) var(--mc-ease),
+    visibility 0s linear var(--mc-duration-fast);
+}
+
+/* The scriptless path: no custom element upgrade required. */
+timlee-tooltip:hover [role="tooltip"],
+timlee-tooltip:focus-within [role="tooltip"] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--mc-duration-fast) var(--mc-ease),
+    visibility 0s linear 0s;
+}
+
+timlee-tooltip[placement="bottom"] [role="tooltip"] {
+  inset-block: calc(100% + var(--tooltip-offset)) auto;
+}
+
+/* WCAG 1.4.13 (hoverable): a shown tooltip takes the pointer, so it can be
+   read or magnified without closing. Being inside the host, hovering it
+   keeps the host hovered, and a transparent bridge spans the gap to the
+   control so the trip across does not count as leaving either. */
+timlee-tooltip:is(:hover, :focus-within, [open]) [role="tooltip"] {
+  pointer-events: auto;
+}
+
+timlee-tooltip [role="tooltip"]::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  block-size: var(--tooltip-offset);
+}
+
+/* Below the control: the scriptless tooltip by its placement, the promoted
+   one by where script put it, which can be flipped for want of room. */
+timlee-tooltip[placement="bottom"] [role="tooltip"]:not([popover])::before,
+timlee-tooltip [role="tooltip"][data-below]::before {
+  inset-block: auto 100%;
+}
+
+/* Promoted to a popover, the tip is display: none until script opens it
+   (the UA's rule for a closed popover), and then lives in the top layer,
+   where the host is no longer its containing block; script sets the
+   coordinates. */
+timlee-tooltip [role="tooltip"]:popover-open {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  /* The UA makes a popover a scroll container, which would clip the hover
+     bridge hanging off its edge. */
+  overflow: visible;
+  translate: none;
+  opacity: 1;
+  visibility: visible;
+}

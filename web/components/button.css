@@ -1,0 +1,266 @@
+timlee-button,
+timlee-icon-button {
+  /* Local properties are the only thing variants rewrite. Each one is
+     sourced from a --ts-* semantic token; no literal colours here. */
+  --button-bg: transparent;
+  --button-fg: var(--ts-text-1);
+  --button-border: var(--ts-border);
+  --button-ring: var(--ts-ring);
+  --button-radius: var(--ts-radius-lg);
+  --button-shadow: var(--ts-elevation-1);
+  --button-height: var(--ts-space-10);
+  --button-padding: var(--ts-space-4);
+  --button-font-size: var(--ts-text-base);
+  --button-font-weight: 600;
+  --button-gap: var(--ts-space-2);
+
+  display: inline-flex;
+  max-inline-size: 100%;
+  vertical-align: middle;
+}
+
+timlee-button[block] {
+  display: flex;
+}
+
+timlee-button > :where(button, a, input[type="submit"], input[type="button"], input[type="reset"]) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--button-gap);
+  inline-size: 100%;
+  min-block-size: var(--button-height);
+  min-inline-size: calc(var(--mc-space-8) + var(--mc-space-1));
+  padding-inline: var(--button-padding);
+  padding-block: 0;
+  border: var(--mc-border-width) solid var(--button-border);
+  border-radius: var(--button-radius);
+  background: var(--button-bg);
+  color: var(--button-fg);
+  box-shadow: var(--button-shadow);
+  font-family: var(--mc-font-sans);
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  line-height: var(--mc-leading-tight);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition:
+    background-color var(--mc-duration-fast) var(--mc-ease),
+    border-color var(--mc-duration-fast) var(--mc-ease),
+    color var(--mc-duration-fast) var(--mc-ease),
+    box-shadow var(--mc-duration-fast) var(--mc-ease);
+}
+
+timlee-button > :where(button, a, input):focus-visible {
+  outline: var(--mc-focus-width) solid var(--button-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+/* --- Variants: each rewrites only the local properties ------------------ */
+
+timlee-button[variant="primary"] {
+  --button-bg: var(--ts-primary);
+  --button-fg: var(--ts-primary-foreground);
+  --button-border: var(--ts-primary);
+}
+timlee-button[variant="primary"]:hover {
+  --button-bg: var(--ts-primary-hover);
+  --button-border: var(--ts-primary-hover);
+}
+timlee-button[variant="primary"]:active {
+  --button-bg: var(--ts-primary-active);
+  --button-border: var(--ts-primary-active);
+}
+
+timlee-button[variant="secondary"] {
+  --button-bg: var(--ts-surface-raised);
+  --button-fg: var(--ts-text-1);
+  --button-border: var(--ts-border);
+}
+/* A raised control answers the pointer with its edge (the hover-border
+   step) and a press with the active step, so it reacts the same way on the
+   white of light and the lifted step of dark. */
+timlee-button[variant="secondary"]:hover {
+  --button-border: var(--ts-border-hover);
+}
+timlee-button[variant="secondary"]:active {
+  --button-bg: var(--ts-surface-active);
+}
+
+timlee-button[variant="ghost"] {
+  --button-bg: transparent;
+  --button-fg: var(--ts-text-2);
+  --button-border: transparent;
+  --button-shadow: none;
+}
+timlee-button[variant="ghost"]:hover {
+  --button-bg: var(--ts-surface-hover);
+  --button-fg: var(--ts-text-1);
+}
+timlee-button[variant="ghost"]:active {
+  --button-bg: var(--ts-surface-active);
+}
+
+timlee-button[variant="danger"] {
+  --button-bg: var(--ts-danger);
+  --button-fg: var(--ts-danger-foreground);
+  --button-border: var(--ts-danger);
+}
+timlee-button[variant="danger"]:hover {
+  --button-bg: var(--ts-danger-ink);
+  --button-border: var(--ts-danger-ink);
+}
+
+timlee-button[variant="byoc"] {
+  --button-bg: var(--ts-byoc);
+  --button-fg: var(--ts-byoc-foreground);
+  --button-border: var(--ts-byoc);
+}
+timlee-button[variant="byoc"]:hover {
+  --button-bg: var(--ts-byoc-strong);
+  --button-border: var(--ts-byoc-strong);
+}
+
+timlee-button[variant="link"] {
+  --button-bg: transparent;
+  --button-fg: var(--ts-primary);
+  --button-border: transparent;
+  --button-shadow: none;
+  --button-padding: var(--ts-space-1);
+  --button-height: var(--ts-space-6);
+}
+timlee-button[variant="link"]:hover {
+  --button-fg: var(--ts-primary-hover);
+}
+timlee-button[variant="link"] > :where(button, a) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Sizes -------------------------------------------------------------- */
+
+timlee-button[size="sm"],
+timlee-icon-button[size="sm"] {
+  --button-height: calc(var(--ts-space-8) + var(--ts-space-1));
+  --button-padding: var(--ts-space-3);
+  --button-font-size: var(--ts-text-sm);
+}
+
+timlee-button[size="lg"],
+timlee-icon-button[size="lg"] {
+  --button-height: var(--ts-space-12);
+  --button-padding: var(--ts-space-6);
+  --button-font-size: var(--ts-text-md);
+}
+
+/* --- Disabled and busy -------------------------------------------------- */
+
+timlee-button > :where(button, a, input):disabled,
+timlee-button > :where(button, a, input)[aria-disabled="true"] {
+  --button-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+timlee-button[loading] > :where(button, a, input) {
+  cursor: progress;
+  opacity: 1;
+}
+
+/* The spinner sits beside the label rather than on top of it. Hiding the
+   label to keep the width fixed is the common trick and it is a bug: a
+   visibility:hidden label leaves the button with no accessible name, and
+   "Saving" is exactly what the user wants to keep reading. */
+.timlee-button__spinner {
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+  border: var(--mc-focus-width) solid currentcolor;
+  border-block-start-color: transparent;
+  border-radius: var(--mc-radius-full);
+  animation: timlee-spin var(--mc-duration-slower) linear infinite;
+}
+
+/* Reduced motion: the arc stops turning and breathes in place, like
+   <timlee-spinner>. */
+@media (prefers-reduced-motion: reduce) {
+  .timlee-button__spinner {
+    animation: timlee-pulse var(--mc-duration-pulse) var(--mc-ease-emphasis) infinite alternate;
+  }
+}
+
+/* --- Icon button -------------------------------------------------------- */
+
+timlee-icon-button {
+  --button-height: var(--ts-space-10);
+  --button-bg: transparent;
+  --button-fg: var(--ts-text-2);
+  --button-border: transparent;
+  --button-shadow: none;
+  --button-radius: var(--ts-radius-md);
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+timlee-icon-button > :where(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* SC 2.5.8 floor is 24px; 36px is the smallest Timlee ships. */
+  inline-size: var(--button-height);
+  block-size: var(--button-height);
+  min-inline-size: calc(var(--mc-space-8) + var(--mc-space-1));
+  min-block-size: calc(var(--mc-space-8) + var(--mc-space-1));
+  padding: 0;
+  border: var(--mc-border-width) solid var(--button-border);
+  border-radius: var(--button-radius);
+  background: var(--button-bg);
+  color: var(--button-fg);
+  cursor: pointer;
+  transition:
+    background-color var(--mc-duration-fast) var(--mc-ease),
+    color var(--mc-duration-fast) var(--mc-ease);
+}
+
+timlee-icon-button > :where(button, a) > :where(svg, img) {
+  inline-size: var(--mc-space-4-5);
+  block-size: var(--mc-space-4-5);
+  pointer-events: none;
+}
+
+timlee-icon-button:hover {
+  --button-bg: var(--ts-surface-hover);
+  --button-fg: var(--ts-text-1);
+}
+timlee-icon-button:active {
+  --button-bg: var(--ts-surface-active);
+}
+timlee-icon-button[variant="solid"] {
+  --button-bg: var(--ts-primary);
+  --button-fg: var(--ts-primary-foreground);
+  --button-border: var(--ts-primary);
+}
+timlee-icon-button[variant="solid"]:hover {
+  --button-bg: var(--ts-primary-hover);
+  --button-border: var(--ts-primary-hover);
+}
+timlee-icon-button[variant="danger"] {
+  --button-fg: var(--ts-danger-ink);
+}
+timlee-icon-button[variant="danger"]:hover {
+  --button-bg: var(--ts-danger-soft);
+}
+
+timlee-icon-button > :where(button, a):focus-visible {
+  outline: var(--mc-focus-width) solid var(--button-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+timlee-icon-button > :where(button, a):disabled,
+timlee-icon-button > :where(button, a)[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

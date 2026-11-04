@@ -1,0 +1,21 @@
+{{- /*
+  The language switcher (docs/I18N.md §2): this page in every shipped
+  language, as plain links, so it works without script and a crawler can
+  follow it. Each language is named in itself, with its own lang and dir, and
+  the page's own is marked aria-current.
+
+  Takes the Page. Renders nothing while one locale is shipped, nor on an app
+  page, which has one URL for every language: profile settings choose there.
+*/ -}}
+{{ define "locale-switcher" }}
+{{- with .Languages }}{{ if .Links }}
+<div class="footer-group locale-switcher">
+  <h2>{{ t $.L "common.locale.heading" }}</h2>
+  <ul>
+    {{- range .Options }}
+    <li><a href="{{ .Href }}" hreflang="{{ .Lang }}"{{ if .Current }} aria-current="true"{{ end }}><span lang="{{ .Lang }}" dir="{{ .Dir }}">{{ .Name }}</span></a></li>
+    {{- end }}
+  </ul>
+</div>
+{{- end }}{{ end }}
+{{- end }}

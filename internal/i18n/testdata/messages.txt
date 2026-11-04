@@ -1,0 +1,52 @@
+// The parser's golden corpus: one Go-quoted message per line. The parsed
+// form, or the error, is pinned in messages.golden; regenerate with
+// go test ./internal/i18n -run TestParseGolden -update.
+
+// Plain text, quoting and characters that are only sometimes syntax.
+"Sign in"
+""
+"It’s ready"
+"It''s ready"
+"It's ready"
+"'{literal}' and '}' and '#' and '<b>'"
+"An unterminated quote '{runs to the end"
+"a < b and 3 <= 4"
+"Issue #4"
+"{count, plural, other {#'#' and #}}"
+
+// Arguments.
+"Hello {name}"
+"{ name }"
+"{a}{b}"
+
+// The examples of docs/I18N.md §3.
+"{members, plural, one {# member} other {# members}}, {owners, plural, one {# owner} other {# owners}}"
+"{keys, plural, =0 {Removed {name} from the organisation.} one {Removed {name} from the organisation. The API key they created was revoked.} other {Removed {name} from the organisation. The # API keys they created were revoked.}}"
+"Keys let your applications call the inference API at <code>{endpoint}</code>{org, select, none {.} other { on behalf of {org}.}}"
+
+// Plural and select structure.
+"{count, plural, zero {z} one {o} two {t} few {f} many {m} other {x}}"
+"{count,plural,=0{none}=1{one exactly}other{#}}"
+"{n, plural, other {{g, select, a {# in a} other {# elsewhere}}}}"
+"{g, select, a {no # here} other {{n, plural, other {# here}}}}"
+
+// Tags.
+"<b>Bold</b>, <em>emphasis</em>, <kbd>Ctrl</kbd>, <code>x</code>"
+"Read <link>the docs</link> or <link2>the guide</link2>."
+"<b><em>nested</em></b>"
+
+// Errors.
+"Hello {name"
+"Hello }"
+"{}"
+"{n, number}"
+"{n, plural, one {x}}"
+"{n, plural, other {x} other {y}}"
+"{n, plural, several {x} other {y}}"
+"{n, plural, offset:1 other {x}}"
+"{n, select, =1 {x} other {y}}"
+"<b>bold"
+"<b>bold</em>"
+"<strong>x</strong>"
+"<a href=\"/\">x</a>"
+"{n, plural, other {<b>x}}"

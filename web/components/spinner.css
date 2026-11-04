@@ -1,0 +1,133 @@
+timlee-spinner {
+  --spinner-size: var(--ts-space-5);
+  --spinner-track: var(--ts-border);
+  --spinner-indicator: var(--ts-primary);
+  --spinner-thickness: var(--ts-space-0-5);
+
+  display: inline-block;
+  flex: none;
+  inline-size: var(--spinner-size);
+  block-size: var(--spinner-size);
+  border: var(--spinner-thickness) solid var(--spinner-track);
+  border-block-start-color: var(--spinner-indicator);
+  border-radius: var(--mc-radius-full);
+  animation: timlee-spin var(--mc-duration-slower) linear infinite;
+  vertical-align: middle;
+}
+
+timlee-spinner[size="sm"] {
+  --spinner-size: var(--ts-space-4);
+}
+timlee-spinner[size="lg"] {
+  --spinner-size: var(--ts-space-8);
+  --spinner-thickness: 3px;
+}
+timlee-spinner[size="xl"] {
+  --spinner-size: var(--ts-space-12);
+  --spinner-thickness: var(--ts-space-1);
+}
+
+timlee-spinner[tone="inverse"] {
+  --spinner-track: color-mix(in srgb, currentcolor 25%, transparent);
+  --spinner-indicator: currentcolor;
+}
+timlee-spinner[tone="neutral"] {
+  --spinner-indicator: var(--ts-text-2);
+}
+
+/* Reduced motion: nothing turns. The arc stays where it is, still reading
+   as a spinner, and breathes slowly instead, so the cue that work is under
+   way stays while the movement goes. Stated here rather than left to a
+   shared rule, because a server-rendered spinner animates before any
+   element has upgraded. */
+@media (prefers-reduced-motion: reduce) {
+  timlee-spinner {
+    border-inline-end-color: var(--spinner-indicator);
+    animation: timlee-pulse var(--mc-duration-pulse) var(--mc-ease-emphasis) infinite alternate;
+  }
+}
+
+/* --- Progress ----------------------------------------------------------- */
+
+timlee-progress {
+  --progress-height: 0.5rem;
+  --progress-track: var(--ts-surface-3);
+  --progress-indicator: var(--ts-primary);
+  --progress-radius: var(--ts-radius-full);
+
+  display: grid;
+  gap: var(--mc-space-1);
+}
+
+timlee-progress > label,
+.timlee-progress__label {
+  color: var(--mc-text-2);
+  font-size: var(--mc-text-xs);
+  font-weight: 600;
+}
+
+timlee-progress > progress {
+  appearance: none;
+  inline-size: 100%;
+  block-size: var(--progress-height);
+  border: 0;
+  border-radius: var(--progress-radius);
+  background: var(--progress-track);
+  color: var(--progress-indicator);
+  overflow: hidden;
+}
+
+/* Each engine needs its own pseudo-element; they cannot be merged into one
+   selector list because an unknown pseudo invalidates the whole rule. */
+timlee-progress > progress::-webkit-progress-bar {
+  background: var(--progress-track);
+  border-radius: var(--progress-radius);
+}
+
+timlee-progress > progress::-webkit-progress-value {
+  background: var(--progress-indicator);
+  border-radius: var(--progress-radius);
+  transition: inline-size var(--mc-duration) var(--mc-ease);
+}
+
+/* Reduced motion: the bar takes its new length without sliding to it. */
+@media (prefers-reduced-motion: reduce) {
+  timlee-progress > progress::-webkit-progress-value {
+    transition: none;
+  }
+}
+
+timlee-progress > progress::-moz-progress-bar {
+  background: var(--progress-indicator);
+  border-radius: var(--progress-radius);
+}
+
+timlee-progress[tone="success"] {
+  --progress-indicator: var(--ts-success-solid);
+}
+timlee-progress[tone="warning"] {
+  --progress-indicator: var(--ts-warning);
+}
+timlee-progress[tone="danger"] {
+  --progress-indicator: var(--ts-danger);
+}
+
+timlee-progress[size="lg"] {
+  --progress-height: var(--ts-space-3);
+}
+
+/* Forced colours paint the track and the fill Canvas, which leaves no bar at
+   all: outline the track and fill the value with the selection colour. */
+@media (forced-colors: active) {
+  timlee-progress > progress {
+    border: var(--mc-border-width) solid CanvasText;
+  }
+
+  timlee-progress > progress::-webkit-progress-value {
+    background: Highlight;
+  }
+
+  timlee-progress > progress::-moz-progress-bar {
+    background: Highlight;
+  }
+}

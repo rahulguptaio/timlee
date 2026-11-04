@@ -1,0 +1,49 @@
+/* =============================================================================
+   components.css — the stylesheet of every Timlee web component.
+
+   Each component keeps its rules beside its module (button.css next to
+   button.ts); this file only puts them in cascade order. web/assets/app.css
+   @imports it, and esbuild inlines every @import at build time,
+   so a server-rendered page is fully styled before any JavaScript runs and
+   stays styled if the bundle never arrives. That is the only way component
+   styles reach a page: the page CSP admits no injected <style>, so nothing at
+   runtime adds them.
+
+   Order is cascade order. `shared` comes first and anything that must
+   override a neighbour comes after it. A new component's stylesheet is added
+   here; styles.test.ts fails while one is missing.
+
+   ---------------------------------------------------------------------------
+   Why no @layer
+   ---------------------------------------------------------------------------
+   A cascade layer would be the tidy way to let application CSS win. It cannot
+   be used here: `web/assets/css/base.css` is unlayered and resets
+   `button, input, textarea, select { font: inherit; color: inherit }`.
+   Unlayered rules beat layered ones at *any* specificity, so a layered
+   `timlee-button > button { color: … }` would lose to a bare `button` selector.
+
+   Specificity does the job instead. Every selector in these files is anchored
+   to a `timlee-*` tag name, so a component rule is at least (0,0,2) against
+   the reset's (0,0,1), while a single application class (0,1,0) still
+   overrides it. That is the encapsulation budget shadow DOM would otherwise
+   have bought.
+   ========================================================================== */
+
+@import "./shared.css";
+@import "./button.css";
+@import "./field.css";
+@import "./choice.css";
+@import "./switch.css";
+@import "./card.css";
+@import "./badge.css";
+@import "./alert.css";
+@import "./avatar.css";
+@import "./spinner.css";
+@import "./empty-state.css";
+@import "./navigation.css";
+@import "./table.css";
+@import "./code-block.css";
+@import "./tabs.css";
+@import "./tooltip.css";
+@import "./dialog.css";
+@import "./toast.css";

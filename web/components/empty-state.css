@@ -1,0 +1,163 @@
+timlee-empty-state {
+  --empty-bg: transparent;
+  --empty-border: var(--ts-border);
+  --empty-padding: var(--ts-space-12);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mc-space-3);
+  padding: var(--empty-padding) var(--mc-space-6);
+  border: var(--mc-border-width) dashed var(--empty-border);
+  border-radius: var(--mc-radius-xl);
+  background: var(--empty-bg);
+  text-align: center;
+}
+
+timlee-empty-state[variant="filled"] {
+  --empty-bg: var(--ts-surface-1);
+  --empty-border: transparent;
+}
+
+timlee-empty-state[variant="bare"] {
+  --empty-border: transparent;
+  --empty-padding: var(--ts-space-8);
+}
+
+timlee-empty-state :where(h1, h2, h3, h4) {
+  margin: 0;
+  color: var(--mc-text-heading);
+  font-size: var(--mc-text-lg);
+  line-height: var(--mc-leading-snug);
+}
+
+timlee-empty-state p {
+  margin: 0;
+  max-inline-size: 42ch;
+  color: var(--mc-text-2);
+  font-size: var(--mc-text-base);
+  line-height: var(--mc-leading-normal);
+}
+
+timlee-empty-state > :where(svg, img, [data-illustration]) {
+  inline-size: var(--mc-space-12);
+  block-size: var(--mc-space-12);
+  color: var(--mc-text-3);
+  opacity: 0.8;
+}
+
+/* --- Skeleton ----------------------------------------------------------- */
+
+timlee-skeleton {
+  --skeleton-base: var(--ts-surface-2);
+  --skeleton-sheen: var(--ts-surface-3);
+  --skeleton-radius: var(--ts-radius-sm);
+  --skeleton-height: var(--ts-space-3-5);
+  --skeleton-gap: var(--ts-space-2);
+
+  display: block;
+  inline-size: 100%;
+  block-size: var(--skeleton-height);
+  border-radius: var(--skeleton-radius);
+  background-color: var(--skeleton-base);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--skeleton-sheen) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  background-repeat: no-repeat;
+  animation: timlee-shimmer var(--mc-duration-slower) linear infinite;
+}
+
+/* The sheen sweeps the way the line reads. Only the sweep has a direction:
+   under reduced motion the placeholder breathes, and a reversed breath
+   would jump back to full strength at the end of every cycle. */
+@media (prefers-reduced-motion: no-preference) {
+  timlee-skeleton:dir(rtl) {
+    animation-direction: reverse;
+  }
+}
+
+timlee-skeleton[shape="circle"] {
+  --skeleton-radius: var(--ts-radius-full);
+  inline-size: var(--skeleton-height);
+  flex: none;
+}
+
+timlee-skeleton[shape="block"] {
+  --skeleton-radius: var(--ts-radius-lg);
+  --skeleton-height: var(--ts-space-24);
+}
+
+timlee-skeleton[shape="text"] {
+  --skeleton-height: var(--ts-space-3);
+}
+
+/* Multiple lines without multiple elements: the stripe pattern is drawn by
+   a repeating gradient, so "lines="3"" is all the template writes. */
+timlee-skeleton[lines] {
+  block-size: auto;
+  min-block-size: calc(
+    var(--skeleton-lines, 3) *
+    var(--skeleton-height) +
+    (var(--skeleton-lines, 3) - 1) *
+    var(--skeleton-gap)
+  );
+  border-radius: 0;
+  background-color: transparent;
+  background-image:
+    linear-gradient(90deg, transparent 0%, var(--skeleton-sheen) 50%, transparent 100%),
+    repeating-linear-gradient(
+      to bottom,
+      var(--skeleton-base) 0,
+      var(--skeleton-base) var(--skeleton-height),
+      transparent var(--skeleton-height),
+      transparent calc(var(--skeleton-height) + var(--skeleton-gap))
+    );
+  background-size:
+    200% 100%,
+    100% 100%;
+  background-position:
+    200% 0,
+    0 0;
+}
+
+timlee-skeleton[lines="1"] {
+  --skeleton-lines: 1;
+}
+timlee-skeleton[lines="2"] {
+  --skeleton-lines: 2;
+}
+timlee-skeleton[lines="3"] {
+  --skeleton-lines: 3;
+}
+timlee-skeleton[lines="4"] {
+  --skeleton-lines: 4;
+}
+timlee-skeleton[lines="5"] {
+  --skeleton-lines: 5;
+}
+
+/* Reduced motion: the sheen stops sweeping and the placeholder breathes in
+   place instead, so a page that is still loading does not look finished.
+   Stated here rather than left to a shared rule: a server-rendered skeleton
+   is animating long before any custom element has upgraded. */
+@media (prefers-reduced-motion: reduce) {
+  timlee-skeleton {
+    background-image: none;
+    animation: timlee-pulse var(--mc-duration-pulse) var(--mc-ease-emphasis) infinite alternate;
+  }
+
+  timlee-skeleton[lines] {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--skeleton-base) 0,
+      var(--skeleton-base) var(--skeleton-height),
+      transparent var(--skeleton-height),
+      transparent calc(var(--skeleton-height) + var(--skeleton-gap))
+    );
+  }
+}

@@ -1,0 +1,141 @@
+/* Timlee's own copy of the visually-hidden utility. base.css has one, but a
+   component must not depend on a class the host page might not ship. */
+.timlee-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Internal component-layer aliases keep global tokens out of visual
+   declarations without repeating the same bridge in every component. */
+:where(
+  timlee-alert,
+  timlee-avatar,
+  timlee-avatar-group,
+  timlee-badge,
+  timlee-button,
+  timlee-icon-button,
+  timlee-card,
+  timlee-checkbox,
+  timlee-radio,
+  timlee-switch,
+  timlee-code-block,
+  timlee-dialog,
+  timlee-empty-state,
+  timlee-skeleton,
+  timlee-input,
+  timlee-textarea,
+  timlee-select,
+  timlee-breadcrumb,
+  timlee-pagination,
+  timlee-spinner,
+  timlee-progress,
+  timlee-table,
+  timlee-tabs,
+  timlee-toaster,
+  timlee-toast,
+  timlee-tooltip
+) {
+  --mc-border-subtle: var(--ts-border-subtle);
+  --mc-border-width: var(--ts-border-width);
+  --mc-danger-ink: var(--ts-danger-ink);
+  --mc-duration: var(--ts-duration);
+  --mc-duration-fast: var(--ts-duration-fast);
+  --mc-duration-pulse: var(--ts-duration-pulse);
+  --mc-duration-slower: var(--ts-duration-slower);
+  --mc-ease: var(--ts-ease);
+  --mc-ease-emphasis: var(--ts-ease-emphasis);
+  --mc-ease-out: var(--ts-ease-out);
+  --mc-elevation-1: var(--ts-elevation-1);
+  --mc-focus-offset: var(--ts-focus-ring-offset);
+  --mc-focus-width: var(--ts-focus-ring-width);
+  --mc-font-mono: var(--ts-font-mono);
+  --mc-font-sans: var(--ts-font-sans);
+  --mc-leading-none: var(--ts-leading-none);
+  --mc-leading-normal: var(--ts-leading-normal);
+  --mc-leading-snug: var(--ts-leading-snug);
+  --mc-leading-tight: var(--ts-leading-tight);
+  --mc-overlay: var(--ts-overlay);
+  --mc-primary: var(--ts-primary);
+  --mc-radius-full: var(--ts-radius-full);
+  --mc-radius-lg: var(--ts-radius-lg);
+  --mc-radius-md: var(--ts-radius-md);
+  --mc-radius-sm: var(--ts-radius-sm);
+  --mc-radius-xl: var(--ts-radius-xl);
+  --mc-ring: var(--ts-ring);
+  --mc-space-0-5: var(--ts-space-0-5);
+  --mc-space-1: var(--ts-space-1);
+  --mc-space-1-5: var(--ts-space-1-5);
+  --mc-space-2: var(--ts-space-2);
+  --mc-space-2-5: var(--ts-space-2-5);
+  --mc-space-3: var(--ts-space-3);
+  --mc-space-4: var(--ts-space-4);
+  --mc-space-4-5: var(--ts-space-4-5);
+  --mc-space-5: var(--ts-space-5);
+  --mc-space-6: var(--ts-space-6);
+  --mc-space-7: var(--ts-space-7);
+  --mc-space-8: var(--ts-space-8);
+  --mc-space-10: var(--ts-space-10);
+  --mc-space-12: var(--ts-space-12);
+  --mc-space-24: var(--ts-space-24);
+  --mc-surface-raised: var(--ts-surface-raised);
+  --mc-text-1: var(--ts-text-1);
+  --mc-text-2: var(--ts-text-2);
+  --mc-text-3: var(--ts-text-3);
+  --mc-text-base: var(--ts-text-base);
+  --mc-text-heading: var(--ts-text-heading);
+  --mc-text-lg: var(--ts-text-lg);
+  --mc-text-sm: var(--ts-text-sm);
+  --mc-text-xl: var(--ts-text-xl);
+  --mc-text-xs: var(--ts-text-xs);
+  --mc-tracking-normal: var(--ts-tracking-normal);
+  --mc-tracking-wide: var(--ts-tracking-wide);
+  --mc-z-dropdown: var(--ts-z-dropdown);
+  --mc-z-sticky: var(--ts-z-sticky);
+  --mc-z-toast: var(--ts-z-toast);
+}
+
+@keyframes timlee-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes timlee-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes timlee-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--timlee-enter-y, 4px));
+  }
+}
+
+/* Reduced motion has no global switch here or anywhere: a blanket
+   `animation-duration: 0.01ms` freezes a spinner or a skeleton mid-frame,
+   which reads as broken rather than calm. Each rule that moves states its
+   reduced form beside it instead (docs/design-tokens.md#reduced-motion):
+   an entrance keeps its fade and loses its slide (timlee-fade), and a
+   looping indicator stops moving but keeps a slow cue (timlee-pulse). */
+@keyframes timlee-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes timlee-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}

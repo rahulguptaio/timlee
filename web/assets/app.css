@@ -1,0 +1,24 @@
+/* =============================================================================
+   app.css — the stylesheet entry point.
+
+   esbuild inlines each @import at build time, so the browser fetches exactly
+   one hashed stylesheet instead of paying a round trip per layer.
+   ========================================================================== */
+
+@import "./css/tokens.css";
+@import "./css/base.css";
+/* Component styles ship in the stylesheet so server-rendered markup is
+   styled before any JavaScript runs; the bundle carries an identical copy
+   only as a fallback. */
+@import "../components/components.css";
+@import "../components/chat/chat.css";
+/* Page styles come after the components so a page can tune a component
+   through its local custom properties without out-ranking it. */
+@import "./css/landing.css";
+@import "./css/signin.css";
+/* The apps list and an app's workspace. */
+@import "./css/apps.css";
+/* The account and organisation console. */
+@import "./css/settings.css";
+/* The suggestion banner of a page in more than one language. */
+@import "./css/locale.css";

@@ -1,0 +1,64 @@
+{{- /*
+  Profile: the name an organisation sees. The ways this account signs in, and
+  where it is signed in, are under Security.
+*/ -}}
+{{ define "content" }}
+{{- $d := .Data -}}
+{{- $s := $d.Shell -}}
+<header class="st-head">
+  <h1>{{ t .L "settings.profile.title" }}</h1>
+  <p>{{ th $.L "settings.profile.lede" "link" "/settings/security" }}</p>
+</header>
+
+{{ template "settings-outcome" . }}
+
+<section class="st-section">
+  <h2 id="pf-name">{{ t .L "settings.profile.nameTitle" }}</h2>
+  <form class="st-inline-form" method="post" action="/settings/profile" data-enhance>
+    {{ $s.CSRF }}
+    <timlee-input{{ if $d.Form.Error }} invalid{{ end }}>
+      <label for="pf-name-input">{{ t $.L "settings.profile.nameLabel" }}</label>
+      <input
+        id="pf-name-input"
+        type="text"
+        name="name"
+        value="{{ $d.Form.Name }}"
+        dir="auto"
+        autocomplete="name"
+        maxlength="120"
+        aria-describedby="pf-name-hint{{ if $d.Form.Error }} pf-name-error{{ end }}"
+        {{ if $d.Form.Error }}aria-invalid="true"{{ end }}
+      />
+      <p data-hint id="pf-name-hint">{{ t $.L "settings.profile.nameHint" }}</p>
+      <p data-error id="pf-name-error">{{ template "settings-error" (dict "L" $.L "Message" $d.Form.Error) }}</p>
+    </timlee-input>
+    <timlee-button variant="primary"><button type="submit">{{ t $.L "settings.profile.save" }}</button></timlee-button>
+  </form>
+  <p class="st-quiet">
+    {{ th $.L "settings.profile.signedInAs" "email" $s.User.Email }}
+  </p>
+</section>
+{{- /* Not enhanced by settings.ts: a new language is a new <html lang dir>,
+       which only a full page load brings. */}}
+{{- with .Languages }}
+
+<section class="st-section">
+  <h2 id="pf-language">{{ t $.L "common.locale.heading" }}</h2>
+  <form class="st-inline-form" method="post" action="/locale">
+    {{- .CSRF }}
+    <input type="hidden" name="returnTo" value="{{ .ReturnTo }}" />
+    <timlee-select>
+      <label for="pf-language-select">{{ t $.L "common.locale.heading" }}</label>
+      <select id="pf-language-select" name="locale" aria-describedby="pf-language-hint">
+        <option value="">{{ t $.L "common.locale.notSet" }}</option>
+        {{- range .Options }}
+        <option value="{{ .ID }}" lang="{{ .Lang }}"{{ if eq .ID $.Languages.Saved }} selected{{ end }}>{{ .Name }}</option>
+        {{- end }}
+      </select>
+      <p data-hint id="pf-language-hint">{{ t $.L "common.locale.hint" }}</p>
+    </timlee-select>
+    <timlee-button variant="primary"><button type="submit">{{ t $.L "common.locale.save" }}</button></timlee-button>
+  </form>
+</section>
+{{- end }}
+{{ end }}

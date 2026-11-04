@@ -1,0 +1,150 @@
+/* Flat: a table lies on whatever holds it, the page or a card, so its body
+   is that surface, its edge a border and it has no shadow. */
+timlee-table {
+  --table-bg: transparent;
+  --table-border: var(--ts-border);
+  --table-head-bg: var(--ts-surface-1);
+  --table-head-fg: var(--ts-text-2);
+  --table-row-hover: var(--ts-surface-hover);
+  --table-cell-padding-block: var(--ts-space-3);
+  --table-cell-padding-inline: var(--ts-space-4);
+  --table-radius: var(--ts-radius-lg);
+
+  display: block;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: var(--mc-border-width) solid var(--table-border);
+  border-radius: var(--table-radius);
+  background: var(--table-bg);
+}
+
+timlee-table:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+timlee-table > table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--mc-text-base);
+  font-variant-numeric: tabular-nums;
+}
+
+timlee-table caption {
+  padding: var(--mc-space-3) var(--table-cell-padding-inline);
+  color: var(--mc-text-2);
+  font-size: var(--mc-text-sm);
+  text-align: start;
+}
+
+timlee-table th {
+  padding: var(--table-cell-padding-block) var(--table-cell-padding-inline);
+  background: var(--table-head-bg);
+  color: var(--table-head-fg);
+  font-size: var(--mc-text-xs);
+  font-weight: 650;
+  letter-spacing: var(--mc-tracking-wide);
+  text-transform: uppercase;
+  text-align: start;
+  white-space: nowrap;
+  border-block-end: var(--mc-border-width) solid var(--table-border);
+}
+
+timlee-table[sticky] thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--mc-z-sticky);
+}
+
+timlee-table td {
+  padding: var(--table-cell-padding-block) var(--table-cell-padding-inline);
+  color: var(--mc-text-1);
+  border-block-end: var(--mc-border-width) solid var(--mc-border-subtle);
+  vertical-align: middle;
+}
+
+timlee-table tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+timlee-table[hoverable] tbody tr:hover td {
+  background: var(--table-row-hover);
+}
+
+timlee-table[density="compact"] {
+  --table-cell-padding-block: var(--ts-space-2);
+  --table-cell-padding-inline: var(--ts-space-3);
+}
+
+/* A column's alignment is a class on its header and cells: the CSP refuses
+   style attributes and align is obsolete HTML. align="end" still works for
+   markup written before the classes. */
+timlee-table :is(th, td).align-start {
+  text-align: start;
+}
+
+timlee-table :is(th, td).align-center {
+  text-align: center;
+}
+
+timlee-table :is(th, td):is(.align-end, [align="end"]) {
+  text-align: end;
+}
+
+.timlee-table__sort {
+  --table-sort-color: var(--table-head-fg);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mc-space-1);
+  min-block-size: var(--mc-space-6);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--table-sort-color);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.timlee-table__sort:hover {
+  --table-sort-color: var(--ts-text-1);
+}
+
+.timlee-table__sort:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+  border-radius: var(--mc-radius-sm);
+}
+
+/* The indicator is driven by aria-sort, so the glyph cannot disagree with
+   what a screen reader announces. */
+.timlee-table__sort::after {
+  content: "";
+  inline-size: var(--mc-space-2);
+  block-size: var(--mc-space-2);
+  background: currentcolor;
+  opacity: 0.35;
+  clip-path: polygon(50% 0, 100% 45%, 0 45%, 0 55%, 100% 55%, 50% 100%);
+}
+
+th[aria-sort="ascending"] .timlee-table__sort::after {
+  opacity: 1;
+  clip-path: polygon(50% 10%, 100% 70%, 0 70%);
+}
+
+th[aria-sort="descending"] .timlee-table__sort::after {
+  opacity: 1;
+  clip-path: polygon(0 30%, 100% 30%, 50% 90%);
+}
+
+/* Forced colours paint backgrounds Canvas, which would erase the sort arrow.
+   "currentcolor" is forced too, so the button's system colour is named, and
+   the unsorted arrow is drawn at full strength: its shape tells it apart. */
+@media (forced-colors: active) {
+  .timlee-table__sort::after {
+    background: ButtonText;
+    opacity: 1;
+  }
+}

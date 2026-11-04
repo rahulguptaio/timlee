@@ -1,0 +1,30 @@
+{{- /*
+  The suggestion banner (docs/I18N.md §2, decision 13). On a public page in
+  another language than the reader's, it offers theirs: the one they saved,
+  or else the one their browser asks for. It is written in the language it
+  offers, with that language's lang and dir.
+
+  Both buttons post to /locale, which remembers the answer and returns to
+  this page in the language chosen, so the banner works without script and
+  does not come back once answered. Nobody is redirected. Part of the first
+  response, so nothing moves when it appears.
+
+  Takes the Page; renders nothing without an offer.
+*/ -}}
+{{ define "locale-banner" }}
+{{- with .Languages }}{{ with .Suggest }}
+<div class="locale-banner{{ if not $.Layout }} wrap{{ end }}">
+  <timlee-alert tone="info" lang="{{ .Lang }}" dir="{{ .Dir }}">
+    <form method="post" action="/locale">
+      {{- $.Languages.CSRF }}
+      <input type="hidden" name="returnTo" value="{{ $.Languages.ReturnTo }}" />
+      <p>{{ t .L "common.locale.suggest" }}</p>
+      <div class="locale-banner-actions">
+        <timlee-button variant="primary" size="sm"><button type="submit" name="locale" value="{{ .ID }}">{{ if .Continue }}{{ t .L "common.locale.continue" }}{{ else }}{{ t .L "common.locale.switch" }}{{ end }}</button></timlee-button>
+        <timlee-button variant="ghost" size="sm"><button type="submit" name="locale" value="{{ .Keep.ID }}">{{ th .L "common.locale.keep" "language" .Keep.Name }}</button></timlee-button>
+      </div>
+    </form>
+  </timlee-alert>
+</div>
+{{- end }}{{ end }}
+{{- end }}

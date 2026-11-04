@@ -1,0 +1,120 @@
+timlee-switch {
+  --switch-track: var(--ts-border);
+  --switch-track-on: var(--ts-primary);
+  --switch-thumb: var(--ts-text-on-solid);
+  /* A control boundary, so 3:1 against the page like any input's edge. */
+  --switch-border: var(--ts-input);
+  --switch-shadow: var(--ts-elevation-1);
+  --switch-width: calc(var(--ts-space-8) + var(--ts-space-1));
+  --switch-height: var(--ts-space-5);
+  --switch-fg: var(--ts-text-1);
+
+  display: grid;
+  gap: var(--mc-space-1);
+}
+
+timlee-switch > label,
+timlee-switch[data-timlee-standalone] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mc-space-3);
+  min-block-size: calc(var(--mc-space-8) + var(--mc-space-1));
+  color: var(--switch-fg);
+  font-size: var(--mc-text-base);
+  line-height: var(--mc-leading-snug);
+  cursor: pointer;
+}
+
+/* The track is the control itself: one element, no pseudo-elements on a
+   form control (support for those is uneven), the thumb drawn as a
+   background gradient whose position animates. */
+timlee-switch input[type="checkbox"],
+.timlee-switch__track {
+  flex: none;
+  appearance: none;
+  box-sizing: border-box;
+  inline-size: var(--switch-width);
+  block-size: var(--switch-height);
+  margin: 0;
+  border: var(--mc-border-width) solid var(--switch-border);
+  border-radius: var(--mc-radius-full);
+  background-color: var(--switch-track);
+  background-image: radial-gradient(circle at center, var(--switch-thumb) 40%, transparent 42%);
+  background-repeat: no-repeat;
+  background-size: var(--switch-height) var(--switch-height);
+  background-position: 0 center;
+  box-shadow: var(--switch-shadow);
+  cursor: pointer;
+  transition:
+    background-color var(--mc-duration) var(--mc-ease),
+    background-position var(--mc-duration) var(--mc-ease),
+    border-color var(--mc-duration) var(--mc-ease);
+}
+
+timlee-switch input[type="checkbox"]:checked,
+timlee-switch[checked] .timlee-switch__track {
+  --switch-track: var(--switch-track-on);
+  --switch-border: var(--switch-track-on);
+  background-position: 100% center;
+}
+
+/* Right to left, the thumb starts at the right and moves left, as native
+   switches do. */
+timlee-switch input[type="checkbox"]:dir(rtl),
+.timlee-switch__track:dir(rtl) {
+  background-position: 100% center;
+}
+
+timlee-switch input[type="checkbox"]:checked:dir(rtl),
+timlee-switch[checked] .timlee-switch__track:dir(rtl) {
+  background-position: 0 center;
+}
+
+timlee-switch input[type="checkbox"]:focus-visible,
+timlee-switch[data-timlee-standalone]:focus-visible {
+  outline: var(--mc-focus-width) solid var(--mc-ring);
+  outline-offset: var(--mc-focus-offset);
+}
+
+timlee-switch > label:has(input:disabled),
+timlee-switch[disabled] {
+  --switch-fg: var(--ts-text-3);
+  cursor: not-allowed;
+}
+
+timlee-switch input[type="checkbox"]:disabled,
+timlee-switch[disabled] .timlee-switch__track {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+timlee-switch[tone="danger"] {
+  --switch-track-on: var(--ts-danger);
+}
+
+/* Windows high-contrast strips author colours. Without this the two states
+   are indistinguishable, because the only difference is a background. */
+@media (forced-colors: active) {
+  timlee-switch input[type="checkbox"],
+  .timlee-switch__track {
+    forced-color-adjust: none;
+    border-color: ButtonBorder;
+    background-color: ButtonFace;
+    background-image: radial-gradient(circle at center, ButtonText 40%, transparent 42%);
+  }
+
+  timlee-switch input[type="checkbox"]:checked,
+  timlee-switch[checked] .timlee-switch__track {
+    background-color: Highlight;
+    background-image: radial-gradient(circle at center, HighlightText 40%, transparent 42%);
+  }
+}
+
+/* Reduced motion: the thumb jumps to its side instead of sliding there; the
+   colour change that says which state it is in still fades. */
+@media (prefers-reduced-motion: reduce) {
+  timlee-switch input[type="checkbox"],
+  .timlee-switch__track {
+    transition-property: background-color, border-color;
+  }
+}

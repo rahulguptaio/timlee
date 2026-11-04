@@ -1,0 +1,69 @@
+/*
+  Desktop tokens: the subset of web/assets/css/tokens.css that the pages
+  bundled into the app need, with the same names and values.
+
+  These pages are what the app shows when it cannot reach the site, so they
+  cannot load the site's stylesheet. Themes switch with a media query rather
+  than light-dark(): the offline screen has to render on every WebKit the app
+  installs on, and the query has been supported for years longer.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  --ts-background: #ffffff; /* --prim-navy-1 */
+  --ts-surface-hover: #eceff4; /* --prim-navy-4 */
+  --ts-text-1: #1b2a41; /* --prim-navy-12 */
+  --ts-text-2: #515c6c; /* --prim-navy-11 */
+  --ts-border: #dbe0e7; /* --prim-navy-6 */
+  --ts-input: #7c8593; /* --prim-navy-9 */
+  --ts-primary: #007479; /* --prim-teal-9 */
+  --ts-primary-hover: #00676c; /* --prim-teal-10 */
+  --ts-primary-foreground: #ffffff; /* --prim-navy-1 */
+  --ts-ring: #007479; /* --prim-teal-9 */
+  --ts-danger-ink: #b62c29; /* --prim-red-11 */
+
+  --ts-font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial,
+    sans-serif;
+  --ts-text-sm: 0.8125rem; /* 13px */
+  --ts-text-md: 0.9375rem; /* 15px */
+  --ts-text-2xl: 1.375rem; /* 22px */
+  --ts-leading-tight: 1.2;
+  --ts-leading-normal: 1.6;
+
+  --ts-space-1: 0.25rem;
+  --ts-space-2: 0.5rem;
+  --ts-space-3: 0.75rem;
+  --ts-space-4: 1rem;
+  --ts-space-6: 1.5rem;
+  --ts-space-8: 2rem;
+
+  --ts-radius-sm: 4px;
+  --ts-radius: 6px;
+  --ts-radius-md: 8px;
+  --ts-size-mark: 2.5rem; /* 40px */
+  --ts-size-control: 2.5rem; /* 40px: well over the 24px target minimum */
+  --ts-size-dot: 0.5rem; /* 8px */
+  --ts-measure: 34rem;
+
+  --ts-duration-fast: 120ms;
+  --ts-duration-slower: 600ms;
+  --ts-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ts-background: #0b1424; /* --prim-navy-dark-1 */
+    --ts-surface-hover: #1a2c45; /* --prim-navy-dark-4 */
+    --ts-text-1: #e1e8f3; /* --prim-navy-dark-12 */
+    --ts-text-2: #9ca9bd; /* --prim-navy-dark-11 */
+    --ts-border: #2d3d54; /* --prim-navy-dark-6 */
+    --ts-input: #738196; /* --prim-navy-dark-9 */
+    --ts-primary: #5fd0d0; /* --prim-teal-dark-9 */
+    --ts-primary-hover: #7ddee3; /* --prim-teal-dark-10 */
+    --ts-primary-foreground: #0b1424; /* --prim-navy-dark-1 */
+    --ts-ring: #5fd0d0; /* --prim-teal-dark-9 */
+    --ts-danger-ink: #ed766b; /* --prim-red-dark-11 */
+  }
+}

@@ -1,0 +1,64 @@
+{{- /*
+  Accepting an invitation. Opening the link changes nothing: acceptance is a
+  form a person submits while able to see which account they are using, and
+  the invitation only works for the address it was sent to.
+*/ -}}
+{{ define "solo-actions" }}{{ template "theme-toggle" (dict "Page" . "Return" .Data.Self) }}{{ end }}
+
+{{ define "content" }}
+{{- $d := .Data -}}
+<section class="st-card" aria-labelledby="invite-title">
+  {{ if eq $d.State "missing" }}
+  <h1 id="invite-title">{{ t .L "auth.invite.missingTitle" }}</h1>
+  <p>{{ t .L "auth.invite.missingBody" }}</p>
+  <timlee-button variant="secondary"><a href="{{ href .L "/" }}">{{ t .L "auth.invite.home" }}</a></timlee-button>
+
+  {{ else if eq $d.State "signed-out" }}
+  <h1 id="invite-title">{{ t .L "auth.invite.signedOutTitle" }}</h1>
+  <p>{{ t .L "auth.invite.signedOutBody" }}</p>
+  <timlee-button variant="primary"><a href="{{ $d.SignIn }}">{{ t .L "auth.invite.signIn" }}</a></timlee-button>
+  {{ if $d.DevLogin }}
+  <form class="st-dev" method="post" action="{{ href $.L "/sign-in" }}">
+    <input type="hidden" name="intent" value="dev" />
+    <input type="hidden" name="returnTo" value="{{ $d.Self }}" />
+    <timlee-input>
+      <label for="invite-dev-email">{{ t $.L "auth.invite.emailLabel" }}</label>
+      <input id="invite-dev-email" name="email" type="email" dir="ltr" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" enterkeyhint="go" required aria-describedby="invite-dev-hint" />
+      <p data-hint id="invite-dev-hint">{{ t $.L "auth.invite.devHint" }}</p>
+    </timlee-input>
+    <timlee-button variant="secondary"><button type="submit">{{ t $.L "auth.signIn.devSubmit" }}</button></timlee-button>
+  </form>
+  {{ end }}
+
+  {{ else if eq $d.State "mismatch" }}
+  <h1 id="invite-title">{{ t .L "auth.invite.mismatchTitle" }}</h1>
+  <p>{{ t .L "auth.invite.signedInAs" }} <strong><bdi dir="ltr">{{ $d.Email }}</bdi></strong>{{ t .L "auth.invite.mismatchAfterEmail" }}</p>
+  <form method="post" action="/sign-out">
+    <input type="hidden" name="returnTo" value="{{ $d.Self }}" />
+    <timlee-button variant="primary"><button type="submit">{{ t .L "auth.invite.switchAccount" }}</button></timlee-button>
+  </form>
+
+  {{ else if eq $d.State "gone" }}
+  <h1 id="invite-title">{{ t .L "auth.invite.goneTitle" }}</h1>
+  <p>{{ t .L "auth.invite.goneBody" }}</p>
+  <timlee-button variant="secondary"><a href="/settings">{{ t .L "auth.invite.settings" }}</a></timlee-button>
+
+  {{ else }}
+  <h1 id="invite-title">{{ if eq $d.State "failed" }}{{ t .L "auth.invite.failedTitle" }}{{ else }}{{ t .L "auth.invite.readyTitle" }}{{ end }}</h1>
+  {{ if eq $d.State "failed" }}
+  <p>{{ t .L "auth.invite.failedBody" }}</p>
+  {{ else }}
+  <p>{{ t .L "auth.invite.signedInAs" }} <strong><bdi dir="ltr">{{ $d.Email }}</bdi></strong>{{ t .L "auth.invite.readyAfterEmail" }}</p>
+  {{ end }}
+  <form method="post" action="{{ href $.L "/invite" }}">
+    {{ $d.CSRF }}
+    <input type="hidden" name="token" value="{{ $d.Token }}" />
+    <timlee-button variant="primary"><button type="submit">{{ t .L "auth.invite.accept" }}</button></timlee-button>
+  </form>
+  <form class="st-not-you" method="post" action="/sign-out">
+    <input type="hidden" name="returnTo" value="{{ $d.Self }}" />
+    <p>{{ t .L "auth.invite.not" }} <bdi dir="ltr">{{ $d.Email }}</bdi>? <timlee-button variant="link"><button type="submit">{{ t .L "auth.invite.signOut" }}</button></timlee-button></p>
+  </form>
+  {{ end }}
+</section>
+{{ end }}
