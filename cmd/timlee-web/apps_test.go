@@ -29,7 +29,7 @@ func appsStack(t *testing.T) (*stack, *appfactory.Factory) {
 
 	ws := filepath.Join(t.TempDir(), "workspace")
 	for _, dir := range []string{"templates/app", "packages/design/src"} {
-		if err := os.CopyFS(filepath.Join(ws, dir), os.DirFS(filepath.Join("..", "..", "workspace", dir))); err != nil {
+		if err := os.CopyFS(filepath.Join(ws, dir), os.DirFS(filepath.Join("..", "..", "internal", "appfactory", "testdata", "workspace", dir))); err != nil {
 			t.Fatal(err)
 		}
 	}

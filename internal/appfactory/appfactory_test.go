@@ -17,7 +17,7 @@ import (
 func newTestFactory(t *testing.T) *Factory {
 	t.Helper()
 	_, file, _, _ := runtime.Caller(0)
-	real := filepath.Join(filepath.Dir(file), "..", "..", "workspace")
+	real := filepath.Join(filepath.Dir(file), "testdata", "workspace")
 	ws := filepath.Join(t.TempDir(), "workspace")
 	for _, dir := range []string{"templates/app", "packages/design/src"} {
 		if err := os.CopyFS(filepath.Join(ws, dir), os.DirFS(filepath.Join(real, dir))); err != nil {

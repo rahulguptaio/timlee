@@ -1,0 +1,3 @@
+load("//tools:app.bzl", "timlee_app")
+
+timlee_app()

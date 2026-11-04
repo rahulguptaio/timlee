@@ -1,0 +1,7 @@
+{
+  "slug": "__APP_SLUG__",
+  "name": "__APP_NAME__",
+  "description": "__APP_DESCRIPTION__",
+  "font": "Helvetica",
+  "tokens": { "light": {}, "dark": {} }
+}
