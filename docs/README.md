@@ -6,6 +6,7 @@ contributor workflow in [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 | Document | Covers |
 |---|---|
 | [STATUS.md](STATUS.md) | What exists, what is next, known gaps |
+| [CLOUD-ARCHITECTURE.md](CLOUD-ARCHITECTURE.md) | Target Azure architecture: sandboxes, domains and Front Door, app backends (data, GraphQL, auth, server modules), control plane, security, deployment, costs |
 | [CHECKS.md](CHECKS.md) | Every check, hooks and CI |
 | [I18N.md](I18N.md) | Catalogs, locale routing, RTL |
 | [LOGGING.md](LOGGING.md) | Operational logs, events, redaction |
